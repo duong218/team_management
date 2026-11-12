@@ -60,7 +60,7 @@ function DragCard({ task, onOpen, onMove }) {
 export default function KanbanBoard({ tasks = [], onMove, onOpen }) {
   const [column, setColumn] = useState(STATE_ORDER[0]);
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor),
   );
   return (
