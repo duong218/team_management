@@ -224,8 +224,8 @@ returns table(id uuid,task_id uuid,noi_dung text,trong_so numeric,da_xong boolea
 language plpgsql stable security definer set search_path='' as $$
 declare v_project uuid; v_self uuid; v_manager boolean;
 begin
- select project_id into v_project from public.tasks where id=p_task;
- select id into v_self from public.members where project_id=v_project and user_id=auth.uid() and trang_thai='dang_tham_gia';
+ select t.project_id into v_project from public.tasks t where t.id=p_task;
+ select m.id into v_self from public.members m where m.project_id=v_project and m.user_id=auth.uid() and m.trang_thai='dang_tham_gia';
  v_manager:=public.la_quan_ly(v_project);
  if v_project is null or not(v_manager or public.co_quyen_task(p_task) or
       (public.task_chua_giao(p_task) and public.la_thanh_vien(v_project))) then
@@ -247,7 +247,7 @@ begin
  select project_id into v_project from public.tasks where id=p_task;
  select id into v_self from public.members where project_id=v_project and user_id=auth.uid() and trang_thai='dang_tham_gia';
  if v_project is null or not(public.la_quan_ly(v_project) or
-    exists(select 1 from public.task_assignees where task_id=p_task and member_id=v_self)) then
+    exists(select 1 from public.task_assignees a where a.task_id=p_task and a.member_id=v_self)) then
   raise exception 'Bạn không được xem đóng góp task này';
  end if;
  if exists(select 1 from public.task_dong_gop_dieu_chinh where task_id=p_task) then
