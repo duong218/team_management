@@ -1,6 +1,7 @@
 export default function ChecklistRow({
   item,
   hasOwnLink,
+  canAddLink,
   onToggle,
   onAddLink,
 }) {
@@ -13,7 +14,7 @@ export default function ChecklistRow({
         onChange={onToggle}
       />
       <span>{item.noi_dung}</span>
-      {!hasOwnLink && (
+      {canAddLink && !hasOwnLink && (
         <button onClick={onAddLink}>Cần gắn minh chứng trước</button>
       )}
     </div>

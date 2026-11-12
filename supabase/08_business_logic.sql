@@ -176,6 +176,27 @@ end; $$;
 revoke all on function public.tao_task(uuid,text,text,date,jsonb) from public,anon;
 grant execute on function public.tao_task(uuid,text,text,date,jsonb) to authenticated;
 
+-- Chỉ chính người được giao task mới được thêm minh chứng, kể cả khi người khác là quản lý.
+create or replace function public.them_link(p_muc uuid,p_url text,p_ghi_chu text default '')
+returns uuid language plpgsql security definer set search_path='' as $$
+declare v_task uuid; v_project uuid; v_member uuid; v_host text; v_norm text; v_id uuid;
+begin
+ select c.task_id,t.project_id into v_task,v_project from public.task_checklist c join public.tasks t on t.id=c.task_id where c.id=p_muc;
+ select m.id into v_member from public.members m where m.project_id=v_project and m.user_id=auth.uid() and m.trang_thai='dang_tham_gia';
+ if v_member is null or not exists(select 1 from public.task_assignees a where a.task_id=v_task and a.member_id=v_member and a.trang_thai='dang_lam') then raise exception 'Chỉ người được giao task mới được gắn minh chứng'; end if;
+ if (select t.trang_thai from public.tasks t where t.id=v_task) in('cho_duyet','hoan_thanh','da_huy') then raise exception 'Task đang bị khóa'; end if;
+ if char_length(p_url)>2000 or p_url !~ '^https://[^[:space:]]+$' or p_url ~* '^https://[^/@:]+:[^/@]+@' then raise exception 'Link phải là HTTPS hợp lệ, không chứa khoảng trắng hoặc thông tin đăng nhập'; end if;
+ v_host:=lower(split_part(split_part(p_url,'://',2),'/',1));
+ if position('.' in v_host)=0 then raise exception 'Link cần có tên miền hợp lệ'; end if;
+ v_norm:=regexp_replace(rtrim(btrim(p_url),'/'),'^https://([^/]+)','https://'||lower(v_host));
+ if (select count(*) from public.task_links l where l.muc_id=p_muc)>=10 then raise exception 'Mỗi mục tối đa 10 link'; end if;
+ insert into public.task_links(task_id,muc_id,url,url_chuan_hoa,ghi_chu,nguoi_them) values(v_task,p_muc,btrim(p_url),v_norm,left(coalesce(p_ghi_chu,''),1000),v_member) returning id into v_id;
+ perform public.ghi_log(v_project,v_task,v_member,'them_link');
+ return v_id;
+end; $$;
+revoke all on function public.them_link(uuid,text,text) from public,anon;
+grant execute on function public.them_link(uuid,text,text) to authenticated;
+
 create or replace function public.xoa_link(p_link uuid)
 returns void language plpgsql security definer set search_path='' as $$
 declare v_task uuid; v_project uuid; v_muc uuid; v_member uuid; v_state text;
@@ -265,6 +286,23 @@ end; $$;
 revoke all on function public.dong_gop_task(uuid) from public,anon;
 grant execute on function public.dong_gop_task(uuid) to authenticated;
 revoke all on public.task_dong_gop_dieu_chinh from anon,authenticated;
+
+-- Bản vá cho người được giao task đã mở được lịch sử nhưng cột kết quả id trùng với tasks.id.
+create or replace function public.lich_su_nguoi_chinh(p_task uuid)
+returns table(id uuid,tu_member uuid,tu_ten text,den_member uuid,den_ten text,nguoi_chuyen uuid,tien_do_luc_chuyen numeric,loai_chuyen text,ly_do text,thoi_gian timestamptz,da_sua_loai boolean)
+language plpgsql stable security definer set search_path='' as $$
+declare v_project uuid; v_mgr boolean;
+begin
+ select t.project_id into v_project from public.tasks t where t.id=p_task;
+ if not public.co_quyen_task(p_task) then raise exception 'Bạn không được xem lịch sử task này'; end if;
+ v_mgr:=public.la_quan_ly(v_project);
+ return query select x.id,x.tu_member,p1.ho_ten,x.den_member,p2.ho_ten,x.nguoi_chuyen,x.tien_do_luc_chuyen,x.loai_chuyen,
+  case when v_mgr then x.ly_do else null end,x.thoi_gian,x.da_sua_loai
+ from public.task_chuyen_giao x
+ join public.members m1 on m1.id=x.tu_member join public.profiles p1 on p1.user_id=m1.user_id
+ join public.members m2 on m2.id=x.den_member join public.profiles p2 on p2.user_id=m2.user_id
+ where x.task_id=p_task order by x.thoi_gian;
+end; $$;
 
 -- Triggers chỉ cần được PostgreSQL gọi, không phải là API cho client.
 revoke all on function public.log_join_request_event() from public, anon, authenticated;

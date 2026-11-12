@@ -186,7 +186,7 @@ returns table(id uuid,tu_member uuid,tu_ten text,den_member uuid,den_ten text,ng
 language plpgsql stable security definer set search_path='' as $$
 declare v_project uuid; v_mgr boolean;
 begin
- select project_id into v_project from public.tasks where id=p_task;
+ select t.project_id into v_project from public.tasks t where t.id=p_task;
  if not public.co_quyen_task(p_task) then raise exception 'Bạn không được xem lịch sử task này'; end if;
  v_mgr:=public.la_quan_ly(v_project);
  return query select x.id,x.tu_member,p1.ho_ten,x.den_member,p2.ho_ten,x.nguoi_chuyen,x.tien_do_luc_chuyen,x.loai_chuyen,case when v_mgr then x.ly_do else null end,x.thoi_gian,x.da_sua_loai
