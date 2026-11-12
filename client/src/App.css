@@ -1,0 +1,234 @@
+:root {
+  font-family: Nunito, "Be Vietnam Pro", system-ui, sans-serif;
+  color: #2e1065;
+  background: #fafaff;
+  color-scheme: light;
+  font-size: 16px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  min-height: 44px;
+  border: 1px solid #ddd0f5;
+  border-radius: 14px;
+  background: #fff;
+  color: #2e1065;
+  padding: 8px 14px;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #7c3aed;
+  outline-offset: 2px;
+}
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid #7a5fb0;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fff;
+  color: #2e1065;
+}
+textarea {
+  min-height: 90px;
+}
+label {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  font-weight: 700;
+}
+.auth-card {
+  width: min(460px, calc(100% - 32px));
+  margin: 10vh auto;
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow:
+    8px 10px 22px #4c1d951f,
+    inset 4px 4px 8px #fff,
+    inset -4px -4px 10px #4c1d9512;
+}
+.auth-card form {
+  display: grid;
+  gap: 8px;
+}
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  background: #7c3aed;
+  color: white;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+}
+.button.primary {
+  background: #7c3aed;
+  color: #fff;
+  border: 0;
+}
+.button {
+  box-shadow: 4px 5px 12px #4c1d9517;
+}
+.button:active {
+  transform: translateY(2px);
+}
+.topbar {
+  height: 68px;
+  padding: 0 max(24px, calc((100vw - 1200px) / 2));
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  border-bottom: 1px solid #ddd0f5;
+}
+.topbar span {
+  margin-left: auto;
+}
+.brand {
+  font-weight: 900;
+  text-decoration: none;
+  color: inherit;
+}
+.content {
+  width: min(1200px, calc(100% - 40px));
+  margin: 36px auto;
+}
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.eyebrow {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: #5b4b7a;
+}
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px;
+}
+.card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow:
+    8px 10px 22px #4c1d9517,
+    inset 3px 3px 6px #fff,
+    inset -3px -3px 8px #4c1d9510;
+}
+.card h2 {
+  overflow-wrap: anywhere;
+}
+.inline-form {
+  margin-top: 28px;
+  max-width: 560px;
+}
+.error {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: #fff1f2;
+  color: #881337;
+  padding: 14px;
+  border-radius: 14px;
+  margin: 12px 0;
+}
+.skeleton,
+.empty {
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #5b4b7a;
+}
+.empty {
+  display: grid;
+  justify-items: center;
+  background: #fff;
+  border-radius: 20px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 99px;
+  padding: 5px 10px;
+  background: #e9d5ff;
+  color: #581c87;
+}
+.progress-wrap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.progress {
+  height: 10px;
+  border-radius: 99px;
+  background: #eee9f8;
+  flex: 1;
+  overflow: hidden;
+}
+.progress span {
+  height: 100%;
+  display: block;
+  background: #7c3aed;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #21123b66;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+.dialog {
+  background: white;
+  border-radius: 22px;
+  padding: 24px;
+  width: min(560px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+}
+.dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+@media (max-width: 700px) {
+  .content {
+    width: calc(100% - 24px);
+    margin: 20px auto;
+  }
+  .topbar {
+    padding: 0 12px;
+  }
+  .auth-card {
+    padding: 24px;
+  }
+}
