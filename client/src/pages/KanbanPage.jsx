@@ -6,11 +6,12 @@ import KanbanBoard from "../components/task/KanbanBoard";
 import TaskForm from "../components/task/TaskForm";
 import * as tasksApi from "../api/tasks";
 import { startTask, submitTask, approveTask } from "../api/tasks";
+import TaskCelebration from "../components/task/TaskCelebration";
 import { CircleAlert, X, Plus } from "lucide-react";
 export default function KanbanPage({ projectId, navigate, readOnly = false }) {
   const q = useTasks(projectId);
   const members = useMembers(projectId), project = useProject(projectId), me = useAsync(() => getMyMember(projectId), [projectId]);
-  const [error, setError] = useState(""), [toast, setToast] = useState(null), [createOpen, setCreateOpen] = useState(false), dialogRef = useRef(null);
+  const [error, setError] = useState(""), [toast, setToast] = useState(null), [celebrating, setCelebrating] = useState(false), [createOpen, setCreateOpen] = useState(false), dialogRef = useRef(null);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(null), 4500);
@@ -33,12 +34,14 @@ export default function KanbanPage({ projectId, navigate, readOnly = false }) {
   }
   async function moveTask(id, target) {
     const task = q.data.find((x) => x.id === id); if (!task || target === task.trang_thai) return;
+    const completing = target === "hoan_thanh" && task.trang_thai === "cho_duyet" && manager;
     setError("");
-    try { if (target === "dang_lam" && task.trang_thai === "can_lam") await startTask(id); else if (target === "cho_duyet" && task.trang_thai === "dang_lam") await submitTask(id); else if (target === "hoan_thanh" && task.trang_thai === "cho_duyet" && manager) await approveTask(id); else throw new Error("Chuyển trạng thái này cần thao tác trong chi tiết task."); await q.reload(); }
+    try { if (target === "dang_lam" && task.trang_thai === "can_lam") await startTask(id); else if (target === "cho_duyet" && task.trang_thai === "dang_lam") await submitTask(id); else if (completing) await approveTask(id); else throw new Error("Chuyển trạng thái này cần thao tác trong chi tiết task."); if (completing) setCelebrating(true); await q.reload(); }
     catch (e) { if (target === "cho_duyet") setToast({ message: e.message }); else setError(e.message); }
   }
   return (
     <div className="kanban">
+      {celebrating && <TaskCelebration />}
       {toast && <div className="kb-toast" role="alert"><CircleAlert size={19} /><span>{toast.message}</span><button aria-label="Đóng thông báo" onClick={() => setToast(null)}><X size={17} /></button></div>}
       <h1>{project.data?.project?.ten || "Bảng công việc"}</h1>
       {viewOnly && <p className="card" role="note">Công việc đã kết thúc. Bảng này chỉ để xem. <button onClick={() => navigate(`/history/${projectId}/cancelled`)}>Xem task đã hủy</button></p>}

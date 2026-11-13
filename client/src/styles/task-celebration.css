@@ -1,0 +1,8 @@
+.task-celebration {
+  position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
+  pointer-events: none; background: rgba(24, 12, 44, 0.1);
+  animation: task-celebration-fade 6s ease forwards;
+}
+.task-celebration img { width: min(72vw, 440px); height: min(78vh, 780px); object-fit: contain; }
+@keyframes task-celebration-fade { 0%, 78% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .task-celebration { display: none; } }
