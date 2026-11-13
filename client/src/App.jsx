@@ -1,4 +1,4 @@
-import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen, Gauge } from "lucide-react";
 import { useEffect, useState } from "react";
 import { saveAvatar } from "./api/profile";
 import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
@@ -15,6 +15,7 @@ import ReportPage from "./pages/ReportPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import CancelledTasksPage from "./pages/CancelledTasksPage";
 import HistoryPage from "./pages/HistoryPage";
+import ProjectDashboardPage from "./pages/ProjectDashboardPage";
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const auth = useAuth(),
@@ -58,6 +59,8 @@ export default function App() {
     );
   else if (parts[0] === "project" && parts[2] === "manage")
     screen = <ManagePage projectId={projectId} navigate={navigate} />;
+  else if (parts[0] === "project" && parts[2] === "dashboard")
+    screen = <ProjectDashboardPage projectId={projectId} name={profile.data.ho_ten} navigate={navigate} />;
   else if (parts[0] === "project" && parts[2] === "report")
     screen = <ReportPage projectId={projectId} />;
   else if (parts[0] === "project" && parts[2] === "cancelled")
@@ -113,6 +116,7 @@ export default function App() {
         {inProject && (
           <>
             <div className="nav-label">Công việc đang mở</div>
+            {link(`${base}/dashboard`, Gauge, "Tổng quan", sub === "dashboard")}
             {link(base, LayoutGrid, "Bảng Kanban", !sub)}
             {link(`${base}/manage`, Users, "Thành viên trong nhóm", sub === "manage")}
             {link(`${base}/report`, BarChart3, "Báo cáo", sub === "report")}
