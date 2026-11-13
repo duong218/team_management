@@ -5,7 +5,9 @@ const day = (d) => vnDue(d, false);
 export default function TaskCard({ task, onOpen }) {
   const pct = Math.min(100, Math.max(0, Number(task.tien_do ?? 0))),
     people = (task.assignees || []).filter((a) => a.member?.ho_ten),
-    late = task.han_chot && task.trang_thai !== "hoan_thanh" && new Date(task.han_chot) < new Date();
+    // Chờ duyệt: so hạn với giờ GỬI duyệt (cap_nhat_luc, task bị khóa nên không đổi) — trưởng nhóm duyệt chậm không làm thành viên bị trễ.
+    ref = task.trang_thai === "cho_duyet" && task.cap_nhat_luc ? new Date(task.cap_nhat_luc) : new Date(),
+    late = task.han_chot && task.trang_thai !== "hoan_thanh" && new Date(task.han_chot) < ref;
   return (
     <article className="task-card" tabIndex="0" onClick={() => onOpen?.(task.id)}>
       <h3>{task.tieu_de || "Task"}</h3>
