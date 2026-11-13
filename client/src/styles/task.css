@@ -110,3 +110,12 @@
 .td .cm.mine .cm-bubble { border-radius: 18px 18px 6px 18px; background: var(--brand); color: #fff; }
 .td .cm-legacy { display: grid; gap: 4px; margin: 0; padding: 10px 14px; border-radius: 14px; background: #f4f4f5; color: var(--ink-2); font-size: 13.5px; white-space: pre-wrap; }
 .td .cm-legacy b { color: #52525b; font-size: 12px; }
+
+/* Quản lý checklist */
+.td .check-actions { display: flex; gap: 6px; margin-left: auto; }
+.td .check-actions .sm, .td .check-edit .sm, .td .check-delete .sm { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; min-width: 36px; padding: 4px 10px; }
+.td .check-actions .danger, .td .check-delete .danger { color: #9f1239; background: #fff1f2; }
+.td .check-edit { display: flex; flex: 1; gap: 6px; }
+.td .check-edit input { flex: 1; min-width: 0; min-height: 36px; padding: 6px 10px; }
+.td .check-delete { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 0 34px; padding: 10px 12px; border-radius: 14px; color: #881337; background: #fff1f2; }
+.td .check-delete span { flex: 1 1 220px; font-weight: 700; }
