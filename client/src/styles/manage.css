@@ -1,0 +1,101 @@
+/* Trang Quản lý — Claymorphism nhiều màu. Tiền tố .mg để thắng index.css/clay.css. Mỗi màu có nghĩa:
+   vàng = trưởng nhóm, tím = phó nhóm, xanh ngọc = thành viên, cam = chờ/cảnh báo, hồng = nguy hiểm. */
+.mg-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin: 20px 0 24px; }
+.mg-stat { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 24px; box-shadow: var(--clay); }
+.mg-stat b { display: block; font-size: 28px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
+.mg-stat span { font-size: 14px; font-weight: 700; }
+.mg-stat .mg-ico { width: 44px; height: 44px; }
+.mg-stat-violet { background: #f5f0ff; color: #4c1d95; }
+.mg-stat-teal { background: #ecfdf5; color: #134e4a; }
+.mg-stat-amber { background: #fff7ed; color: #7c2d12; }
+.mg-stat-rose { background: #fff1f2; color: #881337; }
+
+.mg-card h2 { display: flex; align-items: center; gap: 12px; }
+.mg-ico { flex: none; width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; box-shadow: var(--clay-sm); }
+.mg-ico-violet { background: #ddd6fe; color: #4c1d95; }
+.mg-ico-amber { background: #fed7aa; color: #7c2d12; }
+.mg-ico-teal { background: #99f6e4; color: #134e4a; }
+.mg-ico-sky { background: #bae6fd; color: #0c4a6e; }
+.mg-count { min-width: 28px; padding: 0 10px; border-radius: 999px; background: #ede9fe; color: #4c1d95; font-size: 14px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; }
+.mg-muted { color: var(--ink-2); }
+.mg-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.mg-btns button, .mg-actions button { display: inline-flex; align-items: center; gap: 8px; margin: 0 !important; }
+.mg-code-val { display: inline-block; padding: 12px 22px; border-radius: 16px; background: #f5f0ff; color: #4c1d95; font: 800 24px/1.2 ui-monospace, monospace; letter-spacing: 0.18em; box-shadow: inset 3px 3px 7px rgba(76, 29, 149, 0.14), inset -2px -2px 5px #fff; }
+
+/* Hàng thành viên / người chờ: phẳng bên trong thẻ, ngăn bằng đường mảnh; chỉ có viền màu theo vai trò */
+.mg-member { display: flex !important; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 0 16px 14px !important; border-left: 4px solid transparent; border-top: 1px solid var(--line) !important; }
+.mg-member:first-of-type { border-top: 0 !important; }
+.mg-truong_nhom { border-left-color: #f59e0b; }
+.mg-pho_nhom { border-left-color: #7c3aed; }
+.mg-thanh_vien { border-left-color: #14b8a6; }
+.mg-wait { border-left-color: #f97316; }
+.mg-left { opacity: 0.7; }
+.mg-member .avatar { width: 48px; height: 48px; font-size: 16px; }
+.mg-truong_nhom .avatar { background: #f59e0b; }
+.mg-thanh_vien .avatar { background: #0d9488; }
+.mg-wait .avatar { background: #ea580c; }
+.mg-info { flex: 1 1 260px; min-width: 0; }
+.mg-info p { margin: 2px 0 0 !important; font-size: 14px; color: var(--ink-2); }
+.mg-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.mg-role, .mg-flag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; box-shadow: var(--clay-sm); }
+.mg-role-truong_nhom { background: #fef08a; color: #713f12; }
+.mg-role-pho_nhom { background: #ddd6fe; color: #4c1d95; }
+.mg-role-thanh_vien { background: #99f6e4; color: #134e4a; }
+.mg-flag { background: #fed7aa; color: #7c2d12; }
+.mg-flag-muted { background: #e9d5ff; color: #581c87; }
+.mg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+/* Bộ chọn quyền: 2 lựa chọn — Phó nhóm / Thành viên */
+.mg-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 18px; background: #f1ecfb; box-shadow: inset 3px 3px 6px rgba(76, 29, 149, 0.12), inset -2px -2px 4px #fff; }
+.mg-seg button { min-height: 40px; padding: 6px 14px; border-radius: 14px; background: transparent; box-shadow: none; color: var(--ink-2); }
+.mg-seg button:hover:not(:disabled) { background: #fff; }
+.mg-seg button[aria-pressed="true"] { box-shadow: var(--clay-sm); opacity: 1; }
+.mg-seg .mg-seg-pho_nhom[aria-pressed="true"] { background: #ddd6fe; color: #4c1d95; }
+.mg-seg .mg-seg-thanh_vien[aria-pressed="true"] { background: #99f6e4; color: #134e4a; }
+.mg-seg button:disabled:not([aria-pressed="true"]) { opacity: 0.45; }
+
+@media (max-width: 640px) { .mg-actions { width: 100%; } .mg-seg { width: 100%; } .mg-seg button { flex: 1; justify-content: center; } }
+
+/* ---------- Tab Thành viên / Công việc ---------- */
+.mg-tabs { display: inline-flex; gap: 6px; padding: 6px; margin-bottom: 20px; border-radius: 22px; background: #f1ecfb; box-shadow: inset 3px 3px 6px rgba(76, 29, 149, 0.12), inset -2px -2px 4px #fff; }
+.mg-tabs button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 20px; border-radius: 16px; background: transparent; box-shadow: none; color: var(--ink-2); }
+.mg-tabs button[aria-selected="true"] { background: #fff; color: #4c1d95; box-shadow: var(--clay-sm); }
+.mg-count-warn { background: #fed7aa; color: #7c2d12; }
+
+/* ---------- Thẻ công việc ---------- */
+.mg-project-head { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.mg-ico-lg { width: 52px; height: 52px; border-radius: 18px; }
+.mg-project-title { flex: 1 1 260px; min-width: 0; }
+.mg-project-title h2 { margin: 0 0 6px; overflow-wrap: anywhere; }
+.mg-project-head > button { display: inline-flex; align-items: center; gap: 8px; }
+.mg-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.mg-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; box-shadow: var(--clay-sm); }
+.mg-chip-green { background: #bbf7d0; color: #14532d; }
+.mg-chip-sky { background: #bae6fd; color: #0c4a6e; }
+.mg-chip-amber { background: #fed7aa; color: #7c2d12; }
+.mg-chip-purple { background: #e9d5ff; color: #581c87; }
+.mg-chip-gray { background: #ece6fb; color: #5b4b7a; }
+.mg-project .mg-btns { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+
+/* ---------- Hộp thoại chỉnh sửa ---------- */
+.mg-dialog { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0; border: 0; border-radius: 24px; background: #fff; color: var(--ink); box-shadow: var(--clay), 0 24px 60px rgba(76, 29, 149, 0.3); }
+.mg-dialog::backdrop { background: rgba(46, 16, 101, 0.4); }
+.mg-dlg-body { display: flex; flex-direction: column; gap: 22px; padding: 24px; }
+.mg-dlg-body > header { display: flex; align-items: center; gap: 12px; }
+.mg-dlg-body > header h2 { flex: 1; margin: 0; }
+.mg-form { display: flex; flex-direction: column; gap: 12px; }
+.mg-form label { display: flex; flex-direction: column; gap: 6px; }
+.mg-form button { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.mg-code { padding-top: 20px; border-top: 1px solid var(--line); }
+.mg-code h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 18px; }
+.mg-row { display: flex; align-items: center; gap: 12px; padding-top: 20px; border-top: 1px solid var(--line); }
+.mg-row > div { flex: 1; }
+.mg-row p { margin: 0; font-size: 14px; }
+
+/* Công tắc bật/tắt */
+.mg-switch { position: relative; flex: none; width: 60px; min-height: 36px; height: 36px; padding: 0; border-radius: 999px; background: #d8d0ea; box-shadow: inset 3px 3px 6px rgba(76, 29, 149, 0.2), inset -2px -2px 4px #fff; }
+.mg-switch span { position: absolute; top: 4px; left: 4px; width: 28px; height: 28px; border-radius: 50%; background: #fff; box-shadow: var(--clay-sm); transition: transform 0.15s; }
+.mg-switch[aria-checked="true"] { background: #7c3aed; }
+.mg-switch[aria-checked="true"] span { transform: translateX(24px); }
+.mg-switch:active:not(:disabled) { transform: none; }
+@media (prefers-reduced-motion: reduce) { .mg-switch span { transition: none; } }

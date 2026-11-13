@@ -6,31 +6,56 @@ import * as projectApi from '../api/projects'
 import * as voteApi from '../api/votes'
 import * as reportApi from '../api/reports'
 import { ErrorBox, Skeleton, EmptyState } from '../components/common'
-import { KickDialog, WaitingRoom, JoinCodeBox } from '../components/members'
-import { Avatar } from '../components/common'
-import { ROLES } from '../lib/constants'
+import { KickDialog, WaitingRoom, MemberRow, ProjectSettingsDialog } from '../components/members'
+import { Users, DoorOpen, ArrowRightLeft, TriangleAlert, ClipboardList, Pencil, Flag, RotateCcw, LayoutDashboard, Vote, Check, Lock } from 'lucide-react'
+import '../styles/manage.css'
 export default function ManagePage({ projectId, navigate }) {
   const project = useProject(projectId), members = useMembers(projectId), waiting = useJoinRequests(projectId)
   const transfers = useAsync(() => transferApi.transferQueue(projectId), [projectId])
-  const [joinCode, setJoinCode] = useState(undefined), [selectedKick, setSelectedKick] = useState(null), [replaceFor, setReplaceFor] = useState(null), [error, setError] = useState(''), [busy, setBusy] = useState(false)
+  const [tab, setTab] = useState('members'), [editing, setEditing] = useState(false), [joinCode, setJoinCode] = useState(undefined), [selectedKick, setSelectedKick] = useState(null), [replaceFor, setReplaceFor] = useState(null), [error, setError] = useState(''), [busy, setBusy] = useState(false)
   const active = useMemo(() => members.data?.filter((m) => m.trang_thai === 'dang_tham_gia') || [], [members.data])
   const reload = async () => Promise.all([project.reload(), members.reload(), waiting.reload(), transfers.reload()])
-  async function act(fn) { setBusy(true); setError(''); try { await fn(); await reload() } catch (e) { setError(e.message) } finally { setBusy(false) } }
+  async function act(fn) { setBusy(true); setError(''); try { await fn(); await reload(); return true } catch (e) { setError(e.message); return false } finally { setBusy(false) } }
   async function loadCode(fn) { try { setJoinCode(await fn(projectId)) } catch (e) { setError(e.message) } }
   if (project.loading || members.loading || waiting.loading || transfers.loading) return <Skeleton />
   const err = project.error || members.error || waiting.error || transfers.error
   if (err) return <ErrorBox message={err} onRetry={reload} />
   const role = project.data?.vaiTro, manager = role === 'truong_nhom' || role === 'pho_nhom'
+  const pr = project.data?.project || {}, archived = pr.trang_thai === 'luu_tru', nTransfer = transfers.data?.length || 0
+  const closeProject = async () => { const first = await reportApi.closeProject(projectId, false); if (first.can_xac_nhan && window.confirm(`Còn ${first.canh_bao.length} cảnh báo. Kết thúc và chốt sổ?`)) await act(() => reportApi.closeProject(projectId, true)); else if (!first.can_xac_nhan) await reload() }
   return <section><h1>Quản lý công việc</h1><p className="eyebrow">Trên điện thoại, thao tác quản lý thuận tiện hơn khi dùng máy tính.</p>{error && <ErrorBox message={error} onRetry={() => setError('')} />}
+    {manager && <div className="mg-stats"><div className="mg-stat mg-stat-teal"><span className="mg-ico mg-ico-teal"><Users size={22} aria-hidden="true" /></span><div><b>{active.length}</b><span>Thành viên</span></div></div><div className="mg-stat mg-stat-amber"><span className="mg-ico mg-ico-amber"><DoorOpen size={22} aria-hidden="true" /></span><div><b>{waiting.data?.length || 0}</b><span>Đang chờ duyệt</span></div></div><div className="mg-stat mg-stat-violet"><span className="mg-ico mg-ico-violet"><ArrowRightLeft size={22} aria-hidden="true" /></span><div><b>{transfers.data?.length || 0}</b><span>Yêu cầu chuyển giao</span></div></div><div className="mg-stat mg-stat-rose"><span className="mg-ico" style={{ background: '#fecdd3', color: '#881337' }}><TriangleAlert size={22} aria-hidden="true" /></span><div><b>{active.filter((m) => m.chua_nhan_viec).length}</b><span>Chưa nhận việc</span></div></div></div>}
     {!manager ? <EmptyState title="Màn hình dành cho nhóm trưởng và phó nhóm">Vai trò hiện tại: {role || 'Thành viên'}.</EmptyState> : <>
-      <JoinCodeBox code={joinCode} onGet={() => loadCode(projectApi.getJoinCode)} onRotate={() => loadCode(projectApi.rotateJoinCode)} onDisable={() => act(async () => { await projectApi.disableJoinCode(projectId); setJoinCode(null) })} />
+      <div className="mg-tabs" role="tablist" aria-label="Khu vực quản lý">
+        <button role="tab" id="tab-members" aria-selected={tab === 'members'} aria-controls="panel-members" onClick={() => setTab('members')}><Users size={18} aria-hidden="true" />Thành viên<span className="mg-count">{active.length}</span></button>
+        <button role="tab" id="tab-work" aria-selected={tab === 'work'} aria-controls="panel-work" onClick={() => setTab('work')}><ClipboardList size={18} aria-hidden="true" />Công việc{nTransfer > 0 && <span className="mg-count mg-count-warn">{nTransfer}</span>}</button>
+      </div>
+      {tab === 'members' ? <div role="tabpanel" id="panel-members" aria-labelledby="tab-members">
       <WaitingRoom requests={waiting.data || []} onApprove={(r) => act(() => memberApi.approveJoin(r.request_id))} onReject={(r) => act(() => memberApi.rejectJoin(r.request_id))} onReplace={(r) => setReplaceFor(r)} />
       {replaceFor && <div className="card"><h2>Chọn dòng thành viên cũ để thay thế</h2><select id="replace-member" defaultValue=""><option value="" disabled>Chọn thành viên</option>{members.data.filter((m) => m.user_id !== replaceFor.user_id).map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten} · {m.vai_tro} · {m.trang_thai}</option>)}</select><button disabled={busy} onClick={() => { const id = document.getElementById('replace-member').value; if (id) act(() => memberApi.replaceMember(replaceFor.request_id, id)).then(() => setReplaceFor(null)) }}>Thay thế người cũ</button><button onClick={() => setReplaceFor(null)}>Hủy</button></div>}
-      <section className="card"><h2>Thành viên ({active.length})</h2>{!members.data.length ? <EmptyState /> : members.data.map((m) => <article className="member-row" key={m.member_id}><Avatar name={m.ho_ten} size="lg" /><div><strong>{m.ho_ten}</strong> <span className="chip role">{ROLES[m.vai_tro] || m.vai_tro}</span><p>{m.don_vi} · {m.task_dang_lam} task đang làm</p>{m.chua_nhan_viec && <span className="chip warn">Chưa nhận việc</span>}{m.so_lan_bi_loai > 0 && <p>Từng bị loại {m.so_lan_bi_loai} lần{m.so_lan_bi_loai >= 3 ? ' · Đã bị cấm' : ''}</p>}</div><div>{m.trang_thai === 'da_roi' ? <button className="primary" disabled={busy} onClick={() => act(() => memberApi.rejoinMember(m.member_id))}>Mời lại</button> : <><button disabled={busy || m.vai_tro === 'truong_nhom' || (role === 'pho_nhom' && m.vai_tro === 'pho_nhom')} onClick={() => act(() => memberApi.changeRole(m.member_id, role === 'truong_nhom' ? 'truong_nhom' : m.vai_tro === 'pho_nhom' ? 'thanh_vien' : 'pho_nhom'))}>{role === 'truong_nhom' ? 'Chuyển quyền trưởng nhóm' : m.vai_tro === 'pho_nhom' ? 'Đổi thành viên' : 'Đổi thành phó'}</button><button className="danger" disabled={busy || m.user_id === project.data.project?.tao_boi || (role === 'pho_nhom' && m.vai_tro === 'pho_nhom')} onClick={() => setSelectedKick(m)}>Loại khỏi nhóm</button></>}</div></article>)}</section>
+      <section className="card mg-card"><h2><span className="mg-ico mg-ico-teal"><Users size={18} aria-hidden="true" /></span>Thành viên <span className="mg-count">{active.length}</span></h2>{!members.data.length ? <EmptyState /> : members.data.map((m) => <MemberRow key={m.member_id} member={m} myRole={role} busy={busy} protectedKick={m.user_id === project.data.project?.tao_boi} onRole={(r) => act(() => memberApi.changeRole(m.member_id, r))} onKick={() => setSelectedKick(m)} onRejoin={() => act(() => memberApi.rejoinMember(m.member_id))} />)}</section>
       {selectedKick && <KickDialog member={selectedKick} onResolve={({ choice, reason }) => { if (choice === 'cancel') { setSelectedKick(null); return } const mode = choice === 'reset' ? 'xoa' : 'giu'; act(() => memberApi.kickMember(selectedKick.member_id, reason, mode)).then(() => setSelectedKick(null)) }} />}
-      <section className="card"><h2>Yêu cầu chuyển giao ({transfers.data?.length || 0})</h2>{transfers.data?.map((r) => <TransferRequest key={r.id} item={r} members={active} busy={busy} onResolve={(decision,member,type,reason,due) => act(() => transferApi.resolveTransfer(r.id, decision, member, type, reason, due))} />)}</section>
-      <section className="card"><h2>Cài đặt</h2><form onSubmit={(e) => { e.preventDefault(); const values = new FormData(e.currentTarget); act(() => projectApi.updateProjectSettings(projectId, values.get('name'), Number(values.get('maxMembers')))) }}><label>Tên công việc<input name="name" required minLength={2} maxLength={100} defaultValue={project.data.project?.ten || ''} /></label><label>Số thành viên tối đa<input name="maxMembers" type="number" required min="1" max="100" defaultValue={project.data.project?.max_members || 1} /></label><button className="primary" disabled={busy || project.data.project?.trang_thai === 'luu_tru'}>Lưu cài đặt</button></form><label><input type="checkbox" checked={!!project.data.project?.bat_binh_chon} onChange={(e) => act(() => voteApi.setVoting(projectId, e.target.checked))} /> Bật bình chọn nhận task</label><button className="danger" disabled={busy || project.data.project?.trang_thai === 'luu_tru'} onClick={async () => { const first = await reportApi.closeProject(projectId, false); if (first.can_xac_nhan && window.confirm(`Còn ${first.canh_bao.length} cảnh báo. Kết thúc và chốt sổ?`)) await act(() => reportApi.closeProject(projectId, true)); else if (!first.can_xac_nhan) await reload() }}>Kết thúc công việc</button>{role === 'truong_nhom' && project.data.project?.trang_thai === 'luu_tru' && <button disabled={busy} onClick={() => act(() => reportApi.reopenProject(projectId))}>Mở lại công việc</button>}</section>
-      <button className="primary" onClick={() => navigate(`/project/${projectId}`)}>Mở bảng Kanban</button>
+      </div> : <div role="tabpanel" id="panel-work" aria-labelledby="tab-work">
+        <section className="card mg-card mg-project">
+          <div className="mg-project-head">
+            <span className="mg-ico mg-ico-violet mg-ico-lg"><ClipboardList size={26} aria-hidden="true" /></span>
+            <div className="mg-project-title"><h2>{pr.ten}</h2>
+              <div className="mg-meta">
+                <span className={`mg-chip ${archived ? 'mg-chip-purple' : 'mg-chip-green'}`}>{archived ? <Lock size={14} aria-hidden="true" /> : <Check size={14} aria-hidden="true" />}{archived ? 'Đã lưu trữ' : 'Đang mở'}</span>
+                <span className="mg-chip mg-chip-sky"><Users size={14} aria-hidden="true" />{active.length}/{pr.max_members} thành viên</span>
+                <span className={`mg-chip ${pr.bat_binh_chon ? 'mg-chip-amber' : 'mg-chip-gray'}`}><Vote size={14} aria-hidden="true" />Bình chọn {pr.bat_binh_chon ? 'bật' : 'tắt'}</span>
+              </div></div>
+            <button onClick={() => setEditing(true)}><Pencil size={16} aria-hidden="true" />Chỉnh sửa</button>
+          </div>
+          <div className="mg-btns">
+            <button className="primary" onClick={() => navigate(`/project/${projectId}`)}><LayoutDashboard size={16} aria-hidden="true" />Mở bảng Kanban</button>
+            <button className="danger" disabled={busy || archived} onClick={closeProject}><Flag size={16} aria-hidden="true" />Kết thúc công việc</button>
+            {role === 'truong_nhom' && archived && <button disabled={busy} onClick={() => act(() => reportApi.reopenProject(projectId))}><RotateCcw size={16} aria-hidden="true" />Mở lại công việc</button>}
+          </div>
+        </section>
+      <section className="card mg-card"><h2><span className="mg-ico mg-ico-violet"><ArrowRightLeft size={18} aria-hidden="true" /></span>Yêu cầu chuyển giao <span className="mg-count">{nTransfer}</span></h2>{!nTransfer && <p className="mg-muted">Chưa có yêu cầu nào.</p>}{transfers.data?.map((r) => <TransferRequest key={r.id} item={r} members={active} busy={busy} onResolve={(decision,member,type,reason,due) => act(() => transferApi.resolveTransfer(r.id, decision, member, type, reason, due))} />)}</section>
+      </div>}
+      <ProjectSettingsDialog open={editing} onClose={() => setEditing(false)} project={pr} busy={busy} error={error} code={joinCode} onGetCode={() => loadCode(projectApi.getJoinCode)} onRotate={() => loadCode(projectApi.rotateJoinCode)} onDisable={() => act(async () => { await projectApi.disableJoinCode(projectId); setJoinCode(null) })} onSave={(name, max) => act(() => projectApi.updateProjectSettings(projectId, name, max)).then((ok) => ok && setEditing(false))} onVoting={(on) => act(() => voteApi.setVoting(projectId, on))} />
     </>}
   </section>
 }

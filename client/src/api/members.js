@@ -1,7 +1,7 @@
 import { supabase } from '../supabase'
-import { unwrap } from './shared'
-export const listMembers = (projectId) => supabase.rpc('ds_thanh_vien_quan_ly', { p_project: projectId }).then(({ data, error }) => { if (error) throw new Error(error.message || 'Không tải được danh sách thành viên.'); return data })
-export const listWaiting = (projectId) => supabase.rpc('phong_cho_full', { p_project: projectId }).then(({ data, error }) => { if (error) throw new Error(error.message || 'Không tải được phòng chờ.'); return data })
+import { unwrap, withAvatars } from './shared'
+export const listMembers = (projectId) => supabase.rpc('ds_thanh_vien_quan_ly', { p_project: projectId }).then(({ data, error }) => { if (error) throw new Error(error.message || 'Không tải được danh sách thành viên.'); return withAvatars(data) })
+export const listWaiting = (projectId) => supabase.rpc('phong_cho_full', { p_project: projectId }).then(({ data, error }) => { if (error) throw new Error(error.message || 'Không tải được phòng chờ.'); return withAvatars(data) })
 export const getMyMember = async (projectId) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error(authError?.message || 'Bạn chưa đăng nhập.')
