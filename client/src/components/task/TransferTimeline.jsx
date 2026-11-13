@@ -1,5 +1,6 @@
 import { vnTime } from "../../lib/format";
 export default function TransferTimeline({ items = [] }) {
+  if (!items.length) return <small className="td-empty">Chưa có lần chuyển người chính nào.</small>;
   return (
     <ol>
       {items.map((x) => (

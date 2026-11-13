@@ -1,21 +1,12 @@
-export default function ChecklistRow({
-  item,
-  hasOwnLink,
-  canAddLink,
-  onToggle,
-  onAddLink,
-}) {
+import { Link2 } from "lucide-react";
+export default function ChecklistRow({ item, hasOwnLink, canAddLink, onToggle, onAddLink }) {
   return (
-    <div className="check-row">
-      <input
-        type="checkbox"
-        checked={!!item.da_xong}
-        disabled={!hasOwnLink}
-        onChange={onToggle}
-      />
+    <div className={`check-row ${item.da_xong ? "done" : ""}`}>
+      <input type="checkbox" checked={!!item.da_xong} disabled={!hasOwnLink} onChange={onToggle} />
       <span>{item.noi_dung}</span>
+      {item.trang_thai_muc && item.trang_thai_muc !== "da_duyet" && <em className="chip warn">Chờ duyệt mục</em>}
       {canAddLink && !hasOwnLink && (
-        <button onClick={onAddLink}>Cần gắn minh chứng trước</button>
+        <button className="sm" onClick={onAddLink}><Link2 size={14} />Gắn minh chứng</button>
       )}
     </div>
   );
