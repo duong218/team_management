@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Clock3, Sparkles } from "lucide-react";
 import "../../styles/greeting-hero.css";
 
 /* Hero chào mừng có cảnh động theo giờ thật của máy:
@@ -21,6 +21,16 @@ const rnd = (i) => {
   return x - Math.floor(x);
 };
 const sw = (d) => ({ "--d": `${d}s` });
+
+function VietnamClock() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const time = new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).format(now);
+  return <div className="gh-clock" aria-label={`Giờ Việt Nam ${time}`}><Clock3 size={15} aria-hidden="true" /><span>Giờ Việt Nam</span><time dateTime={now.toISOString()}>{time}</time></div>;
+}
 
 /* ---------- Dữ liệu cảnh ---------- */
 const GRASS = Array.from({ length: 48 }, (_, i) => ({
@@ -227,6 +237,7 @@ export default function GreetingHero({ name = "bạn", subtitle, stats = [], hou
           <p className="gh-sub">{subtitle ?? SUB[phase]}</p>
         </div>
         {stats.length > 0 && (
+          <div className="gh-stat-panel">
           <ul className="gh-stats">
             {stats.map((s, i) => (
               <li key={s.label} className={`gh-stat tone-${s.tone || "violet"}`} style={{ "--i": i }}>
@@ -236,6 +247,8 @@ export default function GreetingHero({ name = "bạn", subtitle, stats = [], hou
               </li>
             ))}
           </ul>
+          <VietnamClock />
+          </div>
         )}
       </div>
     </section>

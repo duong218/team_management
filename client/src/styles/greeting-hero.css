@@ -64,6 +64,7 @@
   line-height: 1.5;
   color: var(--sub);
 }
+.gh-stat-panel { display: grid; gap: 10px; flex: none; }
 .gh-stats {
   display: flex;
   gap: 14px;
@@ -71,6 +72,9 @@
   padding: 0;
   list-style: none;
 }
+.gh-clock { display: inline-flex; align-items: center; justify-self: end; gap: 7px; width: max-content; padding: 6px 11px; border: 1px solid rgba(255,255,255,.65); border-radius: 999px; background: rgba(255,255,255,.82); color: #51447d; box-shadow: 0 4px 12px rgba(40,30,120,.12); font-size: 11px; font-weight: 650; backdrop-filter: blur(8px); }
+.gh-clock svg { color: #6d55d9; }
+.gh-clock time { color: #2c205f; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: .03em; }
 .gh-stat {
   display: grid;
   gap: 2px;
@@ -213,6 +217,7 @@
   .sun-pos:not(.is-low), .moon-pos { translate: 150px -58px; scale: 0.8; }
   .sun-pos.is-low { scale: 0.85; translate: 160px -10px; }
   .gh-stats { width: 100%; max-width: 560px; gap: 10px; }
+  .gh-stat-panel { width: 100%; max-width: 560px; }
   .gh-stat { flex: 1; width: auto; padding: 12px 14px; }
   .gh-stat strong { font-size: 26px; }
 }
@@ -225,6 +230,7 @@
   .wolf-flip { transform: scale(1.05, 1.05); }
   .gh-stat > span:last-child { font-size: 12px; }
   .gh-stat-ico { width: 34px; height: 34px; }
+  .gh-clock { padding: 5px 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
