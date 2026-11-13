@@ -32,9 +32,14 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   return (
     <div className="lg">
-      <span className="lg-blob lg-b1" aria-hidden="true" />
-      <span className="lg-blob lg-b2" aria-hidden="true" />
-      <span className="lg-blob lg-b3" aria-hidden="true" />
+      <div className="lg-bg" aria-hidden="true">
+        <span className="lg-blob lg-b1" />
+        <span className="lg-blob lg-b2" />
+        <span className="lg-blob lg-b3" />
+        <span className="lg-wave lg-w1" />
+        <span className="lg-wave lg-w2" />
+        <span className="lg-wave lg-w3" />
+      </div>
 
       <section className="lg-hero" aria-hidden="true">
         <h2>Gom việc cần làm, cả nhóm cùng về đích.</h2>
