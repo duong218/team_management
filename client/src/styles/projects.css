@@ -61,3 +61,5 @@
 @media (max-width: 1100px) { .pl-layout { grid-template-columns: 1fr; } .pl-layout.empty .pl-side { order: -1; } }
 @media (max-width: 760px) { .pl-hero { grid-template-columns: 1fr; padding: 22px; } .pl-stat { flex: 1; min-width: 0; padding: 12px 14px; } .pl-stat .pl-ico { display: none; } }
 @media (prefers-reduced-motion: reduce) { .pl-hero, .pl-card { animation: none; transition: none; } .pl-open svg { transition: none; } }
+/* Hero chào mừng (GreetingHero) nằm trên cùng trang, cách phần nội dung bên dưới */
+.pl > .gh { margin-bottom: 32px; }
