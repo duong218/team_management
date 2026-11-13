@@ -44,6 +44,7 @@
 .mg-flag { background: #fed7aa; color: #7c2d12; }
 .mg-flag-muted { background: #e9d5ff; color: #581c87; }
 .mg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.mg-actions .mg-remove-member { display: inline-grid; width: 42px; min-width: 42px; height: 42px; padding: 0; place-items: center; color: #b42318; background: #fff0f0; }
 
 /* Bộ chọn quyền: 2 lựa chọn — Phó nhóm / Thành viên */
 .mg-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 18px; background: #f1ecfb; box-shadow: inset 3px 3px 6px rgba(76, 29, 149, 0.12), inset -2px -2px 4px #fff; }

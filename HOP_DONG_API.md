@@ -25,7 +25,9 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - `listCancelledTasks(projectId:string)` → cột tasks như trên, lọc project_id và `trang_thai=da_huy`; thành viên dự án theo RLS; CancelledTasksPage.
 
 ## members.js
-- `listMembers(projectId:string)` → `members(id,project_id,user_id,vai_tro,trang_thai,ly_do_roi)`, lọc project_id; trưởng/phó theo thiết kế; ManagePage. Lưu ý cần view/hàm đã kiểm soát quyền để ghép tên/đơn vị/mã định danh; chưa có trong schema.
+- `listMembers(projectId:string)` → RPC `ds_thanh_vien_quan_ly(p_project:uuid)`, danh sách thành viên/ảnh/thống kê; trưởng/phó; ManagePage. Bỏ dòng có `an_khoi_danh_sach=true`.
+- `listCurrentMembers(projectId:string)` → đọc `members(id,user_id,vai_tro,trang_thai)` theo `project_id`, `trang_thai=dang_tham_gia`, `an_khoi_danh_sach=false`; sau đó `profiles(user_id,ho_ten,don_vi,anh_dai_dien)` theo user_id; thành viên hiện tại cùng nhóm; ManagePage chỉ đọc.
+- `removeMemberFromList(member:string)` → RPC `xoa_thanh_vien_khoi_danh_sach(p_member:uuid)`, kết quả void; chỉ trưởng/phó và chỉ thành viên đã rời. Đánh dấu ẩn khỏi danh sách, giữ lịch sử task; ManagePage. Lỗi: không có quyền, thành viên chưa rời hoặc SQL migration chưa chạy.
 
 ## checklist.js
 - `listChecklist(taskId:string)` → `task_checklist(id,task_id,noi_dung,trong_so,da_xong,trang_thai_muc,de_xuat_boi,nguoi_hoan_thanh,thoi_gian_hoan_thanh)`, lọc task_id; người được giao hoặc trưởng/phó theo RLS; TaskDetail.

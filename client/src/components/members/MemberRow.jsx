@@ -1,4 +1,4 @@
-import { Crown, ShieldCheck, User, UserMinus, UserPlus, TriangleAlert } from "lucide-react";
+import { Crown, ShieldCheck, User, UserMinus, UserPlus, TriangleAlert, X } from "lucide-react";
 import { Avatar } from "../common";
 import { ROLES } from "../../lib/constants";
 
@@ -6,7 +6,7 @@ const ICON = { truong_nhom: Crown, pho_nhom: ShieldCheck, thanh_vien: User };
 // Hai quyền có thể gán: phó nhóm / thành viên. Chuyển quyền trưởng nhóm không còn ở đây.
 const ASSIGNABLE = ["pho_nhom", "thanh_vien"];
 
-export default function MemberRow({ member: m, myRole, busy, protectedKick, onRole, onKick, onRejoin, readOnly = false }) {
+export default function MemberRow({ member: m, myRole, busy, protectedKick, onRole, onKick, onRejoin, onRemove, readOnly = false }) {
   const Icon = ICON[m.vai_tro] || User;
   const left = m.trang_thai === "da_roi";
   // Khớp luật server: trưởng nhóm không đổi được; phó nhóm không đổi được phó nhóm khác.
@@ -27,7 +27,10 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
       </div>
       {!readOnly && <div className="mg-actions">
         {left ? (
-          <button className="primary" disabled={busy} onClick={onRejoin}><UserPlus size={16} aria-hidden="true" />Mời lại</button>
+          <>
+            <button className="primary" disabled={busy} onClick={onRejoin}><UserPlus size={16} aria-hidden="true" />Mời lại</button>
+            <button className="danger mg-remove-member" type="button" title="Xóa khỏi danh sách" aria-label={`Xóa ${m.ho_ten} khỏi danh sách`} disabled={busy} onClick={onRemove}><X size={18} aria-hidden="true" /></button>
+          </>
         ) : (
           <>
             <div className="mg-seg" role="group" aria-label={`Vai trò của ${m.ho_ten}`}>
