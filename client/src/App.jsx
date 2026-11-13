@@ -48,6 +48,7 @@ export default function App() {
     screen = (
       <ProjectListPage
         user={auth.data}
+        name={profile.data.ho_ten}
         duocTao={profile.data.duoc_tao_cong_viec}
         navigate={navigate}
       />
