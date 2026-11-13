@@ -3,6 +3,8 @@
   position: fixed; inset: 0; overflow: auto; display: grid; place-items: center; padding: 24px;
   font-family: "Nunito Variable", "Be Vietnam Pro", system-ui, sans-serif; line-height: 1.5;
   color: #2e1065; background: #fafaff; color-scheme: light; text-align: left;
+  background-image: linear-gradient(rgba(250, 250, 255, 0.16), rgba(250, 250, 255, 0.16)), url("../assets/natural-landing-page.svg");
+  background-position: center; background-size: cover; background-attachment: fixed;
   --clay: 8px 10px 22px rgba(76, 29, 149, 0.12), inset 4px 4px 8px #fff, inset -4px -4px 10px rgba(76, 29, 149, 0.07);
 }
 .pf-blob { position: absolute; border-radius: 50%; filter: blur(50px); opacity: 0.6; pointer-events: none; animation: pf-drift 16s ease-in-out infinite alternate; }
@@ -15,7 +17,8 @@
 /* Thẻ xem trước, đổi theo lúc gõ */
 .pf-side {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-  padding: 36px 24px; text-align: center; background: linear-gradient(160deg, #ede9fe 0%, #fce7f3 55%, #ffedd5 100%);
+  padding: 36px 24px; text-align: center;
+  background: linear-gradient(160deg, rgba(237, 233, 254, 0.3), rgba(252, 231, 243, 0.26) 55%, rgba(255, 237, 213, 0.3)), url("../assets/background-full-screen-train.svg") center / cover no-repeat;
 }
 .pf-spark { position: absolute; top: 20px; right: 22px; color: #a78bfa; animation: pf-pop 3s ease-in-out infinite; }
 .pf-avatar {
