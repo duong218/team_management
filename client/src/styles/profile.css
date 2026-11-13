@@ -1,0 +1,77 @@
+/* Trang hoàn thiện hồ sơ — Claymorphism, nhiều màu có nghĩa. Tiền tố pf-. Luôn sáng. */
+.pf {
+  position: fixed; inset: 0; overflow: auto; display: grid; place-items: center; padding: 24px;
+  font-family: "Nunito Variable", "Be Vietnam Pro", system-ui, sans-serif; line-height: 1.5;
+  color: #2e1065; background: #fafaff; color-scheme: light; text-align: left;
+  --clay: 8px 10px 22px rgba(76, 29, 149, 0.12), inset 4px 4px 8px #fff, inset -4px -4px 10px rgba(76, 29, 149, 0.07);
+}
+.pf-blob { position: absolute; border-radius: 50%; filter: blur(50px); opacity: 0.6; pointer-events: none; animation: pf-drift 16s ease-in-out infinite alternate; }
+.pf-b1 { width: 360px; height: 360px; background: #fbcfe8; top: -100px; right: 8%; }
+.pf-b2 { width: 340px; height: 340px; background: #bae6fd; bottom: -120px; left: 6%; animation-delay: -7s; }
+.pf-panel {
+  position: relative; z-index: 1; display: grid; grid-template-columns: 280px 1fr; width: min(820px, 100%);
+  border-radius: 28px; background: #fff; box-shadow: var(--clay); overflow: hidden; animation: pf-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+/* Thẻ xem trước, đổi theo lúc gõ */
+.pf-side {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: 36px 24px; text-align: center; background: linear-gradient(160deg, #ede9fe 0%, #fce7f3 55%, #ffedd5 100%);
+}
+.pf-spark { position: absolute; top: 20px; right: 22px; color: #a78bfa; animation: pf-pop 3s ease-in-out infinite; }
+.pf-avatar {
+  display: grid; place-items: center; width: 96px; height: 96px; border-radius: 50%; margin-bottom: 4px;
+  overflow: hidden; background: #7c3aed; color: #fff; font-size: 34px; font-weight: 800;
+  box-shadow: 6px 8px 18px rgba(124, 58, 237, 0.35), inset 4px 4px 8px rgba(255, 255, 255, 0.4), inset -4px -4px 10px rgba(76, 29, 149, 0.3);
+}
+.pf-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.pf-name { font-size: 20px; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
+.pf-chip, .pf-ico { --bgc: #bae6fd; --fgc: #0c4a6e; background: var(--bgc); color: var(--fgc); }
+.pf-chip.sun, .pf-ico.sun { --bgc: #fef08a; --fgc: #713f12; }
+.pf-chip.mint, .pf-ico.mint { --bgc: #bbf7d0; --fgc: #14532d; }
+.pf-chip {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 12px; border-radius: 999px;
+  font-size: 14px; font-weight: 700; box-shadow: 3px 4px 8px rgba(76, 29, 149, 0.12), inset 2px 2px 4px rgba(255, 255, 255, 0.7);
+  overflow-wrap: anywhere; text-align: left;
+}
+.pf-side small { margin-top: 8px; font-size: 14px; color: #5b4b7a; }
+/* Form */
+.pf-main { padding: 40px 40px 36px; }
+.pf-main h1 { margin: 0 0 6px; font-size: 28px; font-weight: 800; line-height: 1.3; }
+.pf-main > p { margin: 0 0 24px; font-size: 16px; color: #5b4b7a; }
+.pf form { display: grid; gap: 16px; }
+.pf label { display: grid; gap: 6px; font-size: 14px; font-weight: 700; }
+.pf-field { position: relative; display: block; }
+.pf-ico {
+  position: absolute; left: 8px; top: 50%; transform: translateY(-50%); display: grid; place-items: center;
+  width: 32px; height: 32px; border-radius: 10px; box-shadow: 2px 3px 6px rgba(76, 29, 149, 0.14), inset 1px 1px 3px rgba(255, 255, 255, 0.7);
+}
+.pf input {
+  width: 100%; min-height: 48px; padding: 10px 14px 10px 52px; font: inherit; font-size: 16px; font-weight: 600; color: #2e1065;
+  border: 1.5px solid #7a5fb0; border-radius: 16px; background: #fff; box-shadow: inset 2px 2px 5px rgba(76, 29, 149, 0.08);
+}
+.pf input::placeholder { color: #6b5b8c; font-weight: 400; opacity: 0.85; }
+.pf input:focus { outline: 0; border-color: #7c3aed; box-shadow: 0 0 0 3px #fafaff, 0 0 0 6px #7c3aed; }
+.pf button {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border: 0; border-radius: 16px;
+  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+}
+.pf-save {
+  margin-top: 6px; background: #7c3aed; color: #fff;
+  box-shadow: 6px 8px 18px rgba(124, 58, 237, 0.35), inset 3px 3px 6px rgba(255, 255, 255, 0.35), inset -3px -3px 8px rgba(76, 29, 149, 0.3);
+}
+.pf-out { background: #fff; color: #2e1065; box-shadow: 4px 5px 12px rgba(76, 29, 149, 0.14), inset 2px 2px 5px rgba(255, 255, 255, 0.9), inset -2px -2px 6px rgba(76, 29, 149, 0.07); }
+.pf button:hover:not(:disabled) { transform: translateY(-2px); }
+.pf button:active:not(:disabled) { transform: translateY(2px); box-shadow: 3px 4px 8px rgba(76, 29, 149, 0.18), inset 3px 3px 8px rgba(76, 29, 149, 0.14); }
+.pf button:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fafaff, 0 0 0 6px #7c3aed; }
+.pf button:disabled { cursor: wait; opacity: 0.8; }
+@keyframes pf-drift { to { transform: translate(40px, 30px) scale(1.1); } }
+@keyframes pf-rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes pf-pop { 50% { transform: scale(1.25) rotate(12deg); } }
+@media (max-width: 720px) {
+  .pf-panel { grid-template-columns: 1fr; }
+  .pf-side { flex-direction: row; flex-wrap: wrap; padding: 20px; gap: 10px; justify-content: flex-start; text-align: left; }
+  .pf-side small, .pf-spark { display: none; }
+  .pf-avatar { width: 56px; height: 56px; font-size: 22px; margin: 0; }
+  .pf-main { padding: 28px 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .pf *, .pf { animation: none !important; transition: none !important; } }

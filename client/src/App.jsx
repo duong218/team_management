@@ -1,6 +1,7 @@
-import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, Bell } from "lucide-react";
+import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive } from "lucide-react";
 import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
 import { ErrorBox, Skeleton, Avatar } from "./components/common";
+import NotificationBell from "./components/common/NotificationBell";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProjectListPage from "./pages/ProjectListPage";
@@ -25,7 +26,10 @@ export default function App() {
       <ProfilePage
         user={auth.data}
         logout={auth.logout}
-        onSaved={profile.reload}
+        onSaved={() => {
+          navigate("/projects");
+          profile.reload();
+        }}
       />
     );
   const parts = route.split("/").filter(Boolean),
@@ -62,8 +66,7 @@ export default function App() {
         onRetry={() => navigate("/projects")}
       />
     );
-  const unread = notes.data?.filter((n) => !n.da_doc).length || 0,
-    inProject = parts[0] === "project",
+  const inProject = parts[0] === "project",
     base = `#/project/${projectId}`,
     sub = parts[2] || "",
     link = (href, Icon, label, active, extra) => (
@@ -90,13 +93,12 @@ export default function App() {
             {link(`${base}/cancelled`, Archive, "Task đã hủy", sub === "cancelled")}
           </>
         )}
-        <div className="nav-label">Khác</div>
-        {link("#/notifications", Bell, "Thông báo", route === "/notifications", unread > 0 && <span className="badge">{unread}</span>)}
       </aside>
       <div className="main">
         <header className="topbar">
+          <NotificationBell notes={notes} />
           <div className="user-chip">
-            <Avatar name={profile.data.ho_ten} />
+            <Avatar name={profile.data.ho_ten} src={auth.data.user_metadata?.avatar_url || auth.data.user_metadata?.picture} />
             {profile.data.ho_ten}
           </div>
           <button className="icon-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={auth.logout}>
