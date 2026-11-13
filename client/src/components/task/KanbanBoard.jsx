@@ -33,7 +33,7 @@ function DropColumn({ state, title, count, children }) {
     </div>
   );
 }
-function DragCard({ task, onOpen }) {
+function DragCard({ task, onOpen, locked }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: task.id });
   const style = {
@@ -43,12 +43,12 @@ function DragCard({ task, onOpen }) {
   return (
     <div ref={setNodeRef} style={style}>
       <div {...attributes} {...listeners} aria-label="Kéo thẻ">
-        <TaskCard task={task} onOpen={onOpen} />
+        <TaskCard task={task} onOpen={onOpen} locked={locked} />
       </div>
     </div>
   );
 }
-export default function KanbanBoard({ tasks = [], onMove, onOpen, hint }) {
+export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint }) {
   const [column, setColumn] = useState(STATE_ORDER[0]);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -116,6 +116,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, hint }) {
                       key={t.id}
                       task={t}
                       onOpen={onOpen}
+                      locked={canOpen ? !canOpen(t) : false}
                     />
                   ))}
               </DropColumn>

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useTasks, useMembers, useProject } from "../hooks";
+import { useAsync, useTasks, useMembers, useProject } from "../hooks";
+import { getMyMember } from "../api/members";
 import { ErrorBox, Skeleton, EmptyState } from "../components/common";
 import KanbanBoard from "../components/task/KanbanBoard";
 import TaskForm from "../components/task/TaskForm";
@@ -7,7 +8,7 @@ import * as tasksApi from "../api/tasks";
 import { startTask, submitTask, approveTask } from "../api/tasks";
 export default function KanbanPage({ projectId, navigate }) {
   const q = useTasks(projectId);
-  const members = useMembers(projectId), project = useProject(projectId);
+  const members = useMembers(projectId), project = useProject(projectId), me = useAsync(() => getMyMember(projectId), [projectId]);
   const [error, setError] = useState("");
   if (q.loading || members.loading || project.loading) return <Skeleton />;
   if (q.error || members.error || project.error) return <ErrorBox message={q.error || members.error || project.error} onRetry={() => Promise.all([q.reload(), members.reload(), project.reload()])} />;
@@ -33,6 +34,7 @@ export default function KanbanPage({ projectId, navigate }) {
         tasks={q.data}
         onMove={moveTask}
         onOpen={(id) => navigate(`/task/${id}`)}
+        canOpen={(t) => manager || !t.assignees?.length || !me.data?.id || t.assignees.some((a) => a.member_id === me.data.id)}
         hint={
           <ol className="kb-tip" aria-label="Hướng dẫn kéo thả">
             <li><i data-state="dang_lam">1</i><span>Task được giao cho bạn: kéo thẻ sang <b>Đang làm</b> để bắt đầu.</span></li>

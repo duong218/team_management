@@ -76,3 +76,10 @@
 .kanban .kb-tip b { color: var(--ink); font-weight: 800; }
 .kanban .kb-tip em { font-style: normal; font-weight: 800; color: var(--brand); }
 .kanban .kb-tip i { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-style: normal; font-size: 13px; font-weight: 800; background: var(--bgc); color: var(--fgc); box-shadow: 2px 3px 6px rgba(76, 29, 149, 0.14), inset 1px 1px 3px rgba(255, 255, 255, 0.8); }
+
+/* Task của người khác: khóa ngay trên thẻ */
+.kanban .task-card.locked { cursor: not-allowed; }
+.kanban .task-card.locked:hover { transform: none; }
+.kb-lock { position: absolute; top: 12px; right: 12px; color: #6b5b8c; }
+.kb-note { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 8px 12px; border-radius: 12px; background: #faf5ff; color: #581c87; font-size: 14px; font-weight: 600; }
+.kb-note svg { flex: none; margin-top: 3px; }
