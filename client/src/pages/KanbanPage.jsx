@@ -33,6 +33,13 @@ export default function KanbanPage({ projectId, navigate }) {
         tasks={q.data}
         onMove={moveTask}
         onOpen={(id) => navigate(`/task/${id}`)}
+        hint={
+          <ol className="kb-tip" aria-label="Hướng dẫn kéo thả">
+            <li><i data-state="dang_lam">1</i><span>Task được giao cho bạn: kéo thẻ sang <b>Đang làm</b> để bắt đầu.</span></li>
+            <li><i data-state="cho_duyet">2</i><span>Tick hết checklist (kèm link minh chứng), rồi kéo sang <b>Chờ duyệt</b> để gửi nhóm trưởng/phó duyệt.</span></li>
+            {manager && <li><i data-state="hoan_thanh">3</i><span><em>Nhóm trưởng/phó:</em> duyệt xong, kéo sang <b>Hoàn thành</b> để công nhận và cộng điểm cho thành viên. Không tự duyệt task của mình; muốn trả lại hoặc mở lại thì vào chi tiết task, nhập lý do.</span></li>}
+          </ol>
+        }
       />
     </div>
   );

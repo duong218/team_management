@@ -48,7 +48,7 @@ function DragCard({ task, onOpen }) {
     </div>
   );
 }
-export default function KanbanBoard({ tasks = [], onMove, onOpen }) {
+export default function KanbanBoard({ tasks = [], onMove, onOpen, hint }) {
   const [column, setColumn] = useState(STATE_ORDER[0]);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -83,6 +83,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen }) {
           </div>
         </div>
       )}
+      {hint}
       <div className="mobile-only">
         <label>
           Cột
