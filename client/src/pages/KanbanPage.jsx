@@ -6,12 +6,13 @@ import KanbanBoard from "../components/task/KanbanBoard";
 import TaskForm from "../components/task/TaskForm";
 import * as tasksApi from "../api/tasks";
 import { startTask, submitTask, approveTask } from "../api/tasks";
-export default function KanbanPage({ projectId, navigate }) {
+export default function KanbanPage({ projectId, navigate, readOnly = false }) {
   const q = useTasks(projectId);
   const members = useMembers(projectId), project = useProject(projectId), me = useAsync(() => getMyMember(projectId), [projectId]);
   const [error, setError] = useState("");
   if (q.loading || members.loading || project.loading) return <Skeleton />;
   if (q.error || members.error || project.error) return <ErrorBox message={q.error || members.error || project.error} onRetry={() => Promise.all([q.reload(), members.reload(), project.reload()])} />;
+  const viewOnly = readOnly || project.data?.project?.trang_thai === "luu_tru";
   const manager = ["truong_nhom", "pho_nhom"].includes(project.data?.vaiTro);
   async function createTask({ title, desc, due, checklist, assignee }) {
     setError("");
@@ -26,16 +27,18 @@ export default function KanbanPage({ projectId, navigate }) {
   }
   return (
     <div className="kanban">
-      <h1>Bảng công việc</h1>
+      <h1>{project.data?.project?.ten || "Bảng công việc"}</h1>
+      {viewOnly && <p className="card" role="note">Công việc đã kết thúc. Bảng này chỉ để xem. <button onClick={() => navigate(`/history/${projectId}/cancelled`)}>Xem task đã hủy</button></p>}
       {error && <ErrorBox message={error} onRetry={q.reload} />}
-      {manager && <details className="card"><summary>Tạo task</summary><TaskForm members={members.data?.filter((m) => m.trang_thai === "dang_tham_gia") || []} onSubmit={createTask} /></details>}
+      {manager && !viewOnly && <details className="card"><summary>Tạo task</summary><TaskForm members={members.data?.filter((m) => m.trang_thai === "dang_tham_gia") || []} onSubmit={createTask} /></details>}
       {!q.data?.length && <EmptyState title="Chưa có công việc">Tạo task để bắt đầu theo dõi.</EmptyState>}
       <KanbanBoard
         tasks={q.data}
-        onMove={moveTask}
-        onOpen={(id) => navigate(`/task/${id}`)}
+        onMove={viewOnly ? undefined : moveTask}
+        onOpen={(id) => navigate(viewOnly ? `/history/${projectId}/task/${id}` : `/task/${id}`)}
+        readOnly={viewOnly}
         canOpen={(t) => manager || !t.assignees?.length || !me.data?.id || t.assignees.some((a) => a.member_id === me.data.id)}
-        hint={
+        hint={viewOnly ? null :
           <ol className="kb-tip" aria-label="Hướng dẫn kéo thả">
             <li><i data-state="dang_lam">1</i><span>Task được giao cho bạn: kéo thẻ sang <b>Đang làm</b> để bắt đầu.</span></li>
             <li><i data-state="cho_duyet">2</i><span>Tick hết checklist (kèm link minh chứng), rồi kéo sang <b>Chờ duyệt</b> để gửi nhóm trưởng/phó duyệt.</span></li>

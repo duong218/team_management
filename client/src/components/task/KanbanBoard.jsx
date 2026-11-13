@@ -14,8 +14,8 @@ import { Circle, Loader, Eye, CircleCheck } from "lucide-react";
 import TaskCard from "./TaskCard";
 import "../../styles/kanban.css";
 const ICONS = { can_lam: Circle, dang_lam: Loader, cho_duyet: Eye, hoan_thanh: CircleCheck };
-function DropColumn({ state, title, count, children }) {
-  const { setNodeRef, isOver } = useDroppable({ id: state });
+function DropColumn({ state, title, count, children, readOnly }) {
+  const { setNodeRef, isOver } = useDroppable({ id: state, disabled: readOnly });
   return (
     <div
       ref={setNodeRef}
@@ -29,13 +29,13 @@ function DropColumn({ state, title, count, children }) {
         <span className="count">{count}</span>
       </h2>
       {children}
-      {!count && <div className="kb-empty">Kéo thẻ vào đây</div>}
+      {!count && <div className="kb-empty">{readOnly ? "Không có task" : "Kéo thẻ vào đây"}</div>}
     </div>
   );
 }
-function DragCard({ task, onOpen, locked }) {
+function DragCard({ task, onOpen, locked, readOnly }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id: task.id });
+    useDraggable({ id: task.id, disabled: readOnly });
   const style = {
     transform: CSS.Transform.toString(transform),
     opacity: isDragging ? 0.5 : 1,
@@ -48,7 +48,7 @@ function DragCard({ task, onOpen, locked }) {
     </div>
   );
 }
-export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint }) {
+export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint, readOnly = false }) {
   const [column, setColumn] = useState(STATE_ORDER[0]);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -108,7 +108,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint 
               className={column === state ? "mobile-column" : "desktop-column"}
               key={state}
             >
-              <DropColumn state={state} title={STATES[state]} count={tasks.filter((t) => t.trang_thai === state).length}>
+              <DropColumn state={state} title={STATES[state]} count={tasks.filter((t) => t.trang_thai === state).length} readOnly={readOnly}>
                 {tasks
                   .filter((t) => t.trang_thai === state)
                   .map((t) => (
@@ -117,6 +117,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint 
                       task={t}
                       onOpen={onOpen}
                       locked={canOpen ? !canOpen(t) : false}
+                      readOnly={readOnly}
                     />
                   ))}
               </DropColumn>

@@ -14,6 +14,7 @@ import ManagePage from "./pages/ManagePage";
 import ReportPage from "./pages/ReportPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import CancelledTasksPage from "./pages/CancelledTasksPage";
+import HistoryPage from "./pages/HistoryPage";
 export default function App() {
   const auth = useAuth(),
     profile = useProfile(auth.data?.id),
@@ -42,7 +43,8 @@ export default function App() {
     );
   const parts = route.split("/").filter(Boolean),
     projectId = parts[1],
-    taskId = parts[1];
+    taskId = parts[0] === "history" && parts[2] === "task" ? parts[3] : parts[1],
+    historyMode = parts[0] === "history";
   let screen;
   if (route === "/projects" || route === "/")
     screen = (
@@ -59,6 +61,14 @@ export default function App() {
     screen = <ReportPage projectId={projectId} />;
   else if (parts[0] === "project" && parts[2] === "cancelled")
     screen = <CancelledTasksPage projectId={projectId} />;
+  else if (route === "/history")
+    screen = <HistoryPage userId={auth.data.id} navigate={navigate} />;
+  else if (historyMode && parts[2] === "cancelled")
+    screen = <CancelledTasksPage projectId={projectId} readOnly navigate={navigate} />;
+  else if (historyMode && parts[2] === "task")
+    screen = <TaskDetailPage taskId={taskId} readOnly />;
+  else if (historyMode && projectId)
+    screen = <KanbanPage projectId={projectId} navigate={navigate} readOnly />;
   else if (parts[0] === "project")
     screen = (
       <>
@@ -93,6 +103,7 @@ export default function App() {
           <span>Ocean</span>
         </a>
         {link("#/projects", ListChecks, "Công việc của tôi", route === "/projects" || route === "/")}
+        {link("#/history", Archive, "Lịch sử công việc", historyMode)}
         {inProject && (
           <>
             <div className="nav-label">Công việc đang mở</div>
