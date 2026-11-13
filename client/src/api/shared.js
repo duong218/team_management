@@ -16,11 +16,11 @@ export async function rpc(
   if (error) throw new Error(error.message || fallback);
   return data;
 }
-// Gắn ảnh đại diện (ảnh Google đã lưu ở profiles) vào danh sách có user_id. Lỗi thì bỏ qua, vẫn hiện chữ cái.
+// Bổ sung ảnh đại diện cho dòng chưa có sẵn. Người chưa/không còn là thành viên bị RLS chặn đọc profiles, nên hàm SQL (14_*.sql) trả ảnh trực tiếp; đây chỉ là dự phòng.
 export async function withAvatars(rows) {
   const ids = [...new Set((rows || []).map((r) => r.user_id).filter(Boolean))];
   if (!ids.length) return rows;
   const { data } = await supabase.from("profiles").select("user_id,anh_dai_dien").in("user_id", ids);
   const by = new Map((data || []).map((p) => [p.user_id, p.anh_dai_dien]));
-  return rows.map((r) => ({ ...r, anh_dai_dien: by.get(r.user_id) || null }));
+  return rows.map((r) => ({ ...r, anh_dai_dien: r.anh_dai_dien || by.get(r.user_id) || null }));
 }
