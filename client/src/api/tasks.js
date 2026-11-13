@@ -3,6 +3,16 @@ import { unwrap, rpc } from './shared'
 import { toDueISO } from '../lib/format'
 const TASK_COLUMNS = 'id,project_id,trang_thai,trang_thai_truoc_huy,tien_do,han_chot,ly_do_huy,cap_nhat_luc,tao_luc'
 const DETAIL_COLUMNS = 'task_id,tieu_de,mo_ta,tep_dinh_kem,binh_luan'
+export const getMyTaskStats = async (userId, projectIds) => {
+  if (!projectIds.length) return { assigned: 0, waitingReview: 0 }
+  const members = await unwrap(supabase.from('members').select('id').eq('user_id', userId).eq('trang_thai', 'dang_tham_gia').in('project_id', projectIds))
+  if (!members.length) return { assigned: 0, waitingReview: 0 }
+  const assignments = await unwrap(supabase.from('task_assignees').select('task_id').eq('trang_thai', 'dang_lam').in('member_id', members.map((m) => m.id)))
+  const taskIds = [...new Set(assignments.map((a) => a.task_id))]
+  if (!taskIds.length) return { assigned: 0, waitingReview: 0 }
+  const tasks = await unwrap(supabase.from('tasks').select('id,trang_thai').in('id', taskIds).neq('trang_thai', 'da_huy'))
+  return { assigned: tasks.length, waitingReview: tasks.filter((t) => t.trang_thai === 'cho_duyet').length }
+}
 export const listTasks = async (projectId) => {
   const tasks = await unwrap(supabase.from('tasks').select(TASK_COLUMNS).eq('project_id', projectId).neq('trang_thai', 'da_huy').order('tao_luc'))
   if (!tasks.length) return []

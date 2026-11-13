@@ -19,6 +19,7 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - Lấy/đổi/tắt mã tham gia: RPC `lay_ma(p_project)`, `doi_ma(p_project)`, `tat_ma(p_project)` theo code cũ; trưởng/phó; ProjectListPage. Kết quả mã chỉ qua RPC.
 
 ## tasks.js
+- `getMyTaskStats(userId:string,projectIds:string[])` → `{assigned:number,waitingReview:number}`; đọc `members(id)` theo user_id, trạng thái `dang_tham_gia`, project_id; đọc `task_assignees(task_id)` theo member_id và trạng thái `dang_lam`; đọc `tasks(id,trang_thai)` theo id, bỏ `da_huy`; thành viên trong các công việc đang mở; ProjectListPage. Lỗi đọc được hiển thị kèm nút tải lại.
 - `listTasks(projectId:string)` → `tasks(id,project_id,trang_thai,trang_thai_truoc_huy,tien_do,han_chot,ly_do_huy,cap_nhat_luc)`, lọc project_id và bỏ `da_huy`; thành viên dự án theo RLS; Kanban.
 - `getTaskDetails(taskId:string)` → `task_details(task_id,tieu_de,mo_ta,tep_dinh_kem,binh_luan)`, lọc task_id; người được giao hoặc trưởng/phó; TaskDetail.
 - `getTask(id:string)` → ghép hai kết quả trên; cùng quyền; TaskDetail.
