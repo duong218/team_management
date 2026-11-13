@@ -366,7 +366,7 @@ begin
  if p_vai_tro not in('truong_nhom','pho_nhom','thanh_vien') then raise exception 'Vai trò không hợp lệ'; end if;
  select project_id,vai_tro into v_project,v_old from public.members where id=p_member and trang_thai='dang_tham_gia' for update;
  select id,vai_tro into v_actor,v_actor_role from public.members where project_id=v_project and user_id=auth.uid() and trang_thai='dang_tham_gia' for update;
- if v_project is null or v_actor is null or v_actor=v_member or not public.la_quan_ly(v_project) then raise exception 'Bạn không có quyền đổi vai trò'; end if;
+ if v_project is null or v_actor is null or v_actor=p_member or not public.la_quan_ly(v_project) then raise exception 'Bạn không có quyền đổi vai trò'; end if;
  if v_old='truong_nhom' and v_actor_role<>'truong_nhom' then raise exception 'Phó nhóm không được đổi vai trò nhóm trưởng'; end if;
  if v_old='pho_nhom' and v_actor_role<>'truong_nhom' then raise exception 'Chỉ nhóm trưởng được đổi vai trò phó nhóm'; end if;
  if p_vai_tro='truong_nhom' then

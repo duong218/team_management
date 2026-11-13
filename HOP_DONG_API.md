@@ -67,7 +67,7 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 
 ## members.js
 - `listMembers(project)` → `ds_thanh_vien_quan_ly(p_project)` trả member_id,user_id,ho_ten,don_vi,ma_dinh_danh,vai_tro,trang_thai,ly_do_roi,task_dang_lam,chua_nhan_viec,so_lan_bi_loai,task_do; trưởng/phó; ManagePage.
-- Ghi RPC: `duyet_moi(p_request)`, `duyet_thay_the(p_request,p_member)`, `tu_choi_yeu_cau(p_request)`, `loai_thanh_vien(p_member,p_ly_do,p_xu_ly_tien_do)`, `moi_lai(p_member)`, `doi_vai_tro(p_member,p_vai_tro)`, `roi_nhom(p_project)`; tất cả quyền/validation do SQL; ManagePage/project menu.
+- Ghi RPC: `duyet_moi(p_request)`, `duyet_thay_the(p_request,p_member)`, `tu_choi_yeu_cau(p_request)`, `loai_thanh_vien(p_member,p_ly_do,p_xu_ly_tien_do)`, `moi_lai(p_member)`, `doi_vai_tro(p_member,p_vai_tro)`, `roi_nhom(p_project)`; tất cả quyền/validation do SQL; ManagePage/project menu. `doi_vai_tro` được sửa biến kiểm tra người tự đổi vai trò trong `supabase/21_sua_doi_vai_tro.sql`.
 - `getMyMember(project)` đọc `members(id,project_id,user_id,vai_tro,trang_thai)` theo project_id/user_id/trạng thái; chính chủ; TaskDetail.
 
 ## transfers.js và votes.js
