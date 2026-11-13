@@ -6,6 +6,7 @@ import { largestRemainder, vnDue } from "../lib/format";
 import { ROLES, STATES } from "../lib/constants";
 import ReportCharts from "../components/report/ReportCharts";
 import "../styles/report.css";
+import ReportScene from "../components/report/ReportScene";
 
 const ST_ICON = { can_lam: Circle, dang_lam: Loader, cho_duyet: Eye, hoan_thanh: CircleCheck, da_huy: CircleX };
 const ROLE_ICON = { truong_nhom: Crown, pho_nhom: ShieldCheck, thanh_vien: User };
@@ -33,6 +34,7 @@ export default function ReportPage({ projectId }) {
   ];
   return <section className="rp">
     <header className="rp-head">
+      <ReportScene members={members} />
       <div><p className="eyebrow">Báo cáo</p><h1>{q.data.project?.ten}</h1></div>
       <button className="primary" onClick={() => downloadCsv("bao-cao-thanh-vien.csv", rows)}><Download size={16} aria-hidden="true" />Xuất CSV thành viên</button>
     </header>
