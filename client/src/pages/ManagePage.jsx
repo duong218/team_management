@@ -6,7 +6,7 @@ import * as projectApi from '../api/projects'
 import * as voteApi from '../api/votes'
 import * as reportApi from '../api/reports'
 import { ErrorBox, Skeleton, EmptyState } from '../components/common'
-import { KickDialog, WaitingRoom, MemberRow, ProjectSettingsDialog, CloseProjectDialog } from '../components/members'
+import { KickDialog, WaitingRoom, MemberRow, ProjectSettingsDialog, CloseProjectDialog, RemoveMemberDialog } from '../components/members'
 import { Users, DoorOpen, ArrowRightLeft, TriangleAlert, ClipboardList, Pencil, Flag, RotateCcw, LayoutDashboard, Vote, Check, Lock } from 'lucide-react'
 import '../styles/manage.css'
 export default function ManagePage({ projectId, navigate }) {
@@ -15,7 +15,7 @@ export default function ManagePage({ projectId, navigate }) {
   const members = useAsync(() => manager ? memberApi.listMembers(projectId) : memberApi.listCurrentMembers(projectId), [projectId, manager])
   const waiting = useJoinRequests(projectId, manager)
   const transfers = useAsync(() => manager ? transferApi.transferQueue(projectId) : Promise.resolve([]), [projectId, manager])
-  const [tab, setTab] = useState('members'), [editing, setEditing] = useState(false), [closing, setClosing] = useState(null), [joinCode, setJoinCode] = useState(undefined), [selectedKick, setSelectedKick] = useState(null), [replaceFor, setReplaceFor] = useState(null), [error, setError] = useState(''), [busy, setBusy] = useState(false)
+  const [tab, setTab] = useState('members'), [editing, setEditing] = useState(false), [closing, setClosing] = useState(null), [joinCode, setJoinCode] = useState(undefined), [selectedKick, setSelectedKick] = useState(null), [selectedRemove, setSelectedRemove] = useState(null), [replaceFor, setReplaceFor] = useState(null), [error, setError] = useState(''), [busy, setBusy] = useState(false)
   const active = useMemo(() => members.data?.filter((m) => m.trang_thai === 'dang_tham_gia') || [], [members.data])
   const reload = async () => Promise.all([project.reload(), members.reload(), waiting.reload(), transfers.reload()])
   async function act(fn) { setBusy(true); setError(''); try { await fn(); await reload(); return true } catch (e) { setError(e.message); return false } finally { setBusy(false) } }
@@ -40,8 +40,8 @@ export default function ManagePage({ projectId, navigate }) {
       {tab === 'members' ? <div role="tabpanel" id="panel-members" aria-labelledby="tab-members">
       <WaitingRoom requests={waiting.data || []} onApprove={(r) => act(() => memberApi.approveJoin(r.request_id))} onReject={(r) => act(() => memberApi.rejectJoin(r.request_id))} onReplace={(r) => setReplaceFor(r)} />
       {replaceFor && <div className="card"><h2>Chọn dòng thành viên cũ để thay thế</h2><select id="replace-member" defaultValue=""><option value="" disabled>Chọn thành viên</option>{members.data.filter((m) => m.user_id !== replaceFor.user_id).map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten} · {m.vai_tro} · {m.trang_thai}</option>)}</select><button disabled={busy} onClick={() => { const id = document.getElementById('replace-member').value; if (id) act(() => memberApi.replaceMember(replaceFor.request_id, id)).then(() => setReplaceFor(null)) }}>Thay thế người cũ</button><button onClick={() => setReplaceFor(null)}>Hủy</button></div>}
-      <section className="card mg-card"><h2><span className="mg-ico mg-ico-teal"><Users size={18} aria-hidden="true" /></span>Thành viên <span className="mg-count">{active.length}</span></h2>{!members.data.length ? <EmptyState /> : members.data.map((m) => <MemberRow key={m.member_id} member={m} myRole={role} busy={busy} protectedKick={m.user_id === project.data.project?.tao_boi} onRole={(r) => act(() => memberApi.changeRole(m.member_id, r))} onKick={() => setSelectedKick(m)} onRejoin={() => act(() => memberApi.rejoinMember(m.member_id))} onRemove={() => { if (window.confirm(`Xóa ${m.ho_ten} khỏi danh sách? Lịch sử task được giữ lại và người này sẽ không thể được mời lại.`)) act(() => memberApi.removeMemberFromList(m.member_id)) }} />)}</section>
-      {selectedKick && <KickDialog member={selectedKick} onResolve={({ choice, reason }) => { if (choice === 'cancel') { setSelectedKick(null); return } const mode = choice === 'reset' ? 'xoa' : 'giu'; act(() => memberApi.kickMember(selectedKick.member_id, reason, mode)).then(() => setSelectedKick(null)) }} />}
+      <section className="card mg-card"><h2><span className="mg-ico mg-ico-teal"><Users size={18} aria-hidden="true" /></span>Thành viên <span className="mg-count">{active.length}</span></h2>{!members.data.length ? <EmptyState /> : members.data.map((m) => <MemberRow key={m.member_id} member={m} myRole={role} busy={busy} protectedKick={m.user_id === project.data.project?.tao_boi} onRole={(r) => act(() => memberApi.changeRole(m.member_id, r))} onKick={() => setSelectedKick(m)} onRejoin={() => act(() => memberApi.rejoinMember(m.member_id))} onRemove={() => setSelectedRemove(m)} />)}</section>
+      {selectedKick && <KickDialog member={selectedKick} onResolve={async ({ choice, reason }) => { if (choice === 'cancel') { setSelectedKick(null); return } const mode = choice === 'reset' ? 'xoa' : 'giu'; if (await act(() => memberApi.kickMember(selectedKick.member_id, reason, mode))) setSelectedKick(null) }} />}
       </div> : <div role="tabpanel" id="panel-work" aria-labelledby="tab-work">
         <section className="card mg-card mg-project">
           <div className="mg-project-head">
@@ -63,6 +63,7 @@ export default function ManagePage({ projectId, navigate }) {
       <section className="card mg-card"><h2><span className="mg-ico mg-ico-violet"><ArrowRightLeft size={18} aria-hidden="true" /></span>Yêu cầu chuyển giao <span className="mg-count">{nTransfer}</span></h2>{!nTransfer && <p className="mg-muted">Chưa có yêu cầu nào.</p>}{transfers.data?.map((r) => <TransferRequest key={r.id} item={r} members={active} busy={busy} onResolve={(decision,member,type,reason,due) => act(() => transferApi.resolveTransfer(r.id, decision, member, type, reason, due))} />)}</section>
       </div>}
       <CloseProjectDialog open={!!closing} warnings={closing?.warnings} busy={busy} onCancel={() => setClosing(null)} onConfirm={() => closeProject(Array.isArray(closing?.warnings))} />
+      <RemoveMemberDialog open={!!selectedRemove} member={selectedRemove} busy={busy} onCancel={() => setSelectedRemove(null)} onConfirm={async () => { if (await act(() => memberApi.removeMemberFromList(selectedRemove.member_id))) setSelectedRemove(null) }} />
       <ProjectSettingsDialog open={editing} onClose={() => setEditing(false)} project={pr} busy={busy} error={error} code={joinCode} onGetCode={() => loadCode(projectApi.getJoinCode)} onRotate={() => loadCode(projectApi.rotateJoinCode)} onDisable={() => act(async () => { await projectApi.disableJoinCode(projectId); setJoinCode(null) })} onSave={(name, max) => act(() => projectApi.updateProjectSettings(projectId, name, max)).then((ok) => ok && setEditing(false))} onVoting={(on) => act(() => voteApi.setVoting(projectId, on))} />
     </>}
   </section>

@@ -1,4 +1,5 @@
 export { default as MemberList } from "./MemberList";
+export { default as RemoveMemberDialog } from "./RemoveMemberDialog";
 export { default as MemberRow } from "./MemberRow";
 export { default as KickDialog } from "./KickDialog";
 export { default as WaitingRoom } from "./WaitingRoom";
