@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAsync, useTasks, useMembers, useProject } from "../hooks";
 import { getMyMember } from "../api/members";
 import { ErrorBox, Skeleton, EmptyState } from "../components/common";
@@ -6,10 +6,16 @@ import KanbanBoard from "../components/task/KanbanBoard";
 import TaskForm from "../components/task/TaskForm";
 import * as tasksApi from "../api/tasks";
 import { startTask, submitTask, approveTask } from "../api/tasks";
+import { CircleAlert, X } from "lucide-react";
 export default function KanbanPage({ projectId, navigate, readOnly = false }) {
   const q = useTasks(projectId);
   const members = useMembers(projectId), project = useProject(projectId), me = useAsync(() => getMyMember(projectId), [projectId]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""), [toast, setToast] = useState(null);
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 4500);
+    return () => clearTimeout(timer);
+  }, [toast]);
   if (q.loading || members.loading || project.loading) return <Skeleton />;
   if (q.error || members.error || project.error) return <ErrorBox message={q.error || members.error || project.error} onRetry={() => Promise.all([q.reload(), members.reload(), project.reload()])} />;
   const viewOnly = readOnly || project.data?.project?.trang_thai === "luu_tru";
@@ -23,10 +29,11 @@ export default function KanbanPage({ projectId, navigate, readOnly = false }) {
     const task = q.data.find((x) => x.id === id); if (!task || target === task.trang_thai) return;
     setError("");
     try { if (target === "dang_lam" && task.trang_thai === "can_lam") await startTask(id); else if (target === "cho_duyet" && task.trang_thai === "dang_lam") await submitTask(id); else if (target === "hoan_thanh" && task.trang_thai === "cho_duyet" && manager) await approveTask(id); else throw new Error("Chuyển trạng thái này cần thao tác trong chi tiết task."); await q.reload(); }
-    catch (e) { setError(e.message); }
+    catch (e) { if (target === "cho_duyet") setToast({ message: e.message }); else setError(e.message); }
   }
   return (
     <div className="kanban">
+      {toast && <div className="kb-toast" role="alert"><CircleAlert size={19} /><span>{toast.message}</span><button aria-label="Đóng thông báo" onClick={() => setToast(null)}><X size={17} /></button></div>}
       <h1>{project.data?.project?.ten || "Bảng công việc"}</h1>
       {viewOnly && <p className="card" role="note">Công việc đã kết thúc. Bảng này chỉ để xem. <button onClick={() => navigate(`/history/${projectId}/cancelled`)}>Xem task đã hủy</button></p>}
       {error && <ErrorBox message={error} onRetry={q.reload} />}

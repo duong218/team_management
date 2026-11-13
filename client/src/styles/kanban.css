@@ -3,6 +3,11 @@
 .kanban [data-state="dang_lam"] { --tint: #fefce8; --acc: #eab308; --bgc: #fef08a; --fgc: #713f12; }
 .kanban [data-state="cho_duyet"] { --tint: #fff7ed; --acc: #f97316; --bgc: #fed7aa; --fgc: #7c2d12; }
 .kanban [data-state="hoan_thanh"] { --tint: #f0fdf4; --acc: #22c55e; --bgc: #bbf7d0; --fgc: #14532d; }
+.kb-toast { position: fixed; z-index: 1200; top: 92px; right: 24px; display: flex; align-items: center; gap: 12px; width: min(440px, calc(100vw - 32px)); padding: 14px 16px; border: 1px solid #fecdd3; border-radius: 18px; background: #fff1f2; color: #9f1239; box-shadow: 0 12px 32px rgba(76, 29, 149, .2); font-weight: 700; animation: kb-toast-in .2s ease-out; }
+.kb-toast > span { flex: 1; }
+.kb-toast > button { display: grid; place-items: center; width: 32px; height: 32px; min-height: 32px; padding: 0; border-radius: 50%; background: #fff; color: inherit; }
+@keyframes kb-toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 600px) { .kb-toast { top: 82px; right: 16px; } }
 /* Tạo task */
 .kanban > details.card { padding: 0; }
 .kanban > details.card > summary { display: flex; align-items: center; gap: 12px; padding: 16px 22px; cursor: pointer; list-style: none; font-size: 16px; font-weight: 800; }
