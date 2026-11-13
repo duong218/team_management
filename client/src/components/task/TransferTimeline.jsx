@@ -5,8 +5,7 @@ export default function TransferTimeline({ items = [] }) {
     <ol>
       {items.map((x) => (
         <li key={x.id}>
-          {vnTime(x.thoi_gian)} · {x.tu_member} → {x.den_member} ·{" "}
-          {x.tien_do_luc_chuyen}%
+          {vnTime(x.thoi_gian)} · {x.tu_ten || "Thành viên"} → {x.den_ten || "Thành viên"} · Tiến độ lúc chuyển: {Number(x.tien_do_luc_chuyen || 0).toFixed(2)}%
         </li>
       ))}
     </ol>
