@@ -99,3 +99,7 @@
 .mg-switch[aria-checked="true"] span { transform: translateX(24px); }
 .mg-switch:active:not(:disabled) { transform: none; }
 @media (prefers-reduced-motion: reduce) { .mg-switch span { transition: none; } }
+
+/* ---------- Hộp thoại kết thúc công việc ---------- */
+.mg-ico-rose { background: #fecdd3; color: #881337; }
+.mg-warn-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 16px 20px 16px 36px; border-radius: 16px; background: #fff1f2; color: #881337; font-weight: 600; }

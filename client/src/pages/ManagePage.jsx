@@ -6,13 +6,13 @@ import * as projectApi from '../api/projects'
 import * as voteApi from '../api/votes'
 import * as reportApi from '../api/reports'
 import { ErrorBox, Skeleton, EmptyState } from '../components/common'
-import { KickDialog, WaitingRoom, MemberRow, ProjectSettingsDialog } from '../components/members'
+import { KickDialog, WaitingRoom, MemberRow, ProjectSettingsDialog, CloseProjectDialog } from '../components/members'
 import { Users, DoorOpen, ArrowRightLeft, TriangleAlert, ClipboardList, Pencil, Flag, RotateCcw, LayoutDashboard, Vote, Check, Lock } from 'lucide-react'
 import '../styles/manage.css'
 export default function ManagePage({ projectId, navigate }) {
   const project = useProject(projectId), members = useMembers(projectId), waiting = useJoinRequests(projectId)
   const transfers = useAsync(() => transferApi.transferQueue(projectId), [projectId])
-  const [tab, setTab] = useState('members'), [editing, setEditing] = useState(false), [joinCode, setJoinCode] = useState(undefined), [selectedKick, setSelectedKick] = useState(null), [replaceFor, setReplaceFor] = useState(null), [error, setError] = useState(''), [busy, setBusy] = useState(false)
+  const [tab, setTab] = useState('members'), [editing, setEditing] = useState(false), [closing, setClosing] = useState(null), [joinCode, setJoinCode] = useState(undefined), [selectedKick, setSelectedKick] = useState(null), [replaceFor, setReplaceFor] = useState(null), [error, setError] = useState(''), [busy, setBusy] = useState(false)
   const active = useMemo(() => members.data?.filter((m) => m.trang_thai === 'dang_tham_gia') || [], [members.data])
   const reload = async () => Promise.all([project.reload(), members.reload(), waiting.reload(), transfers.reload()])
   async function act(fn) { setBusy(true); setError(''); try { await fn(); await reload(); return true } catch (e) { setError(e.message); return false } finally { setBusy(false) } }
@@ -22,7 +22,12 @@ export default function ManagePage({ projectId, navigate }) {
   if (err) return <ErrorBox message={err} onRetry={reload} />
   const role = project.data?.vaiTro, manager = role === 'truong_nhom' || role === 'pho_nhom'
   const pr = project.data?.project || {}, archived = pr.trang_thai === 'luu_tru', nTransfer = transfers.data?.length || 0
-  const closeProject = async () => { const first = await reportApi.closeProject(projectId, false); if (first.can_xac_nhan && window.confirm(`Còn ${first.canh_bao.length} cảnh báo. Kết thúc và chốt sổ?`)) await act(() => reportApi.closeProject(projectId, true)); else if (!first.can_xac_nhan) await reload() }
+  // Gọi lần đầu (confirm=false): sạch cảnh báo thì kết thúc luôn, còn cảnh báo thì server trả danh sách để người dùng xác nhận bước 2.
+  const closeProject = async (confirmed) => {
+    let warn = null
+    const ok = await act(async () => { const r = await reportApi.closeProject(projectId, confirmed); if (r?.can_xac_nhan) warn = r.canh_bao })
+    setClosing(ok && warn ? { warnings: warn } : null)
+  }
   return <section><h1>Quản lý công việc</h1><p className="eyebrow">Trên điện thoại, thao tác quản lý thuận tiện hơn khi dùng máy tính.</p>{error && <ErrorBox message={error} onRetry={() => setError('')} />}
     {manager && <div className="mg-stats"><div className="mg-stat mg-stat-teal"><span className="mg-ico mg-ico-teal"><Users size={22} aria-hidden="true" /></span><div><b>{active.length}</b><span>Thành viên</span></div></div><div className="mg-stat mg-stat-amber"><span className="mg-ico mg-ico-amber"><DoorOpen size={22} aria-hidden="true" /></span><div><b>{waiting.data?.length || 0}</b><span>Đang chờ duyệt</span></div></div><div className="mg-stat mg-stat-violet"><span className="mg-ico mg-ico-violet"><ArrowRightLeft size={22} aria-hidden="true" /></span><div><b>{transfers.data?.length || 0}</b><span>Yêu cầu chuyển giao</span></div></div><div className="mg-stat mg-stat-rose"><span className="mg-ico" style={{ background: '#fecdd3', color: '#881337' }}><TriangleAlert size={22} aria-hidden="true" /></span><div><b>{active.filter((m) => m.chua_nhan_viec).length}</b><span>Chưa nhận việc</span></div></div></div>}
     {!manager ? <EmptyState title="Màn hình dành cho nhóm trưởng và phó nhóm">Vai trò hiện tại: {role || 'Thành viên'}.</EmptyState> : <>
@@ -49,12 +54,13 @@ export default function ManagePage({ projectId, navigate }) {
           </div>
           <div className="mg-btns">
             <button className="primary" onClick={() => navigate(`/project/${projectId}`)}><LayoutDashboard size={16} aria-hidden="true" />Mở bảng Kanban</button>
-            <button className="danger" disabled={busy || archived} onClick={closeProject}><Flag size={16} aria-hidden="true" />Kết thúc công việc</button>
+            <button className="danger" disabled={busy || archived} onClick={() => setClosing({ warnings: null })}><Flag size={16} aria-hidden="true" />Kết thúc công việc</button>
             {role === 'truong_nhom' && archived && <button disabled={busy} onClick={() => act(() => reportApi.reopenProject(projectId))}><RotateCcw size={16} aria-hidden="true" />Mở lại công việc</button>}
           </div>
         </section>
       <section className="card mg-card"><h2><span className="mg-ico mg-ico-violet"><ArrowRightLeft size={18} aria-hidden="true" /></span>Yêu cầu chuyển giao <span className="mg-count">{nTransfer}</span></h2>{!nTransfer && <p className="mg-muted">Chưa có yêu cầu nào.</p>}{transfers.data?.map((r) => <TransferRequest key={r.id} item={r} members={active} busy={busy} onResolve={(decision,member,type,reason,due) => act(() => transferApi.resolveTransfer(r.id, decision, member, type, reason, due))} />)}</section>
       </div>}
+      <CloseProjectDialog open={!!closing} warnings={closing?.warnings} busy={busy} onCancel={() => setClosing(null)} onConfirm={() => closeProject(Array.isArray(closing?.warnings))} />
       <ProjectSettingsDialog open={editing} onClose={() => setEditing(false)} project={pr} busy={busy} error={error} code={joinCode} onGetCode={() => loadCode(projectApi.getJoinCode)} onRotate={() => loadCode(projectApi.rotateJoinCode)} onDisable={() => act(async () => { await projectApi.disableJoinCode(projectId); setJoinCode(null) })} onSave={(name, max) => act(() => projectApi.updateProjectSettings(projectId, name, max)).then((ok) => ok && setEditing(false))} onVoting={(on) => act(() => voteApi.setVoting(projectId, on))} />
     </>}
   </section>
