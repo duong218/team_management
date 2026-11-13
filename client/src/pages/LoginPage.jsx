@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { LayoutGrid, Bell, BarChart3, ShieldCheck, Circle, Loader, CircleCheck } from "lucide-react";
 import { useAuth } from "../hooks";
+import Logo from "../components/common/Logo";
 import { ErrorBox } from "../components/common";
+import "@fontsource-variable/nunito/wght.css";
 import "../styles/login.css";
 
 const FEATURES = [
-  "Bảng Kanban kéo thả, ai làm gì nhìn là biết",
-  "Thông báo ngay khi có thay đổi",
-  "Báo cáo tiến độ cả nhóm trong một trang",
+  [LayoutGrid, "sky", "Bảng Kanban: ai làm gì, nhìn là biết"],
+  [Bell, "sun", "Thông báo ngay khi có thay đổi"],
+  [BarChart3, "mint", "Báo cáo tiến độ cả nhóm trong một trang"],
 ];
-// [tên cột, [[tên việc, % tiến độ]]] — chỉ để minh hoạ
+// [loại màu, biểu tượng, chữ chip, tên việc, % tiến độ] — chỉ để minh hoạ
 const DEMO = [
-  ["Cần làm", [["Soạn đề cương", 0]]],
-  ["Đang làm", [["Thiết kế giao diện", 60]]],
-  ["Xong", [["Khảo sát nhu cầu", 100]]],
+  ["sky", Circle, "Cần làm", "Soạn đề cương", 0],
+  ["sun", Loader, "Đang làm", "Thiết kế giao diện", 60],
+  ["mint", CircleCheck, "Hoàn thành", "Khảo sát nhu cầu", 100],
 ];
 
 const GoogleG = () => (
@@ -30,28 +32,38 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   return (
     <div className="lg">
+      <span className="lg-blob lg-b1" aria-hidden="true" />
+      <span className="lg-blob lg-b2" aria-hidden="true" />
+      <span className="lg-blob lg-b3" aria-hidden="true" />
+
       <section className="lg-hero" aria-hidden="true">
         <h2>Gom việc cần làm, cả nhóm cùng về đích.</h2>
         <ul>
-          {FEATURES.map((f) => (
-            <li key={f}>
-              <Check strokeWidth={3} />
-              {f}
+          {FEATURES.map(([Icon, tone, text]) => (
+            <li key={text}>
+              <span className={`lg-ico ${tone}`}>
+                <Icon size={20} strokeWidth={2} />
+              </span>
+              {text}
             </li>
           ))}
         </ul>
-        <div className="lg-board">
-          {DEMO.map(([name, cards]) => (
-            <div className="lg-col" key={name}>
-              <b>{name}</b>
-              {cards.map(([title, p]) => (
-                <div className="lg-card" key={title}>
-                  {title}
-                  <span className="lg-bar">
-                    <i style={{ "--p": `${p}%` }} />
-                  </span>
-                </div>
-              ))}
+        <div className="lg-stack">
+          {DEMO.map(([tone, Icon, chip, title, p]) => (
+            <div className="lg-card" key={title}>
+              <div className="lg-card-top">
+                <b>{title}</b>
+                <span className={`lg-chip ${tone}`}>
+                  <Icon size={14} strokeWidth={2.2} />
+                  {chip}
+                </span>
+              </div>
+              <div className="lg-bar-row">
+                <span className="lg-bar">
+                  <i style={{ "--p": `${p}%` }} />
+                </span>
+                <span className="lg-pct">{p}%</span>
+              </div>
             </div>
           ))}
         </div>
@@ -59,9 +71,9 @@ export default function LoginPage() {
 
       <main className="lg-side">
         <div className="lg-panel">
-          <div className="lg-mark" aria-hidden="true">N</div>
-          <h1>Nhóm mình</h1>
-          <p>Gom việc cần làm, cùng theo dõi tiến độ.</p>
+          <Logo className="lg-mark" size={64} />
+          <h1>Chào mừng đến với Ocean!</h1>
+          <p>Đăng nhập để xem việc của mình và theo dõi tiến độ cả nhóm.</p>
           {error && <ErrorBox message={error} />}
           <button
             className="lg-btn"
@@ -75,10 +87,13 @@ export default function LoginPage() {
               }
             }}
           >
-            {busy ? <span className="lg-spin" aria-hidden="true" /> : <GoogleG />}
+            <span className="lg-g">{busy ? <span className="lg-spin" aria-hidden="true" /> : <GoogleG />}</span>
             {busy ? "Đang chuyển tới Google…" : "Đăng nhập bằng Google"}
           </button>
-          <p className="lg-note">Dùng tài khoản Google, không cần nhớ mật khẩu.</p>
+          <p className="lg-note">
+            <ShieldCheck size={16} aria-hidden="true" />
+            Dùng tài khoản Google, không cần nhớ mật khẩu.
+          </p>
         </div>
       </main>
     </div>

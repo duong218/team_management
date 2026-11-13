@@ -158,3 +158,5 @@ input[type="checkbox"] { min-height: 0; box-shadow: none; }
 .bell-empty { margin: 8px 12px 16px; color: var(--ink-2); }
 @keyframes bell-pop { from { opacity: 0; transform: translateY(-4px) scale(0.96); } }
 @media (prefers-reduced-motion: reduce) { .bell-count, .bell-pop { animation: none; } }
+
+.brand-logo { flex: none; filter: drop-shadow(4px 6px 8px rgba(99, 102, 241, 0.3)); }

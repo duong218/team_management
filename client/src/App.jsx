@@ -1,6 +1,7 @@
 import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive } from "lucide-react";
 import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
 import { ErrorBox, Skeleton, Avatar } from "./components/common";
+import Logo from "./components/common/Logo";
 import NotificationBell from "./components/common/NotificationBell";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -80,8 +81,8 @@ export default function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <a href="#/projects" className="brand">
-          <span className="brand-mark">N</span>
-          <span>Nhóm mình</span>
+          <Logo className="brand-logo" />
+          <span>Ocean</span>
         </a>
         {link("#/projects", ListChecks, "Công việc của tôi", route === "/projects" || route === "/")}
         {inProject && (
