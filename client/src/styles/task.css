@@ -56,6 +56,18 @@
 .td .td-links a { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 12px; border-radius: 99px; background: #e0f2fe; color: #075985; font-size: 13px; font-weight: 700; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .td .td-links a:hover { background: #bae6fd; }
 .td .checklist-item form { display: grid; gap: 10px; padding: 12px; border-radius: 16px; background: #fff; }
+.td .checklist-item .td-link-form { gap: 12px; padding: 16px; border: 1px solid #e9ddff; border-radius: 16px; background: linear-gradient(145deg, #fff, #faf7ff); }
+.td .td-link-form-head { display: flex; align-items: center; gap: 10px; }
+.td .td-link-form-head > span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; background: #ede9fe; color: #6d28d9; }
+.td .td-link-form-head div { display: grid; gap: 2px; }
+.td .td-link-form-head strong { color: var(--ink); font-size: 14px; }
+.td .td-link-form-head small, .td .td-link-form-actions small { color: var(--ink-3); font-size: 12px; font-weight: 500; }
+.td .td-link-form label { display: grid; gap: 6px; color: var(--ink-2); font-size: 13px; }
+.td .td-link-form input { width: 100%; min-width: 0; }
+.td .td-link-form .td-link-optional { color: var(--ink-3); font-size: 12px; font-weight: 500; }
+.td .td-link-form [role="alert"] { margin: 0; color: #be123c; font-size: 13px; }
+.td .td-link-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.td .td-link-form-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 16px; }
 .td .td-add { padding: 12px 16px; border-radius: 18px; background: #fff; box-shadow: var(--clay); }
 .td .td-add summary, .td details summary { cursor: pointer; font-weight: 800; color: #5b21b6; }
 .td .td-add form { display: flex; gap: 10px; margin-top: 12px; }
@@ -92,6 +104,7 @@
 .td .td-actions small { color: var(--ink-3); font-weight: 600; }
 
 @media (max-width: 1000px) { .td .td-grid { grid-template-columns: 1fr; } .td .td-side { position: static; } .td .td-top h1 { font-size: 24px; } }
+@media (max-width: 560px) { .td .td-link-form-actions { align-items: stretch; flex-direction: column; } .td .td-link-form-actions button { width: 100%; } }
 .td .checklist-item > button.sm { justify-self: start; }
 .td .td-card form > button { justify-self: end; min-width: 140px; }
 .td .td-empty { color: var(--ink-3); font-weight: 600; }

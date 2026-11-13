@@ -4,16 +4,19 @@ export function useAsync(loader, deps = []) {
     [loading, setLoading] = useState(true),
     [error, setError] = useState("");
   const loaderRef = useRef(loader);
+  const requestId = useRef(0);
   const depsKey = JSON.stringify(deps);
   const reload = useCallback(async () => {
+    const id = ++requestId.current;
     setLoading(true);
     setError("");
     try {
-      setData(await loaderRef.current());
+      const result = await loaderRef.current();
+      if (id === requestId.current) setData(result);
     } catch (e) {
-      setError(e?.message || "Đã có lỗi xảy ra.");
+      if (id === requestId.current) setError(e?.message || "Đã có lỗi xảy ra.");
     } finally {
-      setLoading(false);
+      if (id === requestId.current) setLoading(false);
     }
   }, []);
   useEffect(() => {
