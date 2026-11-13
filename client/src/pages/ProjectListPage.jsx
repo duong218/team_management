@@ -1,22 +1,24 @@
 import { useState } from 'react'
-import { submitCode } from '../api/joinRequests'
+import { submitCode, countWaiting } from '../api/joinRequests'
 import { createProject } from '../api/projects'
-import { useProjects, useJoinRequests } from '../hooks'
+import { useProjects, useJoinRequests, useAsync } from '../hooks'
 import { ErrorBox, Skeleton } from '../components/common'
 import { ROLES } from '../lib/constants'
 import { FolderKanban, Crown, Hourglass, Users, ArrowRight, KeyRound, FolderPlus } from 'lucide-react'
 import GreetingHero from '../components/dashboard/GreetingHero'
 import '../styles/projects.css'
 const TONES = ['violet', 'sky', 'mint', 'sun', 'peach', 'pink']
-const REQ = { dang_cho: 'Chờ duyệt', da_duyet: 'Đã duyệt', bi_tu_choi: 'Bị từ chối', tu_choi: 'Bị từ chối' }
+const REQ = { cho_duyet: 'Chờ duyệt', da_duyet: 'Đã duyệt', tu_choi: 'Bị từ chối', da_thay_the: 'Đã được thay thế', het_han: 'Hết hạn' }
 const STEPS = ['Nhập mã công việc do nhóm trưởng gửi', 'Chờ nhóm trưởng hoặc phó duyệt', 'Nhận task và cập nhật tiến độ']
 export default function ProjectListPage({ user, name, duocTao, navigate }) {
   const projects = useProjects(user.id), requests = useJoinRequests(), [pname, setName] = useState(''), [max, setMax] = useState(20), [formError, setFormError] = useState(''), [code, setCode] = useState(''), [joinError, setJoinError] = useState(''), [joinStatus, setJoinStatus] = useState('')
   async function submit(e) { e.preventDefault(); setFormError(''); try { await createProject(pname, Number(max)); setName(''); await projects.reload() } catch (x) { setFormError(x.message) } }
   async function join(e) { e.preventDefault(); setJoinError(''); setJoinStatus(''); try { const result = await submitCode(code.trim()); setJoinStatus(({ da_gui: 'Đã gửi yêu cầu, chờ nhóm trưởng/phó duyệt.', dang_cho: 'Yêu cầu của bạn đang chờ duyệt.', da_o_trong_nhom: 'Bạn đã ở trong công việc này.', ma_sai: 'Mã không đúng hoặc đã tắt.', tam_khoa: 'Bạn nhập sai mã quá nhiều lần. Hãy thử lại sau.', bi_chan: 'Bạn chưa thể gửi yêu cầu vào công việc này.', nhom_day: 'Công việc đã đủ người.' })[result] || 'Không thể tham gia công việc.'); if (result === 'da_o_trong_nhom') await projects.reload(); setCode(''); await requests.reload() } catch (x) { setJoinError(x.message) } }
-  const list = projects.data || [], manageCount = list.filter((p) => p.vai_tro !== 'thanh_vien').length, pending = (requests.data || []).filter((r) => r.trang_thai === 'dang_cho').length
+  const list = projects.data || [], managed = list.filter((p) => p.vai_tro !== 'thanh_vien'), manageIds = managed.map((p) => p.id)
+  // Số người đang chờ vào các nhóm mà bạn là trưởng/phó (thành viên thường không có số này)
+  const waiting = useAsync(() => (manageIds.length ? countWaiting(manageIds) : Promise.resolve(0)), [manageIds.join(',')])
   const first = (name || user.user_metadata?.full_name || '').trim().split(/\s+/).slice(-1)[0] || 'bạn'
-  const stats = [['blue', FolderKanban, list.length, 'Công việc của bạn'], ['yellow', Crown, manageCount, 'Bạn quản lý'], ['orange', Hourglass, pending, 'Yêu cầu đang chờ']].map(([tone, Icon, value, label]) => ({ tone, icon: <Icon />, value, label }))
+  const stats = [['blue', FolderKanban, list.length, 'Công việc bạn tham gia'], ...(managed.length ? [['yellow', Crown, managed.length, 'Công việc bạn quản lý'], ['orange', Hourglass, waiting.data ?? 0, 'Người chờ bạn duyệt']] : [])].map(([tone, Icon, value, label]) => ({ tone, icon: <Icon />, value, label }))
   const subtitle = duocTao ? 'Chọn một công việc để bắt đầu, hoặc tạo công việc mới cho nhóm.' : list.length ? 'Mở công việc nhóm bạn đang tham gia, hoặc nhập mã để xin vào nhóm mới.' : 'Nhập mã do nhóm trưởng gửi để xin vào công việc của nhóm.'
   return <section className="pl">
     <GreetingHero name={first} subtitle={subtitle} stats={stats} />
