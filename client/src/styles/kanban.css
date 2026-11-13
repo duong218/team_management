@@ -1,0 +1,52 @@
+/* Bảng Kanban — Claymorphism. Dùng .kanban ở đầu selector để thắng index.css/clay.css (file này được nạp trước chúng). */
+.kanban [data-state] { --tint: #f0f9ff; --acc: #0ea5e9; --bgc: #bae6fd; --fgc: #0c4a6e; }
+.kanban [data-state="dang_lam"] { --tint: #fefce8; --acc: #eab308; --bgc: #fef08a; --fgc: #713f12; }
+.kanban [data-state="cho_duyet"] { --tint: #fff7ed; --acc: #f97316; --bgc: #fed7aa; --fgc: #7c2d12; }
+.kanban [data-state="hoan_thanh"] { --tint: #f0fdf4; --acc: #22c55e; --bgc: #bbf7d0; --fgc: #14532d; }
+/* Tạo task */
+.kanban > details.card { padding: 0; }
+.kanban > details.card > summary { display: flex; align-items: center; gap: 12px; padding: 16px 22px; cursor: pointer; list-style: none; font-size: 16px; font-weight: 800; }
+.kanban > details.card > summary::-webkit-details-marker { display: none; }
+.kanban > details.card > summary::before { content: "+"; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 12px; background: #7c3aed; color: #fff; font-size: 22px; line-height: 1; box-shadow: 3px 4px 9px rgba(124, 58, 237, 0.35), inset 2px 2px 4px rgba(255, 255, 255, 0.4), inset -2px -2px 5px rgba(76, 29, 149, 0.3); transition: transform 0.2s; }
+.kanban > details.card[open] > summary::before { transform: rotate(45deg); }
+.kanban > details.card > :not(summary) { margin: 0 22px 22px; }
+/* Thanh tổng quan */
+.kb-sum { margin: 20px 0 4px; padding: 18px 22px; border-radius: 24px; background: #fff; box-shadow: 8px 10px 22px rgba(76, 29, 149, 0.12), inset 4px 4px 8px #fff, inset -4px -4px 10px rgba(76, 29, 149, 0.07); }
+.kb-sum-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; font-size: 16px; }
+.kb-sum-top span { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: #7c3aed; }
+.kb-seg { display: flex; gap: 4px; height: 14px; border-radius: 999px; background: #ece6fb; box-shadow: inset 2px 2px 4px rgba(76, 29, 149, 0.18); padding: 2px; overflow: hidden; }
+.kb-seg i { flex-basis: 0; min-width: 14px; border-radius: 999px; background: var(--acc); transform-origin: left; animation: kb-grow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.kb-legend { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 12px; }
+.kb-legend span { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; background: var(--bgc); color: var(--fgc); }
+.kb-legend b { font-variant-numeric: tabular-nums; }
+/* Cột */
+.kanban .kanban-grid { gap: 18px; align-items: stretch; }
+.kanban .kanban-grid .card { padding: 14px; border-radius: 24px; background: var(--tint); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--acc) 25%, transparent); min-height: 260px; }
+.kanban .kanban-grid .card[data-over="true"] { background: var(--tint); box-shadow: inset 0 0 0 2.5px var(--acc), 0 0 0 5px color-mix(in srgb, var(--acc) 22%, transparent); }
+.kanban .kanban-grid .card > h2 { display: flex; align-items: center; gap: 10px; padding: 2px 2px 14px; font-size: 14px; color: var(--fgc); }
+.kanban .kanban-grid .card > h2::before { display: none; }
+.kb-ico { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--bgc); color: var(--fgc); box-shadow: 2px 3px 6px rgba(76, 29, 149, 0.14), inset 1px 1px 3px rgba(255, 255, 255, 0.7); }
+.kanban .kanban-grid .card > h2 .count { min-width: 28px; text-align: center; padding: 2px 8px; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--fgc); background: #fff; }
+.kb-empty { display: grid; place-items: center; min-height: 96px; border: 2px dashed color-mix(in srgb, var(--acc) 45%, transparent); border-radius: 18px; font-size: 14px; font-weight: 600; color: var(--fgc); opacity: 0.75; }
+.kanban .kanban-grid .card > div { margin-bottom: 12px; cursor: grab; }
+.kanban .kanban-grid .card > div:active { cursor: grabbing; }
+/* Thẻ task */
+.kanban .task-card { position: relative; display: grid; gap: 10px; padding: 14px 14px 14px 20px; border-radius: 18px; background: #fff; overflow: hidden; cursor: pointer; box-shadow: 4px 5px 12px rgba(76, 29, 149, 0.14), inset 2px 2px 5px rgba(255, 255, 255, 0.9), inset -2px -2px 6px rgba(76, 29, 149, 0.06); transition: transform 0.15s, box-shadow 0.15s; }
+.kanban .task-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--acc); }
+.kanban .task-card:hover { transform: translateY(-2px); box-shadow: 6px 10px 18px rgba(76, 29, 149, 0.18), inset 2px 2px 5px rgba(255, 255, 255, 0.9); }
+.kanban .task-card:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fafaff, 0 0 0 6px #7c3aed; }
+.kanban .task-card h3 { margin: 0; font-size: 16px; font-weight: 800; line-height: 1.35; overflow-wrap: anywhere; }
+.kb-who { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; color: #5b4b7a; }
+.kb-avatars { display: flex; }
+.kb-avatars .avatar { width: 26px; height: 26px; font-size: 14px; margin-left: -6px; border: 2px solid #fff; }
+.kb-avatars .avatar:first-child { margin-left: 0; }
+.kb-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.kb-none { display: inline-flex; align-items: center; gap: 5px; font-weight: 500; }
+.kb-prog { display: flex; align-items: center; gap: 10px; }
+.kb-prog .progress { flex: 1; height: 8px; }
+.kanban .task-card .progress span { background: var(--acc); }
+.kb-prog b { min-width: 3em; text-align: right; font-size: 14px; font-variant-numeric: tabular-nums; }
+.kb-due { justify-self: start; display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-size: 14px; font-weight: 700; background: #ece6fb; color: #4c1d95; }
+.kb-due.late { background: #fecdd3; color: #881337; }
+@keyframes kb-grow { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .kb-seg i { animation: none; } .kanban .task-card, .kanban > details.card > summary::before { transition: none; } }

@@ -1,5 +1,6 @@
 import { supabase } from '../supabase'
 import { unwrap, rpc } from './shared'
+import { toDueISO } from '../lib/format'
 const TASK_COLUMNS = 'id,project_id,trang_thai,trang_thai_truoc_huy,tien_do,han_chot,ly_do_huy,cap_nhat_luc,tao_luc'
 const DETAIL_COLUMNS = 'task_id,tieu_de,mo_ta,tep_dinh_kem,binh_luan'
 export const listTasks = async (projectId) => {
@@ -13,7 +14,7 @@ export const listTasks = async (projectId) => {
   const detailMap = Object.fromEntries(details.map((x) => [x.task_id, x]))
   const memberIds = new Set(assignments.map((x) => x.member_id))
   const assignedMembers = members.filter((m) => memberIds.has(m.id))
-  const profiles = assignedMembers.length ? await unwrap(supabase.from('profiles').select('user_id,ho_ten').in('user_id', assignedMembers.map((m) => m.user_id))) : []
+  const profiles = assignedMembers.length ? await unwrap(supabase.from('profiles').select('user_id,ho_ten,anh_dai_dien').in('user_id', assignedMembers.map((m) => m.user_id))) : []
   const people = Object.fromEntries(assignedMembers.map((m) => [m.id, { ...m, ...profiles.find((p) => p.user_id === m.user_id) }]))
   return tasks.map((t) => ({ ...t, ...detailMap[t.id], assignees: assignments.filter((a) => a.task_id === t.id).map((a) => ({ ...a, member: people[a.member_id] })) }))
 }
@@ -24,7 +25,7 @@ export const getTask = async (id) => {
   const detail = await getTaskDetails(id)
   const assignees = await unwrap(supabase.from('task_assignees').select('task_id,member_id,vai_tro_trong_task,trang_thai,giao_boi,thoi_gian_giao').eq('task_id', id))
   const people = assignees.length ? await unwrap(supabase.from('members').select('id,user_id,vai_tro,trang_thai').eq('project_id', task.project_id).in('id', assignees.map((a) => a.member_id))) : []
-  const profiles = people.length ? await unwrap(supabase.from('profiles').select('user_id,ho_ten,don_vi').in('user_id', people.map((p) => p.user_id))) : []
+  const profiles = people.length ? await unwrap(supabase.from('profiles').select('user_id,ho_ten,don_vi,anh_dai_dien').in('user_id', people.map((p) => p.user_id))) : []
   const profileMap = Object.fromEntries(profiles.map((p) => [p.user_id, p]))
   const memberMap = Object.fromEntries(people.map((m) => [m.id, { ...m, ...profileMap[m.user_id] }]))
   const checklist = detail ? await rpc('danh_sach_checklist', { p_task: id }) : []
@@ -43,9 +44,9 @@ export const listCancelledTasks = async (projectId) => {
   const byId = Object.fromEntries(details.map((d) => [d.task_id, d]))
   return tasks.map((t) => ({ ...t, ...byId[t.id] }))
 }
-export const createTask = (project, title, description, dueDate, checklist) => rpc('tao_task', { p_project: project, p_tieu_de: title, p_mo_ta: description, p_han_chot: dueDate || null, p_checklist: checklist })
-export const createAssignedTask = (project, title, description, dueDate, checklist, member) => rpc('tao_task_giao', { p_project: project, p_tieu_de: title, p_mo_ta: description, p_han_chot: dueDate || null, p_checklist: checklist, p_member: member })
-export const updateTask = (id, title, description, dueDate, dueReason, updatedAt) => rpc('cap_nhat_task', { p_task: id, p_tieu_de: title, p_mo_ta: description, p_han_chot: dueDate || null, p_ly_do_han: dueReason || null, p_cap_nhat_luc: updatedAt })
+export const createTask = (project, title, description, dueDate, checklist) => rpc('tao_task', { p_project: project, p_tieu_de: title, p_mo_ta: description, p_han_chot: toDueISO(dueDate), p_checklist: checklist })
+export const createAssignedTask = (project, title, description, dueDate, checklist, member) => rpc('tao_task_giao', { p_project: project, p_tieu_de: title, p_mo_ta: description, p_han_chot: toDueISO(dueDate), p_checklist: checklist, p_member: member })
+export const updateTask = (id, title, description, dueDate, dueReason, updatedAt) => rpc('cap_nhat_task', { p_task: id, p_tieu_de: title, p_mo_ta: description, p_han_chot: toDueISO(dueDate), p_ly_do_han: dueReason || null, p_cap_nhat_luc: updatedAt })
 export const assignTask = (task, member, role = 'chinh') => rpc('gan_task', { p_task: task, p_member: member, p_vai_tro: role })
 export const startTask = (task) => rpc('bat_dau_task', { p_task: task })
 export const submitTask = (task) => rpc('gui_duyet_task', { p_task: task })

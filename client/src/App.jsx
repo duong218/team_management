@@ -1,4 +1,6 @@
 import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive } from "lucide-react";
+import { useEffect } from "react";
+import { saveAvatar } from "./api/profile";
 import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
 import { ErrorBox, Skeleton, Avatar } from "./components/common";
 import Logo from "./components/common/Logo";
@@ -17,6 +19,11 @@ export default function App() {
     profile = useProfile(auth.data?.id),
     { route, navigate } = useHashRoute(),
     notes = useNotifications(auth.data?.id);
+  const photo = auth.data?.user_metadata?.avatar_url || auth.data?.user_metadata?.picture;
+  useEffect(() => {
+    // đồng bộ ảnh Google lên hồ sơ để người khác trong nhóm thấy; lỗi thì bỏ qua, lần đăng nhập sau thử lại
+    if (profile.data && photo && profile.data.anh_dai_dien !== photo) saveAvatar(photo).catch(() => {});
+  }, [profile.data, photo]);
   if (auth.loading) return <Skeleton label="Đang kiểm tra đăng nhập…" />;
   if (!auth.data) return <LoginPage />;
   if (profile.loading) return <Skeleton label="Đang tải hồ sơ…" />;
@@ -99,7 +106,7 @@ export default function App() {
         <header className="topbar">
           <NotificationBell notes={notes} />
           <div className="user-chip">
-            <Avatar name={profile.data.ho_ten} src={auth.data.user_metadata?.avatar_url || auth.data.user_metadata?.picture} />
+            <Avatar name={profile.data.ho_ten} src={photo} />
             {profile.data.ho_ten}
           </div>
           <button className="icon-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={auth.logout}>

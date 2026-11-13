@@ -28,7 +28,7 @@ export default function TaskForm({ members = [], onSubmit }) {
         <textarea value={desc} onChange={(e) => setDesc(e.target.value)} />
       </label>
       <label>Checklist (mỗi dòng một mục)<textarea required value={items} onChange={(e) => setItems(e.target.value)} /></label>
-      <label>Hạn chót<input type="date" value={due} onChange={(e) => setDue(e.target.value)} /></label>
+      <label>Hạn chót<input type="datetime-local" value={due} onChange={(e) => setDue(e.target.value)} /></label>
       <label>Người chính<select value={assignee} onChange={(e) => setAssignee(e.target.value)}><option value="">Chưa giao</option>{members.map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten}</option>)}</select></label>
       {error && <ErrorBox message={error} />}
       <button className="button primary" disabled={busy}>Tạo task</button>

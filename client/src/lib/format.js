@@ -19,3 +19,10 @@ export function largestRemainder(values) {
   for (let j = 0; j < extra; j++) base[order[j].i]++;
   return values.map((v, i) => ({ ...v, percent: (base[i] / 100).toFixed(2) }));
 }
+
+// Hạn chót có giờ. Ô datetime-local cho "YYYY-MM-DDTHH:mm" (không múi giờ) nên gắn +07:00 để không bị lệch 7 tiếng.
+export const toDueISO = (v) => (!v ? null : v.length === 10 ? `${v}T23:59:00+07:00` : v.length === 16 ? `${v}:00+07:00` : v);
+export const vnDue = (v, withYear = true) =>
+  v
+    ? new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", ...(withYear ? { year: "numeric" } : {}), hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(v))
+    : "Chưa đặt";

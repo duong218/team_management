@@ -10,7 +10,10 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import { STATE_ORDER, STATES } from "../../lib/constants";
+import { Circle, Loader, Eye, CircleCheck } from "lucide-react";
 import TaskCard from "./TaskCard";
+import "../../styles/kanban.css";
+const ICONS = { can_lam: Circle, dang_lam: Loader, cho_duyet: Eye, hoan_thanh: CircleCheck };
 function DropColumn({ state, title, count, children }) {
   const { setNodeRef, isOver } = useDroppable({ id: state });
   return (
@@ -21,14 +24,16 @@ function DropColumn({ state, title, count, children }) {
       data-over={isOver}
     >
       <h2>
+        <span className="kb-ico">{(() => { const Icon = ICONS[state]; return <Icon size={16} />; })()}</span>
         {title}
         <span className="count">{count}</span>
       </h2>
       {children}
+      {!count && <div className="kb-empty">Kéo thẻ vào đây</div>}
     </div>
   );
 }
-function DragCard({ task, onOpen, onMove }) {
+function DragCard({ task, onOpen }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: task.id });
   const style = {
@@ -40,20 +45,6 @@ function DragCard({ task, onOpen, onMove }) {
       <div {...attributes} {...listeners} aria-label="Kéo thẻ">
         <TaskCard task={task} onOpen={onOpen} />
       </div>
-      <label>
-        Chuyển sang...
-        <select
-          aria-label="Chuyển sang trạng thái"
-          value={task.trang_thai}
-          onChange={(e) => onMove(task.id, e.target.value)}
-        >
-          {STATE_ORDER.map((s) => (
-            <option key={s} value={s}>
-              {STATES[s]}
-            </option>
-          ))}
-        </select>
-      </label>
     </div>
   );
 }
@@ -63,8 +54,35 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen }) {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor),
   );
+  const total = tasks.length,
+    done = tasks.filter((t) => t.trang_thai === "hoan_thanh").length;
   return (
     <>
+      {total > 0 && (
+        <div className="kb-sum">
+          <div className="kb-sum-top">
+            <b>{done}/{total} task hoàn thành</b>
+            <span>{Math.round((done / total) * 100)}%</span>
+          </div>
+          <div className="kb-seg" role="img" aria-label="Phân bố task theo trạng thái">
+            {STATE_ORDER.map((st) => {
+              const n = tasks.filter((t) => t.trang_thai === st).length;
+              return n > 0 && <i key={st} data-state={st} style={{ flexGrow: n }} />;
+            })}
+          </div>
+          <div className="kb-legend">
+            {STATE_ORDER.map((st) => {
+              const Icon = ICONS[st];
+              return (
+                <span key={st} data-state={st}>
+                  <Icon size={14} />
+                  {STATES[st]} <b>{tasks.filter((t) => t.trang_thai === st).length}</b>
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div className="mobile-only">
         <label>
           Cột
@@ -97,7 +115,6 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen }) {
                       key={t.id}
                       task={t}
                       onOpen={onOpen}
-                      onMove={onMove}
                     />
                   ))}
               </DropColumn>

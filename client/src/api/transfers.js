@@ -1,4 +1,5 @@
 import { rpc } from "./shared";
+import { toDueISO } from "../lib/format";
 export const requestTransfer = (task, reason) =>
   rpc("xin_chuyen_giao", { p_task: task, p_ly_do: reason });
 export const withdrawTransfer = (request) =>
@@ -12,7 +13,7 @@ export const resolveTransfer = (request, decision, member, type, reason, dueDate
     p_den_member: member,
     p_loai: type,
     p_ly_do_xu_ly: reason,
-    p_han_moi: dueDate || null,
+    p_han_moi: toDueISO(dueDate),
   });
 export const transferTask = (task, fromMember, toMember, type, reason, dueDate) =>
   rpc("chuyen_giao_task", {
@@ -21,7 +22,7 @@ export const transferTask = (task, fromMember, toMember, type, reason, dueDate) 
     p_den_member: toMember,
     p_loai: type,
     p_ly_do: reason,
-    p_han_moi: dueDate || null,
+    p_han_moi: toDueISO(dueDate),
   });
 export const history = (task) => rpc("lich_su_nguoi_chinh", { p_task: task });
 export const reviseTransferType = (transfer, type, reason) =>
