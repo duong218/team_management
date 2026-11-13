@@ -94,3 +94,18 @@
 .td .checklist-item > button.sm { justify-self: start; }
 .td .td-card form > button { justify-self: end; min-width: 140px; }
 .td .td-empty { color: var(--ink-3); font-weight: 600; }
+
+/* Bình luận dạng bong bóng chat */
+.td .cm-thread { display: grid; gap: 14px; max-height: 380px; overflow-y: auto; padding: 4px 6px 4px 2px; scroll-behavior: smooth; }
+.td .cm { display: flex; align-items: flex-end; gap: 10px; max-width: 88%; }
+.td .cm.mine { flex-direction: row-reverse; margin-left: auto; }
+.td .cm .avatar { flex: none; }
+.td .cm-body { display: grid; gap: 4px; min-width: 0; }
+.td .cm.mine .cm-body { justify-items: end; }
+.td .cm-who { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+.td .cm-who strong { color: var(--ink); font-weight: 800; }
+.td .cm-who time { color: var(--ink-3); font-size: 12px; font-weight: 600; }
+.td .cm-bubble { margin: 0; padding: 10px 14px; border-radius: 18px 18px 18px 6px; background: #f3e8ff; color: var(--ink); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; box-shadow: 2px 3px 8px rgba(76, 29, 149, 0.08); }
+.td .cm.mine .cm-bubble { border-radius: 18px 18px 6px 18px; background: var(--brand); color: #fff; }
+.td .cm-legacy { display: grid; gap: 4px; margin: 0; padding: 10px 14px; border-radius: 14px; background: #f4f4f5; color: var(--ink-2); font-size: 13.5px; white-space: pre-wrap; }
+.td .cm-legacy b { color: #52525b; font-size: 12px; }
