@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useAsync, useProject, useTasks } from "../hooks";
 import { getMyMember, listCurrentMembers } from "../api/members";
-import { Avatar, EmptyState, ErrorBox, Skeleton } from "../components/common";
+import { Avatar, ErrorBox, Skeleton } from "../components/common";
 import { ROLES, STATES } from "../lib/constants";
 import { vnDue } from "../lib/format";
 import {
@@ -15,13 +15,12 @@ import {
   AlertTriangle,
   Flame,
   TrendingUp,
-  Sparkles,
   Inbox,
   Activity,
   ChevronRight,
-  Layers,
-  Award
+  Layers
 } from "lucide-react";
+import PineAuroraScene from "../components/dashboard/PineAuroraScene";
 import "../styles/project-dashboard.css";
 
 const MANAGERS = ["truong_nhom", "pho_nhom"];
@@ -109,9 +108,6 @@ export default function ProjectDashboardPage({ projectId, name, navigate }) {
   const counts = Object.fromEntries(
     ORDER.map((state) => [state, allTasks.filter((task) => task.trang_thai === state).length])
   );
-  const ownCounts = Object.fromEntries(
-    ORDER.map((state) => [state, ownTasks.filter((task) => task.trang_thai === state).length])
-  );
 
   const activeMembers = members.data || [];
   const doneCount = allTasks.filter((task) => task.trang_thai === "hoan_thanh").length;
@@ -191,7 +187,7 @@ export default function ProjectDashboardPage({ projectId, name, navigate }) {
     <section className="pd-dashboard">
       {/* 1. Header Hero Banner */}
       <header className="pd-hero-banner">
-        <div className="pd-hero-glow" aria-hidden="true" />
+        <PineAuroraScene />
         <div className="pd-hero-content">
           <div className="pd-hero-tag">
             <span className="pd-pulse-dot" />
@@ -389,7 +385,6 @@ export default function ProjectDashboardPage({ projectId, name, navigate }) {
                   <TaskItem
                     key={task.id}
                     task={task}
-                    now={now}
                     onOpen={() => navigate(`/task/${task.id}`)}
                   />
                 ))}
@@ -553,7 +548,7 @@ function MetricCard({ title, value, subtext, icon: Icon, tone, badge, urgent, tr
   );
 }
 
-function TaskItem({ task, now, onOpen }) {
+function TaskItem({ task, onOpen }) {
   const due = task.han_chot ? new Date(task.han_chot) : null;
   const compareTime =
     task.trang_thai === "cho_duyet" && task.cap_nhat_luc ? new Date(task.cap_nhat_luc) : new Date();
