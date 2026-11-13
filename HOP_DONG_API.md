@@ -34,7 +34,8 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - `listChecklist(taskId:string)` → `task_checklist(id,task_id,noi_dung,trong_so,da_xong,trang_thai_muc,de_xuat_boi,nguoi_hoan_thanh,thoi_gian_hoan_thanh)`, lọc task_id; người được giao hoặc trưởng/phó theo RLS; TaskDetail.
 
 ## notifications.js
-- `listNotificationsForUser(userId:string)` → đọc `members(id)` theo user_id, sau đó `thong_bao(id,member_id,loai,task_id,noi_dung,da_doc,thoi_gian)` lọc các member_id tương ứng, mới nhất trước, tối đa 50; tài khoản hiện tại; NotificationsPage. `listNotifications(memberId:string)` là truy vấn cùng danh sách cột, lọc member_id và giới hạn 50; quyền của member đó.
+- `listNotificationsForUser(userId:string)` → đọc `members(id)` theo user_id, sau đó `thong_bao(id,member_id,loai,task_id,noi_dung,da_doc,thoi_gian)` lọc các member_id tương ứng, mới nhất trước, tối đa 90; tài khoản hiện tại; chuông thông báo. `listNotifications(memberId:string)` là truy vấn cùng danh sách cột, lọc member_id và giới hạn 90; quyền của member đó.
+- SQL nội bộ `gui_thong_bao(p_member:uuid,p_loai:text,p_task:uuid|null,p_noi_dung:text)` giữ tối đa 90 thông báo mới nhất trên tất cả member của cùng user, xóa hẳn bản cũ; migration `supabase/19_gioi_han_thong_bao.sql`. Hàm chỉ được gọi bởi các RPC nghiệp vụ.
 
 ## joinRequests.js
 - `listMine()` → RPC `yeu_cau_cua_toi()`, danh sách yêu cầu hiện tại; người đăng nhập, ProjectListPage.
