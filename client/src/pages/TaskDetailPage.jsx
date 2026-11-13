@@ -49,6 +49,7 @@ export default function TaskDetailPage({ taskId }) {
     totalItems = counted.length, doneCount = counted.filter((x) => x.da_xong).length
   return <article className="td"><button className="td-back" onClick={() => history.back()}><ArrowLeft size={16} />Quay lại</button>
     <header className="td-hero" data-state={t.trang_thai}>
+      <img className="ocean-animation" src={`${import.meta.env.BASE_URL}underwater-ocean.svg`} alt="" aria-hidden="true" />
       <div className="td-top"><h1>{t.tieu_de || 'Task giao cho bạn'}</h1><span className={`chip ${t.trang_thai}`}>{STATES[t.trang_thai] || t.trang_thai}</span></div>
       {t.mo_ta && <p className="td-desc">{t.mo_ta}</p>}
       <div className="td-prog"><div className="progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${pct}%` }} /></div><b>{pct.toFixed(0)}%</b></div>

@@ -15,8 +15,9 @@
 .td .td-desc { margin: 0; padding: 12px 16px; border-radius: 16px; background: rgba(255, 255, 255, 0.7); color: var(--ink-2); font-size: 15px; line-height: 1.6; white-space: pre-wrap; }
 .td .td-prog { display: flex; align-items: center; gap: 14px; }
 .td .td-prog .progress { flex: 1; height: 12px; background: rgba(255, 255, 255, 0.8); }
-.td .td-prog .progress span { background: var(--acc); }
-.td .td-prog b { font-size: 20px; font-weight: 800; color: var(--fgc); font-variant-numeric: tabular-nums; }
+.td .td-hero .td-prog .progress { background: rgba(255, 255, 255, 0.96); box-shadow: inset 0 1px 3px #123e5a40; }
+.td .td-hero .td-prog .progress span { background: #ffbd3d; }
+.td .td-hero .td-prog b { padding: 3px 10px; border-radius: 999px; background: #123e5a; color: #fff; box-shadow: 0 2px 7px #123e5a50; font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .td .td-meta { display: flex; flex-wrap: wrap; gap: 10px; }
 .td .td-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 99px; background: #fff; font-size: 14px; font-weight: 700; color: var(--ink-2); box-shadow: 2px 3px 8px rgba(76, 29, 149, 0.1); }
 .td .td-pill.late { background: #ffe4e6; color: #9f1239; }
