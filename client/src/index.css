@@ -96,6 +96,16 @@ details > :not(summary) { margin-top: 12px; }
   display: flex; flex-direction: column; gap: 4px;
   background: var(--surface); border-right: 1px solid var(--line);
 }
+.sidebar-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.sidebar-head .brand { flex: 1; min-width: 0; }
+.sidebar-toggle { flex: none; display: grid; place-items: center; width: 40px; min-height: 40px; padding: 0; border: 1px solid transparent; background: transparent; color: var(--ink-3); box-shadow: none; }
+.sidebar-toggle:hover:not(:disabled) { background: var(--brand-soft); border-color: #e4ddff; color: var(--brand); }
+.app-shell.sidebar-collapsed { grid-template-columns: 84px 1fr; }
+.sidebar-collapsed .sidebar { padding-inline: 10px; }
+.sidebar-collapsed .sidebar-head { flex-direction: column; align-items: center; }
+.sidebar-collapsed .sidebar-head .brand { justify-content: center; padding: 4px 0 10px; }
+.sidebar-collapsed .brand span, .sidebar-collapsed .nav-label, .sidebar-collapsed .nav-text, .sidebar-collapsed .nav-link .badge { display: none; }
+.sidebar-collapsed .nav-link { justify-content: center; padding: 12px; }
 .brand { display: flex; align-items: center; gap: 12px; padding: 4px 10px 20px; text-decoration: none; color: var(--ink); font-weight: 650; font-size: 17px; letter-spacing: -0.01em; }
 .brand-mark {
   width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
@@ -235,7 +245,11 @@ button[aria-pressed="true"] { background: var(--brand-soft); border-color: var(-
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
   .app-shell { grid-template-columns: 1fr; }
+  .app-shell.sidebar-collapsed { grid-template-columns: 1fr; }
   .sidebar { position: static; height: auto; flex-direction: row; align-items: center; overflow-x: auto; padding: 10px 12px; border-right: 0; border-bottom: 1px solid var(--line); gap: 4px; }
+  .sidebar-head { flex: none; align-items: center; }
+  .sidebar-head .brand { padding: 0 8px 0 0; }
+  .sidebar-collapsed .sidebar-head { flex-direction: row; }
   .sidebar .brand { padding: 0 8px 0 0; }
   .sidebar .brand span, .nav-label { display: none; }
   .nav-link { white-space: nowrap; padding: 8px 12px; }

@@ -8,12 +8,12 @@ const endOfDay = (days) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T23:59`;
 };
 const QUICK = [["Hôm nay", 0], ["Ngày mai", 1], ["+ 7 ngày", 7]];
-export default function TaskForm({ members = [], onSubmit }) {
+export default function TaskForm({ members = [], onSubmit, onClose }) {
   const [title, setTitle] = useState(""),
     [desc, setDesc] = useState(""), [items, setItems] = useState(""),
     [due, setDue] = useState(""), [assignee, setAssignee] = useState(""), [error, setError] = useState(""), [busy, setBusy] = useState(false),
     list = items.split("\n").map((s) => s.trim()).filter(Boolean),
-    close = (e) => { const d = e.target.closest("details"); if (d) d.open = false; };
+    close = (e) => { if (onClose) return onClose(); const d = e?.target?.closest("details"); if (d) d.open = false; };
   return (
     <form
       className="tf"
@@ -30,7 +30,7 @@ export default function TaskForm({ members = [], onSubmit }) {
         <div className="tf-main">
           <label className="tf-field">
             <span className="tf-label">Tiêu đề <b>*</b><em>{title.length}/200</em></span>
-            <input maxLength={200} required placeholder="VD: Thiết kế poster sự kiện" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <input autoFocus maxLength={200} required placeholder="VD: Thiết kế poster sự kiện" value={title} onChange={(e) => setTitle(e.target.value)} />
           </label>
           <label className="tf-field">
             <span className="tf-label">Mô tả</span>
@@ -63,7 +63,7 @@ export default function TaskForm({ members = [], onSubmit }) {
       </div>
       {error && <ErrorBox message={error} />}
       <div className="tf-foot">
-        <button type="button" onClick={close}>Hủy</button>
+        <button type="button" onClick={(e) => close(e)}>Hủy</button>
         <button className="primary" disabled={busy || list.length > 30}>{busy ? "Đang tạo…" : "Tạo task"}</button>
       </div>
     </form>

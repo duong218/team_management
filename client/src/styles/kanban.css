@@ -8,13 +8,17 @@
 .kb-toast > button { display: grid; place-items: center; width: 32px; height: 32px; min-height: 32px; padding: 0; border-radius: 50%; background: #fff; color: inherit; }
 @keyframes kb-toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 600px) { .kb-toast { top: 82px; right: 16px; } }
-/* Tạo task */
-.kanban > details.card { padding: 0; }
-.kanban > details.card > summary { display: flex; align-items: center; gap: 12px; padding: 16px 22px; cursor: pointer; list-style: none; font-size: 16px; font-weight: 800; }
-.kanban > details.card > summary::-webkit-details-marker { display: none; }
-.kanban > details.card > summary::before { content: "+"; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 12px; background: #7c3aed; color: #fff; font-size: 22px; line-height: 1; box-shadow: 3px 4px 9px rgba(124, 58, 237, 0.35), inset 2px 2px 4px rgba(255, 255, 255, 0.4), inset -2px -2px 5px rgba(76, 29, 149, 0.3); transition: transform 0.2s; }
-.kanban > details.card[open] > summary::before { transform: rotate(45deg); }
-.kanban > details.card > :not(summary) { margin: 0 22px 22px; }
+/* Tạo task từ nút cộng ở cột đầu tiên */
+.kanban .kb-add-task { flex: none; display: grid; place-items: center; width: 38px; min-height: 38px; margin-left: 4px; padding: 0; border-color: color-mix(in srgb, var(--acc) 35%, #fff); border-radius: 12px; background: #fff; color: var(--fgc); box-shadow: 0 3px 10px rgba(76, 29, 149, .1); }
+.kanban .kb-add-task:hover { background: var(--bgc); border-color: var(--acc); }
+.kanban .kb-create-dialog { width: min(980px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px); overflow: auto; padding: 0; border: 0; border-radius: 24px; background: #fff; color: var(--ink); box-shadow: 0 24px 70px rgba(46, 16, 101, .3); }
+.kanban .kb-create-dialog::backdrop { background: rgba(25, 16, 53, .48); backdrop-filter: blur(3px); }
+.kb-create-body { padding: 20px 26px 24px; }
+.kb-create-body > header { display: flex; align-items: center; gap: 12px; }
+.kb-create-body > header > span { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: #ede9fe; color: #6d28d9; }
+.kb-create-body > header h2 { flex: 1; font-size: 20px; }
+.kb-create-close { display: grid; place-items: center; width: 42px; min-height: 42px; padding: 0; border-radius: 14px; }
+.kanban .kb-create-dialog .tf { margin-top: 16px; padding-top: 18px; }
 /* Thanh tổng quan */
 .kb-sum { margin: 20px 0 4px; padding: 18px 22px; border-radius: 24px; background: #fff; box-shadow: 8px 10px 22px rgba(76, 29, 149, 0.12), inset 4px 4px 8px #fff, inset -4px -4px 10px rgba(76, 29, 149, 0.07); }
 .kb-sum-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; font-size: 16px; }
@@ -33,6 +37,11 @@
 .kb-ico { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--bgc); color: var(--fgc); box-shadow: 2px 3px 6px rgba(76, 29, 149, 0.14), inset 1px 1px 3px rgba(255, 255, 255, 0.7); }
 .kanban .kanban-grid .card > h2 .count { min-width: 28px; text-align: center; padding: 2px 8px; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--fgc); background: #fff; }
 .kb-empty { display: grid; place-items: center; min-height: 96px; border: 2px dashed color-mix(in srgb, var(--acc) 45%, transparent); border-radius: 18px; font-size: 14px; font-weight: 600; color: var(--fgc); opacity: 0.75; }
+.kanban .kb-empty-create { width: 100%; min-height: 144px; align-content: center; gap: 7px; padding: 18px; background: color-mix(in srgb, var(--bgc) 18%, #fff); cursor: pointer; opacity: 1; transition: background .16s ease, border-color .16s ease, transform .16s ease; }
+.kanban .kb-empty-create:hover { background: color-mix(in srgb, var(--bgc) 38%, #fff); border-color: var(--acc); transform: translateY(-1px); }
+.kb-empty-create > span { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 18px; background: var(--acc); color: #fff; box-shadow: 0 7px 16px color-mix(in srgb, var(--acc) 35%, transparent); }
+.kb-empty-create strong { color: var(--fgc); font-size: 16px; font-weight: 800; }
+.kb-empty-create small { color: var(--fgc); font-size: 12px; font-weight: 600; opacity: .8; }
 .kanban .kanban-grid .card > div { margin-bottom: 12px; cursor: grab; }
 .kanban .kanban-grid .card > div:active { cursor: grabbing; }
 /* Thẻ task */
@@ -54,7 +63,7 @@
 .kb-due { justify-self: start; display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-size: 14px; font-weight: 700; background: #ece6fb; color: #4c1d95; }
 .kb-due.late { background: #fecdd3; color: #881337; }
 @keyframes kb-grow { from { transform: scaleX(0); } }
-@media (prefers-reduced-motion: reduce) { .kb-seg i { animation: none; } .kanban .task-card, .kanban > details.card > summary::before { transition: none; } }/* Form tạo task: 2 cột, nội dung bên trái, thiết lập bên phải */
+@media (prefers-reduced-motion: reduce) { .kb-seg i { animation: none; } .kanban .task-card { transition: none; } }/* Form tạo task: 2 cột, nội dung bên trái, thiết lập bên phải */
 .kanban .tf { padding-top: 20px; border-top: 1.5px dashed var(--line-strong); }
 .kanban .tf-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: 24px; align-items: start; }
 .kanban .tf-main, .kanban .tf-side { display: grid; gap: 18px; }
@@ -75,6 +84,7 @@
 .kanban .tf-foot { display: flex; justify-content: flex-end; gap: 12px; margin-top: 22px; padding-top: 18px; border-top: 1.5px solid var(--line); }
 .kanban .tf-foot button { min-width: 96px; }
 @media (max-width: 900px) { .kanban .tf-grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .kb-create-body { padding: 16px; } .kanban .kb-add-task { width: 44px; min-height: 44px; } }
 /* Chú thích kéo thả */
 .kanban .kb-tip { display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 16px 0 4px; padding: 14px 20px; list-style: none; border-radius: 20px; background: var(--surface-2); box-shadow: inset 3px 3px 8px rgba(76, 29, 149, 0.07), inset -2px -2px 6px #fff; }
 .kanban .kb-tip li { display: flex; align-items: center; gap: 10px; flex: 1 1 260px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--ink-2); }

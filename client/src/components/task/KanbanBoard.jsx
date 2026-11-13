@@ -10,11 +10,11 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import { STATE_ORDER, STATES } from "../../lib/constants";
-import { Circle, Loader, Eye, CircleCheck } from "lucide-react";
+import { Circle, Loader, Eye, CircleCheck, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
 import "../../styles/kanban.css";
 const ICONS = { can_lam: Circle, dang_lam: Loader, cho_duyet: Eye, hoan_thanh: CircleCheck };
-function DropColumn({ state, title, count, children, readOnly }) {
+function DropColumn({ state, title, count, children, readOnly, onCreateTask }) {
   const { setNodeRef, isOver } = useDroppable({ id: state, disabled: readOnly });
   return (
     <div
@@ -27,9 +27,10 @@ function DropColumn({ state, title, count, children, readOnly }) {
         <span className="kb-ico">{(() => { const Icon = ICONS[state]; return <Icon size={16} />; })()}</span>
         {title}
         <span className="count">{count}</span>
+        {state === "can_lam" && onCreateTask && count > 0 && <button type="button" className="kb-add-task" aria-label="Tạo task" title="Tạo task" onClick={onCreateTask}><Plus size={18} /></button>}
       </h2>
       {children}
-      {!count && <div className="kb-empty">{readOnly ? "Không có task" : "Kéo thẻ vào đây"}</div>}
+      {!count && state === "can_lam" && onCreateTask ? <button type="button" className="kb-empty kb-empty-create" onClick={onCreateTask}><span><Plus size={28} /></span><strong>Tạo task</strong><small>Nhấn để thêm công việc mới</small></button> : !count && <div className="kb-empty">{readOnly ? "Không có task" : "Kéo thẻ vào đây"}</div>}
     </div>
   );
 }
@@ -48,7 +49,7 @@ function DragCard({ task, onOpen, locked, readOnly }) {
     </div>
   );
 }
-export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint, readOnly = false }) {
+export default function KanbanBoard({ tasks = [], onMove, onOpen, onCreateTask, canOpen, hint, readOnly = false }) {
   const [column, setColumn] = useState(STATE_ORDER[0]);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -108,7 +109,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, canOpen, hint,
               className={column === state ? "mobile-column" : "desktop-column"}
               key={state}
             >
-              <DropColumn state={state} title={STATES[state]} count={tasks.filter((t) => t.trang_thai === state).length} readOnly={readOnly}>
+              <DropColumn state={state} title={STATES[state]} count={tasks.filter((t) => t.trang_thai === state).length} readOnly={readOnly} onCreateTask={onCreateTask}>
                 {tasks
                   .filter((t) => t.trang_thai === state)
                   .map((t) => (

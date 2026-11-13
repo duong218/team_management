@@ -1,5 +1,5 @@
-import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive } from "lucide-react";
-import { useEffect } from "react";
+import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { useEffect, useState } from "react";
 import { saveAvatar } from "./api/profile";
 import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
 import { ErrorBox, Skeleton, Avatar } from "./components/common";
@@ -16,6 +16,7 @@ import NotificationsPage from "./pages/NotificationsPage";
 import CancelledTasksPage from "./pages/CancelledTasksPage";
 import HistoryPage from "./pages/HistoryPage";
 export default function App() {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const auth = useAuth(),
     profile = useProfile(auth.data?.id),
     { route, navigate } = useHashRoute(),
@@ -89,19 +90,24 @@ export default function App() {
     base = `#/project/${projectId}`,
     sub = parts[2] || "",
     link = (href, Icon, label, active, extra) => (
-      <a className="nav-link" href={href} aria-current={active ? "page" : undefined}>
+      <a className="nav-link" href={href} aria-label={label} title={sidebarCollapsed ? label : undefined} aria-current={active ? "page" : undefined}>
         <Icon size={18} strokeWidth={1.8} />
-        {label}
+        <span className="nav-text">{label}</span>
         {extra}
       </a>
     );
   return (
-    <div className="app-shell">
+    <div className={`app-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
       <aside className="sidebar">
-        <a href="#/projects" className="brand">
-          <Logo className="brand-logo" />
-          <span>Ocean</span>
-        </a>
+        <div className="sidebar-head">
+          <a href="#/projects" className="brand" aria-label="Ocean - Công việc của tôi" title={sidebarCollapsed ? "Ocean" : undefined}>
+            <Logo className="brand-logo" />
+            <span>Ocean</span>
+          </a>
+          <button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"} aria-expanded={!sidebarCollapsed} title={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"} onClick={() => setSidebarCollapsed((value) => !value)}>
+            {sidebarCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+          </button>
+        </div>
         {link("#/projects", ListChecks, "Công việc của tôi", route === "/projects" || route === "/")}
         {link("#/history", Archive, "Lịch sử công việc", historyMode)}
         {inProject && (

@@ -48,7 +48,7 @@ export default function TaskDetailPage({ taskId, readOnly: requestedReadOnly = f
     late = t.han_chot && !['hoan_thanh', 'da_huy'].includes(t.trang_thai) && new Date(t.han_chot) < ref,
     counted = items.filter((x) => x.trang_thai_muc === 'da_duyet'),
     totalItems = counted.length, doneCount = counted.filter((x) => x.da_xong).length
-  return <article className="td"><button className="td-back" onClick={() => history.back()}><ArrowLeft size={16} />Quay lại</button>
+  return <article className="td"><button className="td-back" onClick={() => history.back()}><ArrowLeft size={17} />Quay lại</button>
     {readOnly && <p className="td-card" role="note">Công việc đã kết thúc. Chi tiết task ở chế độ chỉ xem.</p>}
     <header className="td-hero" data-state={t.trang_thai}>
       <img className="ocean-animation" src={`${import.meta.env.BASE_URL}underwater-ocean.svg`} alt="" aria-hidden="true" />
