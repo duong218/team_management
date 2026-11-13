@@ -1,0 +1,80 @@
+/* Trang Báo cáo — Claymorphism nhiều màu. Tiền tố .rp. Màu có nghĩa: trạng thái task theo spec mục 16.4, vai trò theo trang Quản lý. */
+.rp-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.rp-head h1 { margin: 0; overflow-wrap: anywhere; }
+.rp-head button, .rp-chips { display: inline-flex; align-items: center; gap: 8px; }
+.rp-chips { flex-wrap: wrap; }
+.rp-muted { color: var(--ink-2); font-size: 14px; }
+.rp-h { display: flex; align-items: center; gap: 12px; margin: 32px 0 14px; }
+.rp-count { min-width: 28px; padding: 0 10px; border-radius: 999px; background: #ede9fe; color: #4c1d95; font-size: 14px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Thẻ số liệu */
+.rp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.rp-stat { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 24px; box-shadow: var(--clay); }
+.rp-stat b { display: block; font-size: 28px; line-height: 1.1; font-weight: 800; font-variant-numeric: tabular-nums; }
+.rp-stat span:not(.rp-ico) { font-size: 14px; font-weight: 700; }
+.rp-ico { flex: none; width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; box-shadow: var(--clay-sm); }
+.rp-ico-sm { width: 36px; height: 36px; border-radius: 12px; }
+.rp-violet { background: #f5f0ff; color: #4c1d95; } .rp-violet .rp-ico, .rp-ico.rp-violet { background: #ddd6fe; }
+.rp-sky { background: #f0f9ff; color: #0c4a6e; } .rp-sky .rp-ico, .rp-ico.rp-sky { background: #bae6fd; }
+.rp-green { background: #f0fdf4; color: #14532d; } .rp-green .rp-ico { background: #bbf7d0; }
+.rp-amber { background: #fff7ed; color: #7c2d12; } .rp-amber .rp-ico { background: #fed7aa; }
+
+/* Thành viên: hàng phẳng trong một thẻ */
+.rp-card { padding: 8px 24px; }
+.rp-member { display: flex !important; flex-wrap: wrap; align-items: center; gap: 16px; padding: 14px 0 !important; border-top: 1px solid var(--line) !important; }
+.rp-member:first-child { border-top: 0 !important; }
+.rp-member .avatar { width: 44px; height: 44px; font-size: 16px; }
+.rp-mname { flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.rp-role { display: inline-flex; align-items: center; gap: 6px; padding: 2px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; }
+.rp-role-truong_nhom { background: #fef08a; color: #713f12; }
+.rp-role-pho_nhom { background: #ddd6fe; color: #4c1d95; }
+.rp-role-thanh_vien { background: #99f6e4; color: #134e4a; }
+.rp-score { flex: 0 1 200px; min-width: 140px; display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 6px; }
+.rp-score b { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.rp-score span { font-size: 14px; color: var(--ink-2); }
+.rp-score .progress { grid-column: 1 / -1; height: 10px; margin-top: 6px; border-radius: 999px; background: #ece6fb; box-shadow: inset 2px 2px 4px rgba(76, 29, 149, 0.18); }
+.rp-score .progress span { background: #7c3aed; }
+
+/* Thẻ task */
+.rp-tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.rp-task { margin: 0 !important; display: flex; flex-direction: column; gap: 10px; }
+.rp-task h3 { margin: 0; font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; }
+.rp-task p { margin: 0 !important; }
+.rp-t-dang_lam { background: #fefce8 !important; } .rp-t-cho_duyet { background: #fff7ed !important; } .rp-t-hoan_thanh { background: #f0fdf4 !important; }
+.rp-st { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; box-shadow: var(--clay-sm); }
+.rp-st-can_lam { background: #bae6fd; color: #0c4a6e; } .rp-st-dang_lam { background: #fef08a; color: #713f12; }
+.rp-st-cho_duyet { background: #fed7aa; color: #7c2d12; } .rp-st-hoan_thanh { background: #bbf7d0; color: #14532d; }
+.rp-st-da_huy { background: #e9d5ff; color: #581c87; } .rp-st-late { background: #fecdd3; color: #881337; }
+.rp-bar { display: flex; align-items: center; gap: 10px; }
+.rp-bar .progress { flex: 1; height: 10px; border-radius: 999px; background: #ece6fb; box-shadow: inset 2px 2px 4px rgba(76, 29, 149, 0.18); }
+.rp-bar .progress span { background: #7c3aed; }
+.rp-bar b { font-size: 14px; font-variant-numeric: tabular-nums; }
+.rp-stack { display: flex; height: 12px; gap: 2px; border-radius: 999px; overflow: hidden; }
+.rp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.rp-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.rp-legend i { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ---------- Bản nhiều màu: mỗi thành viên một màu, mỗi trạng thái task một màu ---------- */
+.rp-head { padding: 24px 28px; border-radius: 28px; background: linear-gradient(120deg, #ddd6fe 0%, #fbcfe8 55%, #bae6fd 100%); box-shadow: var(--clay); }
+.rp-head .eyebrow { color: #4c1d95; }
+.rp-stat { box-shadow: var(--clay); }
+.rp-stat.rp-violet { background: linear-gradient(135deg, #ddd6fe, #f5d0fe); color: #3b0764; }
+.rp-stat.rp-sky { background: linear-gradient(135deg, #bae6fd, #a5f3fc); color: #083344; }
+.rp-stat.rp-green { background: linear-gradient(135deg, #bbf7d0, #d9f99d); color: #14532d; }
+.rp-stat.rp-amber { background: linear-gradient(135deg, #fed7aa, #fde68a); color: #7c2d12; }
+.rp-stat .rp-ico { background: rgba(255, 255, 255, 0.75); }
+
+.rp-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.rp-member { --c: #7c3aed; --t: #f5f0ff; margin: 0 !important; padding: 18px !important; border: 0 !important; border-radius: 24px; background: var(--t); box-shadow: var(--clay); border-left: 6px solid var(--c) !important; }
+.rp-c0 { --c: #7c3aed; --t: #f5f0ff; } .rp-c1 { --c: #0f766e; --t: #ecfdf5; } .rp-c2 { --c: #c2410c; --t: #fff7ed; }
+.rp-c3 { --c: #0369a1; --t: #f0f9ff; } .rp-c4 { --c: #be123c; --t: #fff1f2; }
+.rp-member .avatar { background: var(--c); }
+.rp-score { flex: 1 1 100%; }
+.rp-score .progress span { background: var(--c); }
+.rp-score b { color: var(--c); }
+
+.rp-task { border-top: 6px solid var(--c, #7c3aed) !important; }
+.rp-t-can_lam { --c: #0ea5e9; background: #f0f9ff !important; } .rp-t-dang_lam { --c: #eab308; } .rp-t-cho_duyet { --c: #f97316; }
+.rp-t-hoan_thanh { --c: #22c55e; } .rp-t-da_huy { --c: #a855f7; background: #faf5ff !important; }
+.rp-bar .progress span { background: var(--c, #7c3aed); }
+.rp-h { padding: 8px 16px 8px 8px; border-radius: 999px; background: #fff; box-shadow: var(--clay-sm); width: fit-content; }
