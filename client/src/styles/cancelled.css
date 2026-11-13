@@ -1,0 +1,65 @@
+/* Trang Task đã hủy — banner động (tiền tố cn-): 12 giây lặp thu -> đông. Chỉ animate transform/opacity. */
+.cn-banner { position: relative; overflow: hidden; display: flex; align-items: center; min-height: 210px; margin-bottom: 24px; padding: 28px 32px; border-radius: 28px; box-shadow: var(--clay); }
+.cn-bg { position: absolute; inset: 0; }
+.cn-bg-aut { background: linear-gradient(110deg, #ffedd5 0%, #fed7aa 55%, #fde68a 100%); }
+.cn-bg-win { background: linear-gradient(110deg, #e0e7ff 0%, #c7d2fe 55%, #bfdbfe 100%); opacity: 0; }
+.cn-scene { position: absolute; right: 0; bottom: 0; height: 100%; width: auto; max-width: 100%; pointer-events: none; }
+.cn-title { position: relative; z-index: 1; max-width: 46%; }
+.cn-title h1 { margin: 0 0 8px; color: #2e1065; }
+.cn-title p { margin: 0; color: #3b0764; font-weight: 600; }
+.cn-count { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 4px 14px; border-radius: 999px; background: #e9d5ff; color: #581c87; font-size: 14px; font-weight: 700; box-shadow: var(--clay-sm); }
+
+.cn-aut { animation: cn-aut 12s ease-in-out infinite; }
+.cn-win { opacity: 0; animation: cn-win 12s ease-in-out infinite; }
+.cn-bg-aut { animation: cn-aut 12s ease-in-out infinite; }
+.cn-bg-win { animation: cn-win 12s ease-in-out infinite; }
+@keyframes cn-aut { 0%, 42% { opacity: 1; } 54%, 92% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes cn-win { 0%, 42% { opacity: 0; } 54%, 92% { opacity: 1; } 100% { opacity: 0; } }
+
+.cn-rider, .cn-leaf, .cn-flake, .cn-leg, .cn-spin, .cn-wave, .cn-santa, .cn-bubble, .cn-ponytail, .cn-scarf { transform-box: fill-box; }
+.cn-rider { animation: cn-ride 12s linear infinite; }
+@keyframes cn-ride { 0% { transform: translateX(-110px); } 44%, 100% { transform: translateX(620px); } }
+.cn-spin { transform-origin: center; animation: cn-spin 0.5s linear infinite; }
+@keyframes cn-spin { to { transform: rotate(360deg); } }
+.cn-leg { transform-origin: 50% 0; animation: cn-leg 0.5s ease-in-out infinite alternate; }
+.cn-leg-b { animation-delay: -0.5s; }
+@keyframes cn-leg { from { transform: rotate(-26deg); } to { transform: rotate(26deg); } }
+.cn-ponytail, .cn-scarf { transform-origin: 100% 50%; animation: cn-flutter 0.4s ease-in-out infinite alternate; }
+@keyframes cn-flutter { from { transform: rotate(-6deg); } to { transform: rotate(8deg); } }
+.cn-leaf { animation: cn-fall 5s linear infinite both; }
+@keyframes cn-fall { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(var(--dx), 150px) rotate(300deg); opacity: 0; } }
+.cn-flake { animation: cn-snow 6s linear infinite both; }
+@keyframes cn-snow { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 0.95; } 100% { transform: translate(var(--dx), 200px); opacity: 0.95; } }
+.cn-wave { transform-origin: 0 100%; animation: cn-wave 1.4s ease-in-out infinite alternate; }
+@keyframes cn-wave { from { transform: rotate(-14deg); } to { transform: rotate(16deg); } }
+.cn-santa { animation: cn-bounce 0.9s ease-in-out infinite alternate; }
+@keyframes cn-bounce { to { transform: translateY(-3px); } }
+.cn-bubble { transform-origin: 0 100%; transform: scale(0); animation: cn-pop 12s ease-out infinite both; }
+@keyframes cn-pop { 0%, 58% { transform: scale(0); } 62%, 76% { transform: scale(1); } 80%, 100% { transform: scale(0); } }
+
+/* ---------- Danh sách task đã hủy ---------- */
+.cn-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+.cn-item { margin: 0 !important; display: flex; flex-direction: column; gap: 14px; }
+.cn-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.cn-time { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.cn-st { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; background: #e9d5ff; color: #581c87; font-size: 14px; font-weight: 700; box-shadow: var(--clay-sm); }
+.cn-item h2 { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+.cn-why { display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-radius: 16px; background: #faf5ff; }
+.cn-why b { font-size: 14px; color: #581c87; }
+.cn-why p { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.cn-restore { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); }
+.cn-restore label { display: flex; flex-direction: column; gap: 6px; }
+.cn-hint { font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.cn-restore button { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+
+@media (max-width: 720px) {
+  .cn-banner { padding: 24px 20px; }
+  .cn-title { max-width: 100%; }
+  .cn-scene { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cn-banner *, .cn-banner { animation: none !important; }
+  .cn-win, .cn-bg-win { opacity: 0; }
+  .cn-rider { transform: translateX(300px); }
+  .cn-bubble { transform: scale(0); }
+}
