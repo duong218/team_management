@@ -6,7 +6,7 @@ const ICON = { truong_nhom: Crown, pho_nhom: ShieldCheck, thanh_vien: User };
 // Hai quyền có thể gán: phó nhóm / thành viên. Chuyển quyền trưởng nhóm không còn ở đây.
 const ASSIGNABLE = ["pho_nhom", "thanh_vien"];
 
-export default function MemberRow({ member: m, myRole, busy, protectedKick, onRole, onKick, onRejoin }) {
+export default function MemberRow({ member: m, myRole, busy, protectedKick, onRole, onKick, onRejoin, readOnly = false }) {
   const Icon = ICON[m.vai_tro] || User;
   const left = m.trang_thai === "da_roi";
   // Khớp luật server: trưởng nhóm không đổi được; phó nhóm không đổi được phó nhóm khác.
@@ -22,10 +22,10 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
           {m.chua_nhan_viec && <span className="mg-flag"><TriangleAlert size={14} aria-hidden="true" />Chưa nhận việc</span>}
           {left && <span className="mg-flag mg-flag-muted">Đã rời nhóm</span>}
         </div>
-        <p>{m.don_vi || "Chưa có đơn vị"} · <b>{m.task_dang_lam}</b> task đang làm
-          {m.so_lan_bi_loai > 0 && <> · Từng bị loại {m.so_lan_bi_loai} lần{m.so_lan_bi_loai >= 3 ? " (đã bị cấm)" : ""}</>}</p>
+        <p>{m.don_vi || "Chưa có đơn vị"}{!readOnly && <> · <b>{m.task_dang_lam}</b> task đang làm
+          {m.so_lan_bi_loai > 0 && <> · Từng bị loại {m.so_lan_bi_loai} lần{m.so_lan_bi_loai >= 3 ? " (đã bị cấm)" : ""}</>}</>}</p>
       </div>
-      <div className="mg-actions">
+      {!readOnly && <div className="mg-actions">
         {left ? (
           <button className="primary" disabled={busy} onClick={onRejoin}><UserPlus size={16} aria-hidden="true" />Mời lại</button>
         ) : (
@@ -44,7 +44,7 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
             <button className="danger" disabled={lockKick} onClick={onKick}><UserMinus size={16} aria-hidden="true" />Loại khỏi nhóm</button>
           </>
         )}
-      </div>
+      </div>}
     </article>
   );
 }

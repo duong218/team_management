@@ -1,6 +1,13 @@
 import { supabase } from '../supabase'
 import { unwrap, withAvatars } from './shared'
 export const listMembers = (projectId) => supabase.rpc('ds_thanh_vien_quan_ly', { p_project: projectId }).then(({ data, error }) => { if (error) throw new Error(error.message || 'Không tải được danh sách thành viên.'); return withAvatars(data) })
+export const listCurrentMembers = async (projectId) => {
+  const rows = await unwrap(supabase.from('members').select('id,user_id,vai_tro,trang_thai').eq('project_id', projectId).eq('trang_thai', 'dang_tham_gia'))
+  if (!rows.length) return []
+  const profiles = await unwrap(supabase.from('profiles').select('user_id,ho_ten,don_vi,anh_dai_dien').in('user_id', rows.map((m) => m.user_id)))
+  const byUser = new Map(profiles.map((p) => [p.user_id, p]))
+  return rows.map((m) => ({ member_id: m.id, user_id: m.user_id, vai_tro: m.vai_tro, trang_thai: m.trang_thai, ...byUser.get(m.user_id) }))
+}
 export const listWaiting = (projectId) => supabase.rpc('phong_cho_full', { p_project: projectId }).then(({ data, error }) => { if (error) throw new Error(error.message || 'Không tải được phòng chờ.'); return withAvatars(data) })
 export const getMyMember = async (projectId) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser()

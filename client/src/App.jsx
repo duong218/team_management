@@ -97,7 +97,7 @@ export default function App() {
           <>
             <div className="nav-label">Công việc đang mở</div>
             {link(base, LayoutGrid, "Bảng Kanban", !sub)}
-            {link(`${base}/manage`, Users, "Thành viên & quản lý", sub === "manage")}
+            {link(`${base}/manage`, Users, "Thành viên trong nhóm", sub === "manage")}
             {link(`${base}/report`, BarChart3, "Báo cáo", sub === "report")}
             {link(`${base}/cancelled`, Archive, "Task đã hủy", sub === "cancelled")}
           </>
