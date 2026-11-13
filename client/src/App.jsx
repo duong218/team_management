@@ -103,9 +103,9 @@ export default function App() {
     <div className={`app-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
       <aside className="sidebar">
         <div className="sidebar-head">
-          <a href="#/projects" className="brand" aria-label="Ocean - Công việc của tôi" title={sidebarCollapsed ? "Ocean" : undefined}>
+          <a href="#/projects" className="brand" aria-label="Ocean and Gem - Công việc của tôi" title={sidebarCollapsed ? "Ocean and Gem" : undefined}>
             <Logo className="brand-logo" />
-            <span>Ocean</span>
+            <span>Ocean and Gem</span>
           </a>
           <button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"} aria-expanded={!sidebarCollapsed} title={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"} onClick={() => setSidebarCollapsed((value) => !value)}>
             {sidebarCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}

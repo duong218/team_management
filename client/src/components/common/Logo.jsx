@@ -1,9 +1,9 @@
 import { useId } from "react";
-// Logo Ocean: khối tím → xanh biển, hai làn sóng trắng và một viên ngọc nhỏ.
+// Logo Ocean and Gem: khối tím → xanh biển, hai làn sóng trắng và một viên ngọc nhỏ.
 export default function Logo({ className = "", size = 40 }) {
   const id = useId();
   return (
-    <svg className={className} width={size} height={size} viewBox="0 0 48 48" role="img" aria-label="Ocean">
+    <svg className={className} width={size} height={size} viewBox="0 0 48 48" role="img" aria-label="Ocean and Gem">
       <defs>
         <linearGradient id={id} x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
           <stop stopColor="#8b5cf6" />

@@ -77,7 +77,7 @@ export default function LoginPage() {
       <main className="lg-side">
         <div className="lg-panel">
           <Logo className="lg-mark" size={64} />
-          <h1>Chào mừng đến với Ocean!</h1>
+          <h1>Chào mừng đến với Ocean and Gem!</h1>
           <p>Đăng nhập để xem việc của mình và theo dõi tiến độ cả nhóm.</p>
           {error && <ErrorBox message={error} />}
           <button

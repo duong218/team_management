@@ -37,7 +37,7 @@ const save = async (workbook, projectName) => {
 export async function downloadExcelReport(report) {
   const projectName = report.project?.ten || "Công việc", members = report.members || [], tasks = report.tasks || [];
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "Ocean";
+  workbook.creator = "Ocean and Gem";
   workbook.subject = `Báo cáo ${projectName}`;
   workbook.created = new Date();
 

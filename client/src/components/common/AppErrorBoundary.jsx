@@ -8,7 +8,7 @@ export default class AppErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error("Lỗi giao diện Ocean:", error, info);
+    console.error("Lỗi giao diện Ocean and Gem:", error, info);
   }
 
   render() {
