@@ -4,6 +4,7 @@ import { ErrorBox, Skeleton, EmptyState, Avatar } from "../components/common";
 import { downloadCsv } from "../lib/csv";
 import { largestRemainder, vnDue } from "../lib/format";
 import { ROLES, STATES } from "../lib/constants";
+import ReportCharts from "../components/report/ReportCharts";
 import "../styles/report.css";
 
 const ST_ICON = { can_lam: Circle, dang_lam: Loader, cho_duyet: Eye, hoan_thanh: CircleCheck, da_huy: CircleX };
@@ -37,6 +38,8 @@ export default function ReportPage({ projectId }) {
     </header>
     {!members.length && !tasks.length ? <EmptyState title="Chưa có dữ liệu báo cáo" /> : <>
       <div className="rp-stats">{stats.map(([tone, Icon, value, label]) => <div key={label} className={`rp-stat rp-${tone}`}><span className="rp-ico"><Icon size={22} aria-hidden="true" /></span><div><b>{value}</b><span>{label}</span></div></div>)}</div>
+
+      <ReportCharts tasks={tasks} members={members} />
 
       <h2 className="rp-h"><span className="rp-ico rp-ico-sm rp-violet"><Trophy size={18} aria-hidden="true" /></span>Thành viên <span className="rp-count">{members.length}</span></h2>
       <div className="rp-members">{members.map((m, i) => {

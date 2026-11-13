@@ -1,0 +1,44 @@
+/* Biểu đồ trang báo cáo — Claymorphism. Tiền tố rc-. Màu luôn đi kèm chữ + biểu tượng. */
+.rc-grid { display: grid; grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.4fr) minmax(0, 1.1fr); gap: 20px; margin: 8px 0 36px; align-items: start; }
+.rc-card { padding: 22px; border-radius: 24px; background: #fff; box-shadow: 8px 10px 22px rgba(76, 29, 149, 0.12), inset 4px 4px 8px #fff, inset -4px -4px 10px rgba(76, 29, 149, 0.07); animation: rc-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rc-card:nth-child(2) { animation-delay: 0.07s; } .rc-card:nth-child(3) { animation-delay: 0.14s; }
+.rc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.rc-head h2 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.3; }
+.rc-head small { font-size: 14px; color: #5b4b7a; }
+.rc-ico { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 12px; box-shadow: 3px 4px 8px rgba(76, 29, 149, 0.14), inset 2px 2px 4px rgba(255, 255, 255, 0.7); }
+.rc-ico.violet { background: #ddd6fe; color: #4c1d95; } .rc-ico.sky { background: #bae6fd; color: #0c4a6e; } .rc-ico.amber { background: #fef08a; color: #713f12; }
+/* Vòng tròn */
+.rc-donut { position: relative; width: 190px; height: 190px; margin: 0 auto 18px; }
+.rc-donut svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.rc-ring, .rc-seg { fill: none; stroke-width: 14; }
+.rc-ring { stroke: #ece6fb; }
+.rc-seg { stroke-linecap: butt; animation: rc-draw 1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rc-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.rc-center b { font-size: 34px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.rc-center span { font-size: 14px; font-weight: 700; color: #5b4b7a; }
+.rc-legend { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rc-legend li { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+.rc-legend li i { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+.rc-legend li b { margin-left: auto; font-size: 16px; font-variant-numeric: tabular-nums; }
+/* Thanh ngang */
+.rc-rows, .rc-rank { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.rc-row-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.rc-row-top strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 700; }
+.rc-row-top b { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.rc-track { height: 12px; margin: 6px 0; border-radius: 999px; background: #ece6fb; box-shadow: inset 2px 2px 4px rgba(76, 29, 149, 0.18); overflow: hidden; }
+.rc-track i { display: block; height: 100%; min-width: 6px; border-radius: inherit; transform-origin: left; animation: rc-grow 0.9s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both; box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5); }
+.rc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 14px; color: #5b4b7a; }
+.rc-chip { display: inline-flex; align-items: center; gap: 5px; padding: 1px 10px; border-radius: 999px; font-weight: 700; color: #2e1065; background: color-mix(in srgb, var(--c) 22%, #fff); }
+.rc-late { display: inline-flex; align-items: center; gap: 5px; padding: 1px 10px; border-radius: 999px; font-weight: 700; background: #fecdd3; color: #881337; }
+.rc-more { margin: 14px 0 0; font-size: 14px; color: #5b4b7a; }
+/* Bảng điểm */
+.rc-rank li { display: flex; align-items: center; gap: 10px; }
+.rc-pos { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 10px; font-size: 14px; font-weight: 800; background: #ede9fe; color: #4c1d95; }
+.rc-rank li:first-child .rc-pos { background: #fde68a; color: #713f12; box-shadow: 2px 3px 6px rgba(234, 179, 8, 0.35); }
+.rc-who { flex: 1; min-width: 0; }
+@keyframes rc-rise { from { opacity: 0; transform: translateY(12px); } }
+@keyframes rc-grow { from { transform: scaleX(0); } }
+@keyframes rc-draw { from { stroke-dasharray: 0 100; } }
+@media (max-width: 1180px) { .rc-grid { grid-template-columns: 1fr 1fr; } .rc-grid > :nth-child(3) { grid-column: 1 / -1; } }
+@media (max-width: 760px) { .rc-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .rc-card, .rc-seg, .rc-track i { animation: none; } }
