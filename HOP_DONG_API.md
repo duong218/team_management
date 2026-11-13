@@ -37,6 +37,11 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - `listNotificationsForUser(userId:string)` → đọc `members(id)` theo user_id, sau đó `thong_bao(id,member_id,loai,task_id,noi_dung,da_doc,thoi_gian)` lọc các member_id tương ứng, mới nhất trước, tối đa 90; tài khoản hiện tại; chuông thông báo. `listNotifications(memberId:string)` là truy vấn cùng danh sách cột, lọc member_id và giới hạn 90; quyền của member đó.
 - SQL nội bộ `gui_thong_bao(p_member:uuid,p_loai:text,p_task:uuid|null,p_noi_dung:text)` giữ tối đa 90 thông báo mới nhất trên tất cả member của cùng user, xóa hẳn bản cũ; migration `supabase/19_gioi_han_thong_bao.sql`. Hàm chỉ được gọi bởi các RPC nghiệp vụ.
 
+## Vận hành và giới hạn tần suất
+- `kiem_tra_ket_noi()` → boolean luôn là `true`, không đọc bảng hoặc trả dữ liệu người dùng; chỉ `anon` được gọi bằng publishable key từ GitHub Actions hằng ngày. Lỗi dự kiến: project Supabase đang pause/không truy cập được hoặc chưa chạy migration `20_gioi_han_spam_va_ping.sql`. Không dùng service_role.
+- Migration `20_gioi_han_spam_va_ping.sql` giới hạn ở database: mỗi tài khoản tối đa 10 bình luận/phút, 10 task/10 phút và 5 yêu cầu chuyển giao/10 phút. Các trigger dùng khóa giao dịch theo user để chặn vượt ngưỡng khi gửi đồng thời; thao tác SQL quản trị không có `auth.uid()` không bị giới hạn.
+- Lịch GitHub Actions gọi RPC ping mỗi ngày lúc 03:17 UTC (10:17 giờ Việt Nam). Cần đặt repository secrets `SUPABASE_URL` và `SUPABASE_PUBLISHABLE_KEY`; không đặt `service_role`.
+
 ## joinRequests.js
 - `listMine()` → RPC `yeu_cau_cua_toi()`, danh sách yêu cầu hiện tại; người đăng nhập, ProjectListPage.
 - `submitCode(code:string)` → RPC `nhap_ma(p_ma:text)`; người có hồ sơ; ProjectListPage. Lỗi: mã sai/hết hạn, đã tham gia, giới hạn từ chối/loại.
