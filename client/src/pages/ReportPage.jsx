@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { Download, Users, ListChecks, CircleCheck, Gauge, Circle, Loader, Eye, CircleX, AlarmClock, Crown, ShieldCheck, User, Trophy } from "lucide-react";
 import { useReport } from "../hooks";
 import { ErrorBox, Skeleton, EmptyState, Avatar } from "../components/common";
-import { downloadCsv } from "../lib/csv";
 import { largestRemainder, vnDue } from "../lib/format";
 import { ROLES, STATES } from "../lib/constants";
 import ReportCharts from "../components/report/ReportCharts";
@@ -15,14 +15,16 @@ const SEG = ["#7c3aed", "#0d9488", "#f59e0b", "#0ea5e9", "#e11d48"]; // màu đo
 
 export default function ReportPage({ projectId }) {
   const q = useReport(projectId);
+  const [exportError, setExportError] = useState("");
+  async function exportReport() {
+    setExportError("");
+    try { const { downloadExcelReport } = await import("../lib/excel"); await downloadExcelReport(q.data); }
+    catch { setExportError("Không thể tạo file Excel. Hãy thử lại."); }
+  }
   if (q.loading) return <Skeleton />;
   if (q.error) return <ErrorBox message={q.error} onRetry={q.reload} />;
   if (!q.data) return <EmptyState title="Chưa có báo cáo" />;
   const members = q.data.members || [], tasks = q.data.tasks || [];
-  const rows = [
-    ["Thành viên", "Vai trò", "Trạng thái", "Điểm"],
-    ...members.map((m) => [m.ho_ten, m.vai_tro, m.trang_thai, m.diem?.diem ?? ""]),
-  ];
   const done = tasks.filter((t) => t.trang_thai === "hoan_thanh").length;
   const avg = tasks.length ? tasks.reduce((s, t) => s + Number(t.tien_do || 0), 0) / tasks.length : 0;
   const maxScore = Math.max(1, ...members.map((m) => Number(m.diem?.diem) || 0));
@@ -35,9 +37,10 @@ export default function ReportPage({ projectId }) {
   return <section className="rp">
     <header className="rp-head">
       <ReportScene members={members} />
-      <div><p className="eyebrow">Báo cáo</p><h1>{q.data.project?.ten}</h1></div>
-      <button className="primary" onClick={() => downloadCsv("bao-cao-thanh-vien.csv", rows)}><Download size={16} aria-hidden="true" />Xuất CSV thành viên</button>
+      <div className="rp-title"><p className="rp-kicker">TỔNG QUAN CÔNG VIỆC</p><h1>Báo cáo</h1><p className="rp-project-name">{q.data.project?.ten}</p></div>
+      <button className="primary" onClick={exportReport}><Download size={16} aria-hidden="true" />Xuất Excel (.xlsx)</button>
     </header>
+    {exportError && <ErrorBox message={exportError} onRetry={exportReport} />}
     {!members.length && !tasks.length ? <EmptyState title="Chưa có dữ liệu báo cáo" /> : <>
       <div className="rp-stats">{stats.map(([tone, Icon, value, label]) => <div key={label} className={`rp-stat rp-${tone}`}><span className="rp-ico"><Icon size={22} aria-hidden="true" /></span><div><b>{value}</b><span>{label}</span></div></div>)}</div>
 
