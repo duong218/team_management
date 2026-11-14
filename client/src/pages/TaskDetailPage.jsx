@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import Select from "../components/common/Select"
 import { useChecklist, useProject, useTask, useAsync } from '../hooks'
 import * as checklistApi from '../api/checklist'
 import * as linkApi from '../api/links'
@@ -87,7 +88,7 @@ function AssignControls({ task, projectId, onDone }) {
   const roles = task.trang_thai === 'dang_lam' || hasPrincipal ? ['ho_tro'] : ['chinh', 'ho_tro']
   const chosenRole = roles.includes(role) ? role : roles[0]
   const available = team.data.filter((m) => m.trang_thai === 'dang_tham_gia' && !task.assignees?.some((a) => a.member_id === m.member_id && a.trang_thai === 'dang_lam'))
-  return <div><label>Thêm người tham gia<select value={member} onChange={(e) => setMember(e.target.value)}><option value="">Chọn thành viên</option>{available.map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten}</option>)}</select></label><select value={chosenRole} onChange={(e) => setRole(e.target.value)}>{roles.map((x) => <option key={x} value={x}>{x === 'chinh' ? 'Chính' : 'Hỗ trợ'}</option>)}</select>{error && <ErrorBox message={error} />}<button disabled={!member} onClick={async () => { setError(''); try { await taskApi.assignTask(task.id, member, chosenRole); await onDone() } catch (e) { setError(e.message) } }}>Giao task</button></div>
+  return <div><label>Thêm người tham gia<Select value={member} onChange={(e) => setMember(e.target.value)}><option value="">Chọn thành viên</option>{available.map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten}</option>)}</Select></label><Select value={chosenRole} onChange={(e) => setRole(e.target.value)}>{roles.map((x) => <option key={x} value={x}>{x === 'chinh' ? 'Chính' : 'Hỗ trợ'}</option>)}</Select>{error && <ErrorBox message={error} />}<button disabled={!member} onClick={async () => { setError(''); try { await taskApi.assignTask(task.id, member, chosenRole); await onDone() } catch (e) { setError(e.message) } }}>Giao task</button></div>
 }
 function DirectTransfer({ from, projectId, busy, onTransfer }) {
   const team = useAsync(() => memberApi.listMembers(projectId), [projectId])
@@ -95,7 +96,7 @@ function DirectTransfer({ from, projectId, busy, onTransfer }) {
   if (team.loading) return <Skeleton />
   if (team.error) return <ErrorBox message={team.error} onRetry={team.reload} />
   const choices = team.data.filter((m) => m.trang_thai === 'dang_tham_gia' && m.member_id !== from.member_id)
-  return <form className="card" onSubmit={(e) => { e.preventDefault(); onTransfer({ member, type, reason, due }) }}><h3>Chuyển người chính: {from.member?.ho_ten || 'thành viên đã rời'}</h3><label>Người tiếp nhận<select required value={member} onChange={(e) => setMember(e.target.value)}><option value="">Chọn thành viên</option>{choices.map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten}</option>)}</select></label><label>Loại chuyển<select required value={type} onChange={(e) => setType(e.target.value)}><option value="">Chọn loại</option><option value="khach_quan">Lý do khách quan</option><option value="chua_kip">Chưa kịp tiến độ</option></select></label><label>Lý do (ít nhất 10 ký tự)<textarea required minLength={10} maxLength={1000} value={reason} onChange={(e) => setReason(e.target.value)} /></label><label>Hạn mới (để trống thì giữ hạn hiện tại)<input type="datetime-local" value={due} onChange={(e) => setDue(e.target.value)} /></label><button disabled={busy || !member || !type || reason.trim().length < 10}>Chuyển giao</button></form>
+  return <form className="card" onSubmit={(e) => { e.preventDefault(); onTransfer({ member, type, reason, due }) }}><h3>Chuyển người chính: {from.member?.ho_ten || 'thành viên đã rời'}</h3><label>Người tiếp nhận<Select required value={member} onChange={(e) => setMember(e.target.value)}><option value="">Chọn thành viên</option>{choices.map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten}</option>)}</Select></label><label>Loại chuyển<Select required value={type} onChange={(e) => setType(e.target.value)}><option value="">Chọn loại</option><option value="khach_quan">Lý do khách quan</option><option value="chua_kip">Chưa kịp tiến độ</option></Select></label><label>Lý do (ít nhất 10 ký tự)<textarea required minLength={10} maxLength={1000} value={reason} onChange={(e) => setReason(e.target.value)} /></label><label>Hạn mới (để trống thì giữ hạn hiện tại)<input type="datetime-local" value={due} onChange={(e) => setDue(e.target.value)} /></label><button disabled={busy || !member || !type || reason.trim().length < 10}>Chuyển giao</button></form>
 }
 
 function ContributionEditor({ taskId, rows, names, onSave }) {

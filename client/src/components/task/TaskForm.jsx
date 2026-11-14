@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Select from "../common/Select"
 import { ErrorBox } from "../common";
 const pad = (n) => String(n).padStart(2, "0");
 // Hạn nhanh: cuối ngày (23:59) sau `days` ngày, đúng định dạng của ô datetime-local
@@ -53,10 +54,10 @@ export default function TaskForm({ members = [], onSubmit, onClose }) {
           </label>
           <label className="tf-field">
             <span className="tf-label">Người chính</span>
-            <select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
+            <Select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
               <option value="">Chưa giao</option>
               {members.map((m) => <option key={m.member_id} value={m.member_id}>{m.ho_ten}</option>)}
-            </select>
+            </Select>
             <small>Có thể giao sau khi tạo task.</small>
           </label>
         </aside>
