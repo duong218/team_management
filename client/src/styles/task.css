@@ -134,3 +134,28 @@
 .td .check-edit input { flex: 1; min-width: 0; min-height: 36px; padding: 6px 10px; }
 .td .check-delete { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 0 34px; padding: 10px 12px; border-radius: 14px; color: #881337; background: #fff1f2; }
 .td .check-delete span { flex: 1 1 220px; font-weight: 700; }
+
+/* Điện thoại (≤600px): hero gọn, thao tác lên đầu, nút đủ lớn để chạm; desktop không đổi */
+@media (max-width: 600px) {
+  .td { gap: 14px; }
+  .td-back { min-height: 44px; padding: 6px 14px; font-size: 14px; }
+  .td .td-hero { gap: 10px; padding: 16px 14px 16px 18px; border-radius: 22px; }
+  .td .td-hero::before { width: 6px; }
+  .td .td-top { gap: 8px; }
+  .td .td-top h1 { padding: 8px 12px; font-size: 19px; line-height: 1.3; overflow-wrap: anywhere; }
+  .td .td-desc { padding: 10px 12px; font-size: 14px; line-height: 1.5; }
+  .td .td-hero .td-prog b { font-size: 16px; }
+  .td .td-meta { width: 100%; gap: 6px; padding: 0; background: none; backdrop-filter: none; }
+  .td .td-pill { padding: 5px 10px; font-size: 13px; }
+  .td .td-grid { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  .td .td-main, .td .td-side { display: contents; }
+  .td .td-main > *, .td .td-side > * { order: 3; }
+  .td .td-alert { order: 1; }
+  .td .td-actions-card { order: 2; }
+  .td .td-card { padding: 16px; border-radius: 20px; }
+  .td .td-head h2 { font-size: 16px; }
+  .td .checklist-item { padding: 8px 12px; }
+  .td .check-row { min-height: 44px; }
+  .td .check-actions button.sm { min-width: 44px; min-height: 44px; }
+  .td .td-actions > button { min-height: 48px; }
+}
