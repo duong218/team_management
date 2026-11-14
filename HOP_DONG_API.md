@@ -93,8 +93,10 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - `adjustScore(project,member,score,reason)` → `dieu_chinh_diem(p_project,p_member,p_diem,p_ly_do)`; trưởng/phó theo ràng buộc vai trò; ReportPage.
 - `listTaskContributions(task)` → `dong_gop_task(p_task)` trả `member_id,phan_tram`; người được giao/quản lý; TaskDetail.
 - `adjustContribution(task,allocations,reason)` → `xin_muc_dong_gop(p_task,p_phan_bo,p_ly_do)`; trưởng/phó, task đang mở có mục đã duyệt; tỷ lệ phải đủ toàn bộ người đóng góp, tổng 100.00 và mỗi giá trị tối đa hai chữ số thập phân; TaskDetail.
+- `diem_hien_tai(p_project:uuid,p_member:uuid)` → điểm A/B/C theo trọng số nhóm; khi thành viên chỉ hỗ trợ và có đóng góp checklist thì tính điểm từ A, còn B/C không áp dụng vì không là người chính. Dùng bởi báo cáo và chốt sổ; migration 27.
+- `bao_cao_cong_viec(p_project:uuid)` trả `tasks[].contributions` (member_id, ho_ten, ma_dinh_danh, phan_tram); ReportPage dùng dữ liệu này, gồm cả tỷ lệ trưởng/phó đã điều chỉnh; migration 27 đồng bộ hiển thị máy tính/điện thoại với SQL.
 
-RPC gọi qua `supabase.rpc`; lỗi được ném thành Error với message từ Supabase. Những chữ ký trên phải triển khai ở migrations 04–08; nếu SQL chưa chạy thì giao diện sẽ hiển thị lỗi tương ứng.
+RPC gọi qua `supabase.rpc`; lỗi được ném thành Error với message từ Supabase. Các hàm nghiệp vụ nền tảng được triển khai ở migrations 04–08; migration 27 cập nhật tính điểm cho người hỗ trợ và dữ liệu đóng góp trong báo cáo. Nếu thiếu migration, giao diện sẽ hiển thị lỗi tương ứng.
 
 ## Bổ sung nghiệp vụ (migration 08)
 - `updateScoreWeights(project:uuid,weights:jsonb)` → `cap_nhat_trong_so_diem(p_project,p_trong_so)`; JSON có đúng các khóa `a,b,c`, số không âm, tổng bằng 1; trưởng/phó, màn cài đặt; lỗi quyền, trạng thái lưu trữ, dữ liệu trọng số không hợp lệ.

@@ -8,6 +8,9 @@
 .cn-title h1 { margin: 0 0 8px; color: #2e1065; }
 .cn-title p { margin: 0; color: #3b0764; font-weight: 600; }
 .cn-count { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 4px 14px; border-radius: 999px; background: #e9d5ff; color: #581c87; font-size: 14px; font-weight: 700; box-shadow: var(--clay-sm); }
+.cn-filter { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 0 0 20px; color: var(--ink); font-weight: 700; }
+.cn-filter select { min-width: min(320px, 80vw); }
+.cn-project { display: inline-flex; align-items: center; gap: 7px; margin: -4px 0 0; color: var(--ink-2); font-size: 14px; font-weight: 700; }
 
 .cn-aut { animation: cn-aut 12s ease-in-out infinite; }
 .cn-win { opacity: 0; animation: cn-win 12s ease-in-out infinite; }
@@ -52,10 +55,105 @@
 .cn-hint { font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .cn-restore button { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; margin: 0; }
 
+/* ---------- Thanh phân trang Claymorphism ---------- */
+.cn-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 12px 18px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: var(--clay-card, 6px 8px 20px rgba(76, 29, 149, 0.08), inset 2px 2px 4px #fff);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cn-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 6px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: #f5f3ff;
+  color: #5b21b6;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 2px 3px 8px rgba(76, 29, 149, 0.08), inset 1px 1px 2px #fff;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cn-page-btn:hover:not(:disabled) {
+  background: #ede9fe;
+  transform: translateY(-1px);
+  color: #4c1d95;
+}
+
+.cn-page-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.cn-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  background: #f1f1f5;
+  color: #9490a8;
+}
+
+.cn-page-info {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 650;
+  color: #4c1d95;
+}
+
+.cn-page-info b {
+  font-size: 16px;
+  font-weight: 850;
+  color: #2e1065;
+}
+
+.cn-page-info small {
+  font-size: 12.5px;
+  color: #7d7999;
+}
+
 @media (max-width: 720px) {
   .cn-banner { padding: 24px 20px; }
   .cn-title { max-width: 100%; }
   .cn-scene { opacity: 0.35; }
+
+  /* Phân trang mobile */
+  .cn-pagination {
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 12px;
+    gap: 8px;
+    border-radius: 16px;
+  }
+
+  .cn-page-btn {
+    padding: 6px 12px;
+    min-height: 36px;
+    font-size: 13px;
+  }
+
+  .cn-page-info {
+    font-size: 13px;
+  }
+
+  .cn-page-info small {
+    display: none; /* ẩn bớt text phụ trên mobile cho thoáng */
+  }
 
   /* Tối ưu riêng các thẻ task đã hủy trên Mobile: nhỏ gọn, vừa vặn */
   .cn-list {

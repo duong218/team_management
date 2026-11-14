@@ -73,11 +73,11 @@ export default function App() {
   else if (parts[0] === "project" && parts[2] === "report")
     screen = <ReportPage projectId={projectId} />;
   else if (parts[0] === "project" && parts[2] === "cancelled")
-    screen = <CancelledTasksPage projectId={projectId} />;
+    screen = <CancelledTasksPage projectId={projectId} userId={auth.data.id} />;
   else if (route === "/history")
     screen = <HistoryPage userId={auth.data.id} navigate={navigate} />;
   else if (historyMode && parts[2] === "cancelled")
-    screen = <CancelledTasksPage projectId={projectId} readOnly navigate={navigate} />;
+    screen = <CancelledTasksPage projectId={projectId} userId={auth.data.id} readOnly navigate={navigate} />;
   else if (historyMode && parts[2] === "task")
     screen = <TaskDetailPage taskId={taskId} readOnly />;
   else if (historyMode && projectId)

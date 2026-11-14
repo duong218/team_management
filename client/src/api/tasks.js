@@ -54,6 +54,10 @@ export const listCancelledTasks = async (projectId) => {
   const byId = Object.fromEntries(details.map((d) => [d.task_id, d]))
   return tasks.map((t) => ({ ...t, ...byId[t.id] }))
 }
+export const listCancelledTasksForProjects = async (projectIds) => {
+  const groups = await Promise.all(projectIds.map(async (projectId) => ({ projectId, tasks: await listCancelledTasks(projectId) })))
+  return groups.flatMap(({ projectId, tasks }) => tasks.map((task) => ({ ...task, projectId }))).sort((a, b) => new Date(b.cap_nhat_luc) - new Date(a.cap_nhat_luc))
+}
 export const createTask = (project, title, description, dueDate, checklist) => rpc('tao_task', { p_project: project, p_tieu_de: title, p_mo_ta: description, p_han_chot: toDueISO(dueDate), p_checklist: checklist })
 export const createAssignedTask = (project, title, description, dueDate, checklist, member) => rpc('tao_task_giao', { p_project: project, p_tieu_de: title, p_mo_ta: description, p_han_chot: toDueISO(dueDate), p_checklist: checklist, p_member: member })
 export const updateTask = (id, title, description, dueDate, dueReason, updatedAt) => rpc('cap_nhat_task', { p_task: id, p_tieu_de: title, p_mo_ta: description, p_han_chot: toDueISO(dueDate), p_ly_do_han: dueReason || null, p_cap_nhat_luc: updatedAt })

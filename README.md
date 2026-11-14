@@ -60,7 +60,7 @@ Tên trạng thái và quyền cụ thể được thực thi tại Supabase. Kh
 │   ├── vercel.json                           # Header bảo mật cho Vercel
 │   └── package.json
 ├── scripts/supabase-keepalive.mjs            # Script ping Supabase
-├── supabase/                                 # Các migration SQL (01–26)
+├── supabase/                                 # Các migration SQL (01–27)
 ├── HOP_DONG_API.md                           # Hợp đồng giữa frontend và RPC/bảng
 └── he-thong-quan-ly-app.md                   # Đặc tả và ghi chú nghiệp vụ
 ```
@@ -143,7 +143,7 @@ URL redirect phải khớp với môi trường đang đăng nhập; nếu thi�
 
 ### 2. Áp dụng SQL migrations
 
-Các file trong `supabase/` là các script SQL thủ công, không tự chạy khi deploy frontend. Mở **Supabase Dashboard → SQL Editor**, chạy mỗi file theo thứ tự tên từ `01` đến `26`, mỗi file một lần và chờ hoàn tất trước khi chạy file tiếp theo. Chạy migration nền tảng trước, sau đó chạy các bản sửa đổi tiếp nối; không bỏ qua số thứ tự.
+Các file trong `supabase/` là các script SQL thủ công, không tự chạy khi deploy frontend. Mở **Supabase Dashboard → SQL Editor**, chạy mỗi file theo thứ tự tên từ `01` đến `27`, mỗi file một lần và chờ hoàn tất trước khi chạy file tiếp theo. Chạy migration nền tảng trước, sau đó chạy các bản sửa đổi tiếp nối; không bỏ qua số thứ tự.
 
 ```text
 01_ho_so.sql
@@ -172,6 +172,7 @@ Các file trong `supabase/` là các script SQL thủ công, không tự chạy 
 24_xoa_cong_viec_vinh_vien.sql
 25_don_du_lieu_cu_sau_6_thang.sql
 26_fix_workflow_edge_cases.sql
+27_diem_ho_tro_va_bao_cao_dong_gop.sql
 ```
 
 Các migration sau sửa/hoàn thiện schema và hành vi từ các migration trước; một số thay đổi gồm đổi hạn chót sang ngày giờ, cập nhật báo cáo, sửa quyền bình luận và thiết lập dọn dữ liệu lưu trữ. Vì vậy cần giữ đúng thứ tự, kể cả khi chỉ vừa tạo project mới. Nếu migration báo lỗi, dừng tại đó, đọc thông báo và nội dung đầu file; không chạy tiếp các file sau hoặc tự chạy lặp lại một migration chưa rõ trạng thái. Trên project đang có dữ liệu, hãy xuất/sao lưu dữ liệu trước khi áp dụng thay đổi schema và thử trước trên môi trường staging nếu có.
@@ -179,6 +180,8 @@ Các migration sau sửa/hoàn thiện schema và hành vi từ các migration t
 `25_don_du_lieu_cu_sau_6_thang.sql` bật lịch dọn dữ liệu lưu trữ cũ (sử dụng `pg_cron`). Đọc kỹ nội dung file và chính sách lưu giữ của nhóm trước khi áp dụng migration này lên dữ liệu thật; công việc đang hoạt động không thuộc đối tượng dọn của job.
 
 `26_fix_workflow_edge_cases.sql` chặn gửi duyệt khi còn đề xuất checklist chờ, khóa đồng bộ việc xin chuyển giao, giữ riêng danh tính cũ khi thay thành viên và không cho thành viên rời nhóm khi còn task đang giao. Dự án đã chạy migration 01–25 chỉ cần chạy file 26 một lần.
+
+`27_diem_ho_tro_va_bao_cao_dong_gop.sql` cho điểm thành viên hỗ trợ dựa trên phần checklist/đóng góp đã ghi nhận, và dùng phần trăm đóng góp do SQL trả về ở cả báo cáo điện thoại lẫn máy tính. Dự án đã chạy migration 01–26 chỉ cần chạy file 27 một lần.
 
 Chi tiết các hàm RPC, cột và quyền frontend gọi được ghi trong [HOP_DONG_API.md](HOP_DONG_API.md).
 
@@ -239,7 +242,7 @@ Chạy trong `client/`:
 | --- | --- |
 | Vite báo thiếu cấu hình Supabase hoặc ứng dụng không kết nối được | `client/.env.local` có đúng hai biến `VITE_SUPABASE_URL` và `VITE_SUPABASE_PUBLISHABLE_KEY` không; URL có dạng `https://<project-ref>.supabase.co` không; đã khởi động lại Vite chưa. |
 | Google báo `redirect_uri_mismatch` hoặc quay lại ứng dụng nhưng không đăng nhập | Google OAuth client có callback URL Supabase chính xác không; Supabase Auth provider đã bật chưa; Site URL và Redirect URLs đã gồm host hiện tại chưa. |
-| API trả về lỗi thiếu function/table/column | Đã chạy đủ migrations từ 01 đến 26 đúng thứ tự trên Supabase project tương ứng chưa. Không bỏ qua migration được nhắc trong lỗi. |
+| API trả về lỗi thiếu function/table/column | Đã chạy đủ migrations từ 01 đến 27 đúng thứ tự trên Supabase project tương ứng chưa. Không bỏ qua migration được nhắc trong lỗi. |
 | Người dùng đăng nhập được nhưng không thấy dữ liệu hoặc bị từ chối thao tác | Kiểm tra người dùng đã tạo hồ sơ/chờ được duyệt vào nhóm chưa; kiểm tra vai trò/trạng thái thành viên, RLS policy và migration tương ứng. |
 | Workflow keepalive thất bại | Kiểm tra GitHub Actions secrets `SUPABASE_URL` và `SUPABASE_PUBLISHABLE_KEY`, trạng thái Supabase project, và đã áp dụng migration `20_gioi_han_spam_va_ping.sql` chưa. |
 | Vercel deploy thành công nhưng không đăng nhập được | Kiểm tra Environment Variables cho đúng môi trường Vercel, sau đó tạo lại deployment; thêm domain deployment vào Supabase Auth Redirect URLs. |

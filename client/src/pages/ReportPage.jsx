@@ -20,6 +20,11 @@ const FOLDER_CONFIG = {
   hoan_thanh: { tone: "green", label: "Hoàn thành", color: "#22c55e" }
 };
 const FOLDER_KEYS = ["can_lam", "dang_lam", "cho_duyet", "hoan_thanh"];
+const taskContributions = (task) => largestRemainder((task.contributions || []).map((item) => ({
+  id: item.member_id,
+  name: item.ho_ten,
+  value: Number(item.phan_tram) || 0,
+})));
 
 export default function ReportPage({ projectId }) {
   const q = useReport(projectId);
@@ -108,7 +113,7 @@ export default function ReportPage({ projectId }) {
                   {count > 0 ? (
                     <div className="rp-folder-list">
                       {groupTasks.map((t) => {
-                        const contribution = largestRemainder(Object.entries((t.checklist || []).filter((c) => c.da_xong && c.nguoi_hoan_thanh).reduce((acc, c) => { acc[c.nguoi_hoan_thanh] = (acc[c.nguoi_hoan_thanh] || 0) + Number(c.trong_so); return acc; }, {})).map(([id, value]) => ({ id, value })));
+                        const contribution = taskContributions(t);
                         const SI = ST_ICON[t.trang_thai] || Circle, pct = Number(t.tien_do || 0);
                         const late = t.han_chot && !["hoan_thanh", "da_huy"].includes(t.trang_thai) && new Date(t.han_chot) < new Date();
                         const nameOf = (id) => t.assignees?.find((a) => a.member_id === id)?.ho_ten || "Thành viên";
@@ -130,7 +135,7 @@ export default function ReportPage({ projectId }) {
                                   {contribution.map((c, i) => <span key={c.id} style={{ width: `${c.percent}%`, background: SEG[i % SEG.length] }} />)}
                                 </div>
                                 <ul className="rp-legend">
-                                  {contribution.map((c, i) => <li key={c.id}><i style={{ background: SEG[i % SEG.length] }} />{nameOf(c.id)}: <b>{c.percent}%</b></li>)}
+                                  {contribution.map((c, i) => <li key={c.id}><i style={{ background: SEG[i % SEG.length] }} />{c.name || nameOf(c.id)}: <b>{c.percent}%</b></li>)}
                                 </ul>
                               </>
                             ) : (
@@ -152,7 +157,7 @@ export default function ReportPage({ projectId }) {
 
       {/* Danh sách Task lưới mặc định — Hiển thị trên Desktop, ẩn trên Mobile */}
       <div className="rp-tasks rp-tasks-desktop">{tasks.map((t) => {
-        const contribution = largestRemainder(Object.entries((t.checklist || []).filter((c) => c.da_xong && c.nguoi_hoan_thanh).reduce((acc, c) => { acc[c.nguoi_hoan_thanh] = (acc[c.nguoi_hoan_thanh] || 0) + Number(c.trong_so); return acc; }, {})).map(([id, value]) => ({ id, value })));
+        const contribution = taskContributions(t);
         const SI = ST_ICON[t.trang_thai] || Circle, pct = Number(t.tien_do || 0);
         const late = t.han_chot && !["hoan_thanh", "da_huy"].includes(t.trang_thai) && new Date(t.han_chot) < new Date();
         const nameOf = (id) => t.assignees?.find((a) => a.member_id === id)?.ho_ten || "Thành viên";
@@ -164,7 +169,7 @@ export default function ReportPage({ projectId }) {
           <p className="rp-muted">Hạn {vnDue(t.han_chot)}{t.assignees?.length > 0 && <> · {t.assignees.map((a) => a.ho_ten).filter(Boolean).join(", ")}</>}</p>
           {contribution.length > 0 ? <>
             <div className="rp-stack" aria-hidden="true">{contribution.map((c, i) => <span key={c.id} style={{ width: `${c.percent}%`, background: SEG[i % SEG.length] }} />)}</div>
-            <ul className="rp-legend">{contribution.map((c, i) => <li key={c.id}><i style={{ background: SEG[i % SEG.length] }} />{nameOf(c.id)}: <b>{c.percent}%</b></li>)}</ul>
+            <ul className="rp-legend">{contribution.map((c, i) => <li key={c.id}><i style={{ background: SEG[i % SEG.length] }} />{c.name || nameOf(c.id)}: <b>{c.percent}%</b></li>)}</ul>
           </> : <small className="rp-muted">Chưa có đóng góp được ghi nhận.</small>}
         </article>;
       })}</div>
