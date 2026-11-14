@@ -81,3 +81,359 @@
 .rp-t-hoan_thanh { --c: #22c55e; } .rp-t-da_huy { --c: #a855f7; background: #faf5ff !important; }
 .rp-bar .progress span { background: var(--c, #7c3aed); }
 .rp-h { padding: 8px 16px 8px 8px; border-radius: 999px; background: #fff; box-shadow: var(--clay-sm); width: fit-content; }
+
+/* Ẩn danh sách thư mục mobile trên Desktop */
+.rp-task-folders { display: none; }
+
+/* ==========================================================================
+   Tối ưu riêng cho giao diện Mobile Web (max-width: 680px)
+   Không ảnh hưởng giao diện Desktop
+   ========================================================================== */
+@media (max-width: 680px) {
+  .rp {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 24px;
+  }
+
+  /* Ẩn danh sách task phẳng của desktop trên Mobile */
+  .rp-tasks-desktop {
+    display: none !important;
+  }
+
+  /* Hiện 4 Folder Accordion trên Mobile */
+  .rp-task-folders {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .rp-folder-block {
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 6px 8px 20px rgba(76, 29, 149, 0.08), inset 2px 2px 5px #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .rp-folder-block.is-open {
+    box-shadow: 8px 12px 26px rgba(76, 29, 149, 0.13), inset 3px 3px 6px #ffffff;
+  }
+
+  .rp-folder-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .rp-folder-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rp-folder-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    box-shadow: 2px 3px 8px rgba(76, 29, 149, 0.1), inset 1px 1px 3px rgba(255, 255, 255, 0.8);
+  }
+
+  .rp-folder-icon.sky { background: #e0f2fe; color: #0284c7; }
+  .rp-folder-icon.amber { background: #fef3c7; color: #b45309; }
+  .rp-folder-icon.orange { background: #ffedd5; color: #c2410c; }
+  .rp-folder-icon.green { background: #dcfce7; color: #15803d; }
+
+  .rp-folder-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .rp-folder-meta strong {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink, #17132b);
+  }
+
+  .rp-folder-sub {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6a6688;
+  }
+
+  .rp-folder-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rp-folder-pct {
+    font-size: 13px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #ede9fe;
+    color: #4c1d95;
+    box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rp-f-can_lam .rp-folder-pct { background: #e0f2fe; color: #0369a1; }
+  .rp-f-dang_lam .rp-folder-pct { background: #fef3c7; color: #92400e; }
+  .rp-f-cho_duyet .rp-folder-pct { background: #ffedd5; color: #9a3412; }
+  .rp-f-hoan_thanh .rp-folder-pct { background: #dcfce7; color: #166534; }
+
+  .rp-folder-arrow {
+    color: #7c3aed;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .rp-folder-arrow.rotated {
+    transform: rotate(180deg);
+  }
+
+  /* Nội dung bên trong Folder khi mở */
+  .rp-folder-content {
+    padding: 0 12px 14px;
+    animation: rc-rise 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .rp-folder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rp-folder-empty {
+    margin: 4px 0 0;
+    padding: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: #7d7999;
+    font-weight: 550;
+    border-radius: 14px;
+    background: #f8f7fc;
+  }
+
+  /* Banner đầu trang trên điện thoại */
+  .rp-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 20px 18px;
+    border-radius: 24px;
+    min-height: auto;
+  }
+
+  .rp-title h1 {
+    font-size: 28px;
+  }
+
+  .rp-kicker {
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+  }
+
+  .rp-project-name {
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  .rp-head button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* 4 Thẻ thống kê: hiển thị dạng lưới 2x2 cực kỳ gọn gàng */
+  .rp-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .rp-stat {
+    padding: 12px 14px;
+    border-radius: 18px;
+    gap: 10px;
+  }
+
+  .rp-stat .rp-ico {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .rp-stat .rp-ico svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .rp-stat b {
+    font-size: 20px;
+  }
+
+  .rp-stat span:not(.rp-ico) {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  /* Tiêu đề mục */
+  .rp-h {
+    margin: 20px 0 10px;
+    font-size: 15px;
+    padding: 6px 14px 6px 6px;
+  }
+
+  .rp-count {
+    font-size: 12px;
+    padding: 0 8px;
+  }
+
+  /* Danh sách thành viên trên điện thoại: thẻ gọn 1 cột */
+  .rp-members {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .rp-member {
+    padding: 14px !important;
+    border-radius: 18px;
+    gap: 10px;
+  }
+
+  .rp-member .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+
+  .rp-mname {
+    flex: 1 1 auto;
+  }
+
+  .rp-mname strong {
+    font-size: 15px;
+  }
+
+  .rp-role {
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+
+  .rp-muted {
+    font-size: 12.5px;
+  }
+
+  .rp-score {
+    padding-top: 6px;
+    border-top: 1px dashed rgba(76, 29, 149, 0.12);
+  }
+
+  .rp-score b {
+    font-size: 18px;
+  }
+
+  .rp-score span {
+    font-size: 12.5px;
+  }
+
+  .rp-score .progress {
+    height: 8px;
+    margin-top: 4px;
+  }
+
+  /* Thẻ task bên trong thư mục: nhỏ gọn, tinh tế */
+  .rp-task {
+    padding: 12px 14px !important;
+    border-radius: 16px;
+    gap: 6px;
+    box-shadow: 3px 4px 12px rgba(76, 29, 149, 0.06), inset 2px 2px 4px #fff;
+    border-top-width: 4px !important;
+  }
+
+  .rp-task .rp-chips {
+    gap: 6px;
+  }
+
+  .rp-st {
+    font-size: 11px;
+    padding: 2px 8px;
+    font-weight: 750;
+  }
+
+  .rp-task h3 {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin: 1px 0;
+  }
+
+  .rp-bar {
+    gap: 8px;
+    margin: 2px 0;
+  }
+
+  .rp-bar .progress {
+    height: 6px;
+  }
+
+  .rp-bar b {
+    font-size: 12.5px;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .rp-task .rp-muted {
+    font-size: 12px;
+    line-height: 1.35;
+    color: #6a6688;
+  }
+
+  /* Đóng góp checklist nhỏ gọn tinh gọn */
+  .rp-stack {
+    height: 7px;
+    margin-top: 2px;
+  }
+
+  .rp-legend {
+    gap: 3px 8px;
+    font-size: 11.5px;
+    padding-top: 4px;
+    border-top: 1px dashed rgba(76, 29, 149, 0.08);
+  }
+
+  .rp-legend li {
+    gap: 4px;
+  }
+
+  .rp-legend i {
+    width: 7px;
+    height: 7px;
+  }
+
+  .rp-legend b {
+    font-size: 11.5px;
+  }
+
+  .hint {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 10px;
+  }
+}

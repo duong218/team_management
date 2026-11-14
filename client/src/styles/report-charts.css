@@ -41,4 +41,118 @@
 @keyframes rc-draw { from { stroke-dasharray: 0 100; } }
 @media (max-width: 1180px) { .rc-grid { grid-template-columns: 1fr 1fr; } .rc-grid > :nth-child(3) { grid-column: 1 / -1; } }
 @media (max-width: 760px) { .rc-grid { grid-template-columns: 1fr; } }
+
+/* ==========================================================================
+   Tối ưu các biểu đồ báo cáo riêng cho Mobile Web (max-width: 680px)
+   ========================================================================== */
+@media (max-width: 680px) {
+  .rc-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin: 4px 0 24px;
+  }
+
+  .rc-card {
+    padding: 16px 14px;
+    border-radius: 20px;
+  }
+
+  .rc-head {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .rc-head h2 {
+    font-size: 16px;
+  }
+
+  .rc-head small {
+    font-size: 12.5px;
+  }
+
+  .rc-ico {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  .rc-ico svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Donut chart trên mobile: thu nhỏ vừa vặn */
+  .rc-donut {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 14px;
+  }
+
+  .rc-center b {
+    font-size: 26px;
+  }
+
+  .rc-center span {
+    font-size: 12px;
+  }
+
+  .rc-legend {
+    gap: 6px;
+  }
+
+  .rc-legend li {
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .rc-legend li b {
+    font-size: 14px;
+  }
+
+  /* Thanh tiến độ từng task */
+  .rc-rows, .rc-rank {
+    gap: 12px;
+  }
+
+  .rc-row-top strong {
+    font-size: 14px;
+  }
+
+  .rc-row-top b {
+    font-size: 14px;
+  }
+
+  .rc-track {
+    height: 9px;
+    margin: 4px 0;
+  }
+
+  .rc-meta {
+    font-size: 12px;
+    gap: 4px 8px;
+  }
+
+  .rc-chip, .rc-late {
+    font-size: 11.5px;
+    padding: 1px 8px;
+  }
+
+  .rc-more {
+    margin-top: 10px;
+    font-size: 12.5px;
+  }
+
+  /* Bảng điểm thành viên */
+  .rc-rank li {
+    gap: 8px;
+  }
+
+  .rc-pos {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) { .rc-card, .rc-seg, .rc-track i { animation: none; } }
