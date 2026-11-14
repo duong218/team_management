@@ -67,10 +67,13 @@ export const restoreTask = (task, reason) => rpc('khoi_phuc_task', { p_task: tas
 export const reopenTask = (task, reason) => rpc('mo_lai_task', { p_task: task, p_ly_do: reason })
 export const deleteUnusedTask = (task) => rpc('xoa_task_trong', { p_task: task })
 export const addComment = (task, comment) => rpc('them_binh_luan', { p_task: task, p_binh_luan: comment })
+export const editComment = (id, text) => rpc('sua_binh_luan', { p_comment: id, p_noi_dung: text })
+export const retractComment = (id) => rpc('go_binh_luan', { p_comment: id })
+export const deleteComment = (id) => rpc('xoa_binh_luan', { p_comment: id })
 export const listComments = async (taskId) => {
-  const rows = await unwrap(supabase.from('task_comments').select('id,user_id,noi_dung,tao_luc').eq('task_id', taskId).order('tao_luc'))
-  const ids = [...new Set(rows.map((r) => r.user_id))]
+  const rows = await unwrap(supabase.from('task_comments').select('id,user_id,noi_dung,tao_luc,sua_luc,go_boi,go_luc').eq('task_id', taskId).order('tao_luc'))
+  const ids = [...new Set(rows.flatMap((r) => [r.user_id, r.go_boi]).filter(Boolean))]
   const people = ids.length ? await unwrap(supabase.from('profiles').select('user_id,ho_ten,anh_dai_dien').in('user_id', ids)) : []
   const by = new Map(people.map((p) => [p.user_id, p]))
-  return rows.map((r) => ({ ...r, ho_ten: by.get(r.user_id)?.ho_ten, anh_dai_dien: by.get(r.user_id)?.anh_dai_dien }))
+  return rows.map((r) => ({ ...r, ho_ten: by.get(r.user_id)?.ho_ten, anh_dai_dien: by.get(r.user_id)?.anh_dai_dien, go_ten: by.get(r.go_boi)?.ho_ten }))
 }

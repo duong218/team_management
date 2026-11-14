@@ -161,3 +161,23 @@
   .td .td-card { overflow-x: clip; }
   .td .td-card .card { margin-inline: 0; padding: 12px; max-width: 100%; }
 }
+/* Sửa / gỡ / xóa bình luận */
+.td .cm-who { flex-wrap: wrap; }
+.td .cm-edited { color: var(--ink-3); font-size: 13px; font-style: normal; font-weight: 600; }
+.td .cm.gone .cm-bubble { opacity: 0.45; filter: blur(0.6px); background: #e4e4e7; color: #52525b; }
+.td .cm.mine.gone .cm-bubble { background: #d4d4d8; color: #3f3f46; }
+.td .cm-gone { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-3); font-size: 14px; font-weight: 600; }
+.td .cm-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.td .cm.mine .cm-acts { justify-content: flex-end; }
+.td .cm-act { display: inline-flex; align-items: center; gap: 5px; min-height: 36px; padding: 4px 10px; border: 0; border-radius: 10px; background: transparent; box-shadow: none; color: var(--ink-2); font-size: 14px; font-weight: 700; cursor: pointer; transform: none; }
+.td .cm-act:hover:not(:disabled) { background: #f4f0fc; transform: none; box-shadow: none; }
+.td .cm-act.cm-danger { color: #be123c; }
+.td .cm-act.cm-danger:hover:not(:disabled) { background: #ffe4e6; }
+.td .cm-act.cm-main { background: var(--brand); color: #fff; }
+.td .cm-act.cm-main:hover:not(:disabled) { background: var(--brand-hover, #6d28d9); }
+.td .cm-ask > span { font-size: 14px; font-weight: 700; color: var(--ink); }
+.td .cm.editing { align-items: flex-start; max-width: 100%; width: 100%; }
+.td .cm.editing .cm-body { flex: 1; min-width: 0; justify-items: stretch; }
+.td .cm-edit { display: grid; gap: 6px; width: 100%; min-width: 0; }
+.td .cm-edit textarea { width: 100%; min-height: 72px; box-sizing: border-box; }
+.td .cm-error { color: #be123c; font-size: 14px; font-weight: 600; }
