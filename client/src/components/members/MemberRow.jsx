@@ -28,7 +28,7 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
       {!readOnly && <div className="mg-actions">
         {left ? (
           <>
-            <button className="primary" disabled={busy} onClick={onRejoin}><UserPlus size={16} aria-hidden="true" />Mời lại</button>
+            <button type="button" className="primary" disabled={busy} onClick={onRejoin}><UserPlus size={16} aria-hidden="true" />Mời lại</button>
             <button className="danger mg-remove-member" type="button" title="Xóa khỏi danh sách" aria-label={`Xóa ${m.ho_ten} khỏi danh sách`} disabled={busy} onClick={onRemove}><X size={18} aria-hidden="true" /></button>
           </>
         ) : (
@@ -44,7 +44,7 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
                 );
               })}
             </div>
-            <button className="danger mg-kick" disabled={lockKick} onClick={onKick} title="Loại khỏi nhóm"><UserMinus size={16} aria-hidden="true" /><span className="mg-lbl">Loại khỏi nhóm</span></button>
+            <button type="button" className="danger mg-kick" disabled={lockKick} onClick={(event) => { event.preventDefault(); event.stopPropagation(); onKick?.(); }} title="Loại khỏi nhóm"><UserMinus size={16} aria-hidden="true" /><span className="mg-lbl">Loại khỏi nhóm</span></button>
           </>
         )}
       </div>}
