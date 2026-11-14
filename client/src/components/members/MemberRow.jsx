@@ -44,7 +44,7 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
                 );
               })}
             </div>
-            <button className="danger" disabled={lockKick} onClick={onKick}><UserMinus size={16} aria-hidden="true" />Loại khỏi nhóm</button>
+            <button className="danger mg-kick" disabled={lockKick} onClick={onKick} title="Loại khỏi nhóm"><UserMinus size={16} aria-hidden="true" /><span className="mg-lbl">Loại khỏi nhóm</span></button>
           </>
         )}
       </div>}

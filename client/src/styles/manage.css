@@ -117,3 +117,41 @@
 /* ---------- Hộp thoại kết thúc công việc ---------- */
 .mg-ico-rose { background: #fecdd3; color: #881337; }
 .mg-warn-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 16px 20px 16px 36px; border-radius: 16px; background: #fff1f2; color: #881337; font-weight: 600; }
+
+/* ---------- Mobile (<=640px): gọn, ngón cái với tới, không đẩy avatar xuống dòng riêng ---------- */
+@media (max-width: 640px) {
+  /* 4 thẻ số liệu: lưới 2x2 thay vì xếp dọc (tiết kiệm ~200px) */
+  .mg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .mg-stat { gap: 10px; padding: 12px; border-radius: 20px; }
+  .mg-stat .mg-ico { width: 36px; height: 36px; border-radius: 12px; }
+  .mg-stat b { font-size: 24px; }
+  .mg-stat div > span { display: block; font-size: 13px; line-height: 1.25; }
+  /* Tab chiếm hết chiều ngang, 2 nửa bằng nhau */
+  .mg-tabs { display: flex; width: 100%; margin-bottom: 14px; }
+  .mg-tabs button { flex: 1; justify-content: center; gap: 6px; padding: 8px 6px; white-space: nowrap; }
+  /* Hàng thành viên / người chờ: avatar bên trái tên; nút nằm hàng dưới */
+  .mg-member { display: grid !important; grid-template-columns: 44px minmax(0, 1fr); align-items: start; gap: 10px 12px; padding: 14px 0 14px 12px !important; }
+  .mg-member .avatar { width: 44px; height: 44px; font-size: 15px; }
+  .mg-name { gap: 6px 8px; }
+  .mg-name strong { flex: 1 0 100%; overflow-wrap: anywhere; }
+  .mg-role, .mg-flag { padding: 2px 10px; font-size: 13px; }
+  .mg-info p { overflow-wrap: anywhere; }
+  .mg-member > .mg-actions { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 8px; width: 100%; }
+  .mg-actions > button { justify-content: center; }
+  .mg-card { padding: 18px 14px; }
+  .mg-seg button { min-height: 44px; padding: 6px 6px; gap: 6px; font-size: 14px; white-space: nowrap; }
+  /* Loại khỏi nhóm / xóa khỏi danh sách: nút vuông 44px chỉ có biểu tượng (chữ vẫn có cho trình đọc màn hình) */
+  .mg-kick, .mg-actions .mg-remove-member { width: 44px; min-width: 44px; height: 44px; padding: 0; }
+  .mg-lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* Người chờ: Cho vào + Từ chối cùng hàng, Thay thế người cũ hàng dưới */
+  .mg-wait > .mg-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mg-wait .mg-replace { grid-column: 1 / -1; order: 3; }
+  /* Tab Công việc */
+  .mg-project-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 12px 14px; }
+  .mg-project-title { display: contents; }
+  .mg-project-title h2 { margin: 0; }
+  .mg-meta { grid-column: 1 / -1; }
+  .mg-project-head > button { grid-column: 1 / -1; justify-content: center; }
+  .mg-project .mg-btns { flex-direction: column; }
+  .mg-project .mg-btns button { justify-content: center; }
+}

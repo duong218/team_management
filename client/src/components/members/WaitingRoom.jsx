@@ -15,7 +15,7 @@ export default function WaitingRoom({ requests = [], onApprove, onReplace, onRej
           </div>
           <div className="mg-actions">
             <button className="primary" onClick={() => onApprove?.(r)}><Check size={16} aria-hidden="true" />Cho vào</button>
-            <button onClick={() => onReplace?.(r)}><Repeat size={16} aria-hidden="true" />Thay thế người cũ</button>
+            <button className="mg-replace" onClick={() => onReplace?.(r)}><Repeat size={16} aria-hidden="true" />Thay thế người cũ</button>
             <button className="danger" onClick={() => onReject?.(r)}><X size={16} aria-hidden="true" />Từ chối</button>
           </div>
         </article>
