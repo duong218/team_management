@@ -2,6 +2,7 @@
 --   Sửa: chỉ người viết, ghi vết "đã chỉnh sửa" (sua_luc).
 --   Gỡ : chỉ người viết; tin nhắn bị làm mờ và ghi tên người gỡ (go_boi, go_luc). Không sửa được sau khi gỡ.
 --   Xóa: chỉ nhóm trưởng/phó, xóa được mọi bình luận. Xóa mềm (xoa_boi, xoa_luc): ẩn khỏi mọi người nhưng còn trong bảng để đối chiếu.
+--   Lưu ý: migration 23 đổi thao tác xóa của quản lý thành xóa hẳn khỏi bảng.
 -- Chạy trong Supabase SQL Editor sau 01..21. Chạy lại nhiều lần vẫn an toàn. Chỉ THÊM cột và hàm; dữ liệu cũ giữ nguyên.
 -- Không cần service_role.
 begin;
