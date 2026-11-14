@@ -58,6 +58,7 @@
 .mg-kick-option[aria-pressed="true"] { transform: translateY(-1px); box-shadow: 0 0 0 3px currentColor, var(--clay-sm); }
 .mg-remove-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .mg-remove-dialog-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.mg-replace-cancel { color: #344054; background: #eef2f7; border: 1px solid #d0d5dd; }
 
 /* Bộ chọn quyền: 2 lựa chọn — Phó nhóm / Thành viên */
 .mg-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 18px; background: #f1ecfb; box-shadow: inset 3px 3px 6px rgba(76, 29, 149, 0.12), inset -2px -2px 4px #fff; }
