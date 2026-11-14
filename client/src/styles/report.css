@@ -236,6 +236,11 @@
     padding: 20px 18px;
     border-radius: 24px;
     min-height: auto;
+    background-color: #e9e5ff;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.58)), url("/astro-floating.svg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
 
   .rp-title h1 {
