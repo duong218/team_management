@@ -184,3 +184,9 @@ input[type="checkbox"] { min-height: 0; box-shadow: none; }
   .topbar { gap: 8px; padding: 0 12px; }
 }
 @media (max-width: 520px) { .user-name { display: none; } .user-chip { padding: 4px; } }
+
+/* Điện thoại: ô chọn (select) luôn nằm gọn trong khung, chữ dài thì cắt bằng dấu ... */
+@media (max-width: 600px) {
+  select { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; padding-right: 32px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  label { min-width: 0; }
+}

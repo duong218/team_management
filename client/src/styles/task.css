@@ -158,4 +158,6 @@
   .td .check-row { min-height: 44px; }
   .td .check-actions button.sm { min-width: 44px; min-height: 44px; }
   .td .td-actions > button { min-height: 48px; }
+  .td .td-card { overflow-x: clip; }
+  .td .td-card .card { margin-inline: 0; padding: 12px; max-width: 100%; }
 }

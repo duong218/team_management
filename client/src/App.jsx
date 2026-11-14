@@ -18,20 +18,21 @@ import HistoryPage from "./pages/HistoryPage";
 import ProjectDashboardPage from "./pages/ProjectDashboardPage";
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false); // ngăn kéo menu trên điện thoại
+  const [menuAt, setMenuAt] = useState(null); // ngăn kéo menu trên điện thoại: nhớ đang mở ở đường dẫn nào
   const auth = useAuth(),
     profile = useProfile(auth.data?.id),
     { route, navigate } = useHashRoute(),
-    notes = useNotifications(auth.data?.id);
+    notes = useNotifications(auth.data?.id),
+    menuOpen = menuAt === route, // đổi trang thì menuAt khác route nên menu tự đóng, không cần effect
+    setMenuOpen = (open) => setMenuAt(open ? route : null);
   const photo = auth.data?.user_metadata?.avatar_url || auth.data?.user_metadata?.picture;
   useEffect(() => {
     // đồng bộ ảnh Google lên hồ sơ để người khác trong nhóm thấy; lỗi thì bỏ qua, lần đăng nhập sau thử lại
     if (profile.data && photo && profile.data.anh_dai_dien !== photo) saveAvatar(photo).catch(() => {});
   }, [profile.data, photo]);
-  useEffect(() => setMenuOpen(false), [route]);
   useEffect(() => {
     if (!menuOpen) return;
-    const esc = (e) => e.key === "Escape" && setMenuOpen(false);
+    const esc = (e) => e.key === "Escape" && setMenuAt(null);
     addEventListener("keydown", esc);
     return () => removeEventListener("keydown", esc);
   }, [menuOpen]);
