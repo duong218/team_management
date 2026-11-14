@@ -1,4 +1,4 @@
-import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen, Gauge } from "lucide-react";
+import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen, Gauge, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { saveAvatar } from "./api/profile";
 import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
@@ -18,6 +18,7 @@ import HistoryPage from "./pages/HistoryPage";
 import ProjectDashboardPage from "./pages/ProjectDashboardPage";
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // ngăn kéo menu trên điện thoại
   const auth = useAuth(),
     profile = useProfile(auth.data?.id),
     { route, navigate } = useHashRoute(),
@@ -27,6 +28,13 @@ export default function App() {
     // đồng bộ ảnh Google lên hồ sơ để người khác trong nhóm thấy; lỗi thì bỏ qua, lần đăng nhập sau thử lại
     if (profile.data && photo && profile.data.anh_dai_dien !== photo) saveAvatar(photo).catch(() => {});
   }, [profile.data, photo]);
+  useEffect(() => setMenuOpen(false), [route]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const esc = (e) => e.key === "Escape" && setMenuOpen(false);
+    addEventListener("keydown", esc);
+    return () => removeEventListener("keydown", esc);
+  }, [menuOpen]);
   if (auth.loading) return <Skeleton label="Đang kiểm tra đăng nhập…" />;
   if (!auth.data) return <LoginPage />;
   if (profile.loading) return <Skeleton label="Đang tải hồ sơ…" />;
@@ -100,7 +108,7 @@ export default function App() {
       </a>
     );
   return (
-    <div className={`app-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
+    <div className={`app-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}${menuOpen ? " menu-open" : ""}`}>
       <aside className="sidebar">
         <div className="sidebar-head">
           <a href="#/projects" className="brand" aria-label="Ocean and Gem - Công việc của tôi" title={sidebarCollapsed ? "Ocean and Gem" : undefined}>
@@ -110,6 +118,7 @@ export default function App() {
           <button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"} aria-expanded={!sidebarCollapsed} title={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"} onClick={() => setSidebarCollapsed((value) => !value)}>
             {sidebarCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
           </button>
+          <button className="drawer-close" type="button" aria-label="Đóng menu" onClick={() => setMenuOpen(false)}><X size={20} /></button>
         </div>
         {link("#/projects", ListChecks, "Công việc của tôi", route === "/projects" || route === "/")}
         {link("#/history", Archive, "Lịch sử công việc", historyMode)}
@@ -124,12 +133,14 @@ export default function App() {
           </>
         )}
       </aside>
+      <div className="scrim" onClick={() => setMenuOpen(false)} aria-hidden="true" />
       <div className="main">
         <header className="topbar">
+          <button className="menu-btn" type="button" aria-label="Mở menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Menu size={22} /></button>
           <NotificationBell notes={notes} />
           <div className="user-chip">
             <Avatar name={profile.data.ho_ten} src={photo} />
-            {profile.data.ho_ten}
+            <span className="user-name">{profile.data.ho_ten}</span>
           </div>
           <button className="icon-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={auth.logout}>
             <LogOut size={16} />

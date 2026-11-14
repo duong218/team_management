@@ -165,3 +165,22 @@ input[type="checkbox"] { min-height: 0; box-shadow: none; }
 .td .ocean-animation{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
 .td .td-hero>*:not(.ocean-animation){position:relative;z-index:1}
 .td .td-top h1,.td .td-desc,.td .td-meta{width:fit-content;max-width:100%;border-radius:16px;background:rgba(255,255,255,.82);backdrop-filter:blur(5px);padding:8px 14px}
+
+/* ---------- Menu ngăn kéo (điện thoại/máy tính bảng, desktop không đổi) ---------- */
+.menu-btn, .drawer-close, .scrim { display: none; }
+@media (max-width: 960px) {
+  .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 30; width: min(300px, 84vw); height: 100dvh; flex-direction: column; align-items: stretch; gap: 4px; overflow-y: auto; padding: 18px 14px; border-radius: 0 24px 24px 0; box-shadow: 12px 0 40px rgba(76, 29, 149, 0.22); transform: translateX(-105%); visibility: hidden; transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0.28s; }
+  .menu-open .sidebar { transform: none; visibility: visible; transition-delay: 0s; }
+  .app-shell .sidebar .sidebar-head { flex-direction: row; align-items: center; }
+  .app-shell .sidebar .brand { padding: 4px 8px 14px 4px; }
+  .app-shell .sidebar .brand span, .app-shell .sidebar .nav-text { display: inline; }
+  .app-shell .sidebar .nav-label { display: block; }
+  .app-shell .sidebar .nav-link { justify-content: flex-start; padding: 12px 14px; }
+  .sidebar-toggle { display: none; }
+  .drawer-close { display: grid; place-items: center; flex: none; width: 40px; height: 40px; margin-bottom: 10px; padding: 0; }
+  .scrim { display: block; position: fixed; inset: 0; z-index: 25; background: rgba(31, 26, 90, 0.4); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .menu-open .scrim { opacity: 1; pointer-events: auto; }
+  .menu-btn { display: grid; place-items: center; width: 44px; padding: 0; margin-right: auto; }
+  .topbar { gap: 8px; padding: 0 12px; }
+}
+@media (max-width: 520px) { .user-name { display: none; } .user-chip { padding: 4px; } }

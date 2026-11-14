@@ -224,14 +224,24 @@
 }
 @media (max-width: 520px) {
   .gh { border-radius: 22px; }
-  .sun-pos:not(.is-low), .moon-pos { translate: 112px -84px; scale: 0.6; }
-  .sun-pos.is-low { translate: 118px -48px; scale: 0.68; }
-  .gh-body { padding-bottom: 150px; }
+  .sun-pos:not(.is-low), .moon-pos { translate: 148px -106px; scale: 0.5; }
+  .sun-pos.is-low { translate: 140px -76px; scale: 0.58; }
   .wolf-pos { translate: -64px 0; }
   .wolf-flip { transform: scale(1.05, 1.05); }
-  .gh-stat > span:last-child { font-size: 12px; }
-  .gh-stat-ico { width: 34px; height: 34px; }
-  .gh-clock { padding: 5px 9px; }
+  /* chỉ mobile: chữ gọn, 3 thẻ số liệu chia đều khít khung, đồng hồ căn giữa */
+  .gh-body { min-width: 0; gap: 18px; padding: 24px 14px 140px; }
+  .gh-eyebrow { font-size: 12px; }
+  .gh h1 { margin: 6px 0 8px; font-size: 28px; text-wrap: balance; overflow-wrap: anywhere; }
+  .gh-sub { max-width: none; font-size: 15px; text-wrap: pretty; }
+  .gh-stat-panel { max-width: none; min-width: 0; gap: 12px; }
+  .gh-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; gap: 8px; }
+  .gh-stat { min-width: 0; justify-items: center; gap: 4px; padding: 12px 6px 10px; border-radius: 18px; text-align: center; }
+  .gh-stat:hover { transform: none; }
+  .gh-stat-ico { width: 32px; height: 32px; border-radius: 12px; }
+  .gh-stat-ico svg { width: 18px; height: 18px; }
+  .gh-stat strong { margin-top: 2px; font-size: 24px; }
+  .gh-stat > span:last-child { font-size: 12px; line-height: 1.25; text-wrap: balance; }
+  .gh-clock { justify-self: center; padding: 5px 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
