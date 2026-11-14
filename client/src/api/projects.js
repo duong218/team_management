@@ -60,3 +60,5 @@ export const updateScoreWeights = (project, weights) =>
   rpc("cap_nhat_trong_so_diem", { p_project: project, p_trong_so: weights });
 export const updateProjectSettings = (project, name, maxMembers) =>
   rpc("cap_nhat_cong_viec", { p_project: project, p_ten: name, p_max_members: maxMembers });
+export const deleteArchivedProject = (project) =>
+  rpc("xoa_cong_viec_vinh_vien", { p_project: project });
