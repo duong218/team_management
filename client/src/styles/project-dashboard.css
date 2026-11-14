@@ -1101,6 +1101,44 @@
   }
 }
 
+/* ================= 8. ĐIỆN THOẠI (chỉ ≤600px, desktop không đổi) ================= */
+@media (max-width: 600px) {
+  .pd-dashboard { gap: 14px; padding-bottom: 32px; }
+  .pd-hero-banner { padding: 18px 16px; gap: 14px; border-radius: 24px; }
+  .pd-hero-tag { flex-wrap: wrap; row-gap: 2px; padding: 5px 12px; font-size: 12.5px; margin-bottom: 8px; }
+  .pd-hero-title { margin-bottom: 6px; overflow-wrap: anywhere; text-wrap: balance; }
+  .pd-hero-desc { font-size: 14px; line-height: 1.5; }
+  .pd-hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .pd-hero-actions .pd-btn-primary { grid-column: 1 / -1; }
+  .pd-hero-actions .pd-btn-glass { gap: 6px; padding: 11px 8px; font-size: 13px; white-space: nowrap; }
+  .pd-metrics-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .pd-kpi-card { padding: 14px; border-radius: 20px; }
+  .pd-kpi-card:hover { transform: none; }
+  .pd-kpi-top { margin-bottom: 8px; }
+  .pd-kpi-icon { width: 36px; height: 36px; border-radius: 13px; }
+  .pd-kpi-badge, .pd-kpi-trend, .pd-kpi-sub { display: none; }
+  .pd-kpi-number { font-size: 28px; margin-bottom: 2px; }
+  .pd-kpi-title { font-size: 13px; line-height: 1.25; }
+  /* việc cần làm lên đầu, biểu đồ xuống sau */
+  .pd-main-grid { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  .pd-col-left, .pd-col-right { display: contents; }
+  .pd-card-tasks { order: 1; } .pd-card-deadline { order: 2; } .pd-card-chart { order: 3; } .pd-card-workload { order: 4; }
+  .pd-card { padding: 16px; border-radius: 22px; }
+  .pd-card-header { margin-bottom: 14px; }
+  .pd-card-header h2 { font-size: 17px; }
+  .pd-card-header p { display: none; }
+  .pd-badge-pill { padding: 5px 10px; font-size: 12.5px; }
+  .pd-donut-wrap { width: 148px; height: 148px; }
+  /* ui-ux-pro-max: vùng chạm >= 44px, cách nhau >= 8px, có phản hồi khi chạm */
+  .pd-hero-actions button, .pd-btn-view-all { min-height: 44px; }
+  .pd-deadline-list { gap: 8px; }
+  .pd-deadline-item { min-height: 48px; }
+  .pd-task-card, .pd-deadline-item, .pd-hero-actions button { -webkit-tap-highlight-color: transparent; transition: transform 0.12s; }
+  .pd-task-card:active, .pd-deadline-item:active { transform: scale(0.985); }
+  /* cảnh báo quá hạn phải nổi rõ trên màn nhỏ */
+  .pd-kpi-card.is-urgent { border-color: #fda4af; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pd-scene *,
   .pd-scene *::before {
