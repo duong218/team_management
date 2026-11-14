@@ -60,7 +60,7 @@ export default function HistoryPage({ userId, navigate }) {
         <div className="history-delete-body">
           <span className="history-delete-icon"><AlertTriangle size={22} aria-hidden="true" /></span>
           <h2 id="history-delete-title">Xóa công việc vĩnh viễn?</h2>
-          <p>Bạn sắp xóa <strong>{deleting?.ten}</strong> cùng toàn bộ task, bình luận và lịch sử liên quan. Dữ liệu sẽ không thể khôi phục.</p>
+          <p>Bạn sắp xóa <strong>{deleting?.ten}</strong> cùng toàn bộ task (kể cả task đã hủy), bình luận và lịch sử liên quan. Dữ liệu sẽ không thể khôi phục.</p>
           {deleteError && <p className="history-delete-error" role="alert">{deleteError}</p>}
           <div className="history-delete-actions">
             <button type="button" disabled={busy} onClick={() => setDeleting(null)}>Hủy bỏ</button>
