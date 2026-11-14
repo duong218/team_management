@@ -10,7 +10,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import { STATE_ORDER, STATES } from "../../lib/constants";
-import { Circle, Loader, Eye, CircleCheck, Plus } from "lucide-react";
+import { Circle, Loader, Eye, CircleCheck, Plus, Monitor } from "lucide-react";
 import TaskCard from "./TaskCard";
 import "../../styles/kanban.css";
 const ICONS = { can_lam: Circle, dang_lam: Loader, cho_duyet: Eye, hoan_thanh: CircleCheck };
@@ -85,18 +85,19 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, onCreateTask, 
         </div>
       )}
       {hint}
-      <div className="mobile-only">
-        <label>
-          Cột
-          <select value={column} onChange={(e) => setColumn(e.target.value)}>
-            {STATE_ORDER.map((s) => (
-              <option value={s} key={s}>
-                {STATES[s]}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className="kb-tabs" role="tablist" aria-label="Chọn cột trạng thái">
+        {STATE_ORDER.map((st) => {
+          const Icon = ICONS[st];
+          return (
+            <button key={st} type="button" role="tab" aria-selected={column === st} data-state={st} onClick={() => setColumn(st)}>
+              <Icon size={16} aria-hidden="true" />
+              <b>{tasks.filter((t) => t.trang_thai === st).length}</b>
+              <span>{STATES[st]}</span>
+            </button>
+          );
+        })}
       </div>
+      {!readOnly && <p className="kb-pc-note"><Monitor size={16} aria-hidden="true" />Nên dùng máy tính để kéo thả thẻ giữa các cột cho tiện hơn.</p>}
       <DndContext
         sensors={sensors}
         onDragEnd={({ active, over }) =>
