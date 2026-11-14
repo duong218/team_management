@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Pencil, Undo2, Trash2, EyeOff } from "lucide-react";
+import { Pencil, Undo2, Trash2, EyeOff, X, Check } from "lucide-react";
 import Avatar from "../common/Avatar";
 import { vnTime } from "../../lib/format";
 /* Sửa/gỡ: chỉ người viết. Xóa: chỉ nhóm trưởng/phó. Hàm onEdit/onRetract/onDelete nhận id và ném lỗi nếu thất bại. */
@@ -48,8 +48,8 @@ export default function CommentThread({ comments = [], meId, legacy, manager = f
                 ask?.id === c.id ? (
                   <div className="cm-acts cm-ask">
                     <span>{ask.kind === "delete" ? "Xóa hẳn bình luận này?" : "Gỡ tin nhắn này?"}</span>
-                    <button type="button" className="cm-act" disabled={busy} onClick={() => setAsk(null)}>Không</button>
-                    <button type="button" className="cm-act cm-danger" disabled={busy} onClick={() => run(() => (ask.kind === "delete" ? onDelete(c.id) : onRetract(c.id)))}>{ask.kind === "delete" ? "Xóa" : "Gỡ"}</button>
+                    <button type="button" className="cm-act cm-ico" disabled={busy} aria-label={ask.kind === "delete" ? "Không xóa" : "Không gỡ"} title="Không" onClick={() => setAsk(null)}><X size={20} strokeWidth={2.4} aria-hidden="true" /></button>
+                    <button type="button" className="cm-act cm-ico cm-confirm" disabled={busy} aria-label={ask.kind === "delete" ? "Xác nhận xóa hẳn bình luận" : "Xác nhận gỡ tin nhắn"} title={ask.kind === "delete" ? "Xóa" : "Gỡ"} onClick={() => run(() => (ask.kind === "delete" ? onDelete(c.id) : onRetract(c.id)))}><Check size={20} strokeWidth={2.4} aria-hidden="true" /></button>
                   </div>
                 ) : (
                   <div className="cm-acts">

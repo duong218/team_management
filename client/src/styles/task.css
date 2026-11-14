@@ -181,3 +181,11 @@
 .td .cm-edit { display: grid; gap: 6px; width: 100%; min-width: 0; }
 .td .cm-edit textarea { width: 100%; min-height: 72px; box-sizing: border-box; }
 .td .cm-error { color: #be123c; font-size: 14px; font-weight: 600; }
+/* Hàng xác nhận gỡ/xóa: nút biểu tượng ✕ / ✓ cho gọn trên mobile (vùng chạm 44px, cách nhau 8px) */
+.td .cm-ask { flex-wrap: nowrap; gap: 8px; }
+.td .cm-ask > span { flex: 0 1 auto; min-width: 0; }
+.td .cm-act.cm-ico { flex: none; justify-content: center; width: 44px; min-height: 44px; padding: 0; border-radius: 50%; }
+.td .cm-act.cm-ico { background: #f4f0fc; color: var(--ink-2); }
+.td .cm-act.cm-ico:hover:not(:disabled) { background: #e9e0fa; }
+.td .cm-act.cm-confirm { background: #be123c; color: #fff; }
+.td .cm-act.cm-confirm:hover:not(:disabled) { background: #9f1239; }
