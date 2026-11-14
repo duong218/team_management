@@ -47,6 +47,7 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - `submitCode(code:string)` → RPC `nhap_ma(p_ma:text)`; người có hồ sơ; ProjectListPage. Lỗi: mã sai/hết hạn, đã tham gia, giới hạn từ chối/loại.
 - `approveNew(request:uuid)` → `duyet_moi(p_request)`; trưởng/phó; ManagePage.
 - `approveReplacement(request:uuid,member:uuid)` → `duyet_thay_the(p_request,p_member)`; trưởng/phó; ManagePage.
+  Migration 26 giữ dòng thành viên cũ để bảo toàn lịch sử; các task đang làm/cần làm được chuyển sang dòng thành viên mới. Task đang chờ duyệt phải được trả lại trước.
 - `reject(request:uuid)` → `tu_choi_yeu_cau(p_request)`; trưởng/phó; ManagePage.
 - Danh sách phòng chờ thực tế gọi `phong_cho_full(p_project:uuid)` trả request_id,user_id,ho_ten,email,ma_dinh_danh,don_vi,cho_tu,trung_ma_voi,so_lan_bi_tu_choi,so_lan_bi_loai,tung_o_nhom,task_do; chỉ trưởng/phó của project.
 
@@ -56,23 +57,25 @@ Phạm vi: `client/src/api/`. Mọi lỗi Supabase được ném thành `Error`;
 - `reopenTask(task,reason)` → RPC `mo_lai_task(p_task:uuid,p_ly_do:text)`; trưởng/phó, TaskDetailPage.
 - `updateProjectSettings(project,name,maxMembers)` → RPC `cap_nhat_cong_viec(p_project:uuid,p_ten:text,p_max_members:integer)`; trưởng/phó, ManagePage.
 - `deleteArchivedProject(project:uuid)` → RPC `xoa_cong_viec_vinh_vien(p_project:uuid)`, trả `void`; chỉ trưởng/phó đang tham gia và chỉ với công việc đã lưu trữ; xóa vĩnh viễn công việc cùng toàn bộ task, bình luận, thành viên, thông báo và snapshot báo cáo liên quan; HistoryPage. Lỗi: không có quyền, không tìm thấy công việc, hoặc công việc chưa kết thúc.
-- `listTasks(project)` đọc `tasks(id,project_id,trang_thai,trang_thai_truoc_huy,tien_do,han_chot,ly_do_huy,cap_nhat_luc,tao_luc)`, `task_details(task_id,tieu_de,mo_ta,tep_dinh_kem,binh_luan)`, `task_assignees(task_id,member_id,vai_tro_trong_task,trang_thai)`, `members(id,user_id,vai_tro,trang_thai)`, `profiles(user_id,ho_ten)`; theo project và task_id; thành viên dự án qua RLS; Kanban.
-- `getTask(task)` đọc tasks/detail, assignments, thành viên/hồ sơ, checklist/link, activity_log với danh sách cột tường minh; lọc task/project; RLS chỉ thành viên được giao hoặc quản lý (task chưa giao cho phép thành viên xem tóm tắt); TaskDetail.
+- `listTasks(project)` đọc `tasks(id,project_id,trang_thai,trang_thai_truoc_huy,tien_do,han_chot,ly_do_huy,cap_nhat_luc,tao_luc)`, `task_details(task_id,tieu_de,mo_ta,tep_dinh_kem,binh_luan)`, `task_assignees(task_id,member_id,vai_tro_trong_task,trang_thai)`, `members(id,user_id,vai_tro,trang_thai,ly_do_roi)`, `profiles(user_id,ho_ten)`; theo project và task_id; thành viên dự án qua RLS; Kanban.
+- `getTask(task)` đọc tasks/detail, assignments, thành viên/hồ sơ, checklist/link, activity_log với danh sách cột tường minh; thành viên gồm `ly_do_roi` để phân biệt người đã thay thế khỏi người cần chuyển tiếp; lọc task/project; RLS chỉ thành viên được giao hoặc quản lý (task chưa giao cho phép thành viên xem tóm tắt); TaskDetail.
 
 ## checklist.js và links.js
 - `listChecklist(task)` đọc `task_checklist(id,task_id,noi_dung,trong_so,da_xong,trang_thai_muc,de_xuat_boi,nguoi_hoan_thanh,thoi_gian_hoan_thanh)`, lọc task_id; người được giao/quản lý; TaskDetail.
 - `toggleChecklistItem(item:uuid,checked:boolean)` → `tick_muc(p_muc,p_da_xong)`; người được giao hợp lệ; TaskDetail.
+- `de_xuat_muc(p_task:uuid,p_noi_dung:text)` và `xu_ly_de_xuat_muc(p_muc:uuid,p_duyet:boolean,p_ly_do:text|null)`; thành viên đang làm đề xuất, trưởng/phó xử lý. Task không thể gửi duyệt khi còn đề xuất checklist đang chờ; migration 26 cho phép từ chối đề xuất còn chờ để đóng lại, nhưng không cho duyệt đề xuất trên task đã khóa.
 - `addChecklistItem(task:uuid,content:text)` → `them_muc_task(p_task,p_noi_dung,p_trong_so=1)`; trưởng/phó; TaskDetail.
 - `addLink(item:uuid,url:string,note:string)` → `them_link(p_muc,p_url,p_ghi_chu)`; người được giao; TaskDetail. `rejectLink(link:uuid,reason:text)` → `tu_choi_link(p_link,p_ly_do)`; trưởng/phó; TaskDetail.
 - `listLinks(task)` đọc `task_links(id,task_id,muc_id,url,ghi_chu,nguoi_them,thoi_gian,trang_thai_link,ly_do_tu_choi)` lọc task_id; người được giao/quản lý theo RLS.
 
 ## members.js
 - `listMembers(project)` → `ds_thanh_vien_quan_ly(p_project)` trả member_id,user_id,ho_ten,don_vi,ma_dinh_danh,vai_tro,trang_thai,ly_do_roi,task_dang_lam,chua_nhan_viec,so_lan_bi_loai,task_do; trưởng/phó; ManagePage.
-- Ghi RPC: `duyet_moi(p_request)`, `duyet_thay_the(p_request,p_member)`, `tu_choi_yeu_cau(p_request)`, `loai_thanh_vien(p_member,p_ly_do,p_xu_ly_tien_do)`, `moi_lai(p_member)`, `doi_vai_tro(p_member,p_vai_tro)`, `roi_nhom(p_project)`; tất cả quyền/validation do SQL; ManagePage/project menu. `doi_vai_tro` được sửa biến kiểm tra người tự đổi vai trò trong `supabase/21_sua_doi_vai_tro.sql`.
+- Ghi RPC: `duyet_moi(p_request)`, `duyet_thay_the(p_request,p_member)`, `tu_choi_yeu_cau(p_request)`, `loai_thanh_vien(p_member,p_ly_do,p_xu_ly_tien_do)`, `moi_lai(p_member)`, `doi_vai_tro(p_member,p_vai_tro)`, `roi_nhom(p_project)`; tất cả quyền/validation do SQL; ManagePage/project menu. Migration 26 không cho rời nhóm nếu còn task được giao ở trạng thái Cần làm/Đang làm/Chờ duyệt. `doi_vai_tro` được sửa trong `supabase/21_sua_doi_vai_tro.sql`.
 - `getMyMember(project)` đọc `members(id,project_id,user_id,vai_tro,trang_thai)` theo project_id/user_id/trạng thái; chính chủ; TaskDetail.
 
 ## transfers.js và votes.js
 - `requestTransfer(task,reason)` → `xin_chuyen_giao(p_task,p_ly_do)`; người đang được giao; TaskDetail.
+  Migration 26 khóa task trước khi kiểm tra và ghi yêu cầu để tránh yêu cầu chuyển giao cũ xuất hiện đồng thời với đổi người chính.
 - `transferQueue(project)` → `ds_yeu_cau_chuyen_giao(p_project)` trả id,task_id,member_id,ho_ten,ly_do,trang_thai,thoi_gian,tien_do,vai_tro_trong_task; trưởng/phó; ManagePage.
 - `resolveTransfer(request,decision,member,type,reason,dueDate?)` → `xu_ly_yeu_cau_chuyen_giao(p_yeu_cau,p_quyet_dinh,p_den_member,p_loai,p_ly_do_xu_ly,p_han_moi)`; trưởng/phó; ManagePage.
 - `transferTask(task,fromMember,toMember,type,reason,dueDate?)` → `chuyen_giao_task(p_task,p_tu_member,p_den_member,p_loai,p_ly_do,p_han_moi)`; trưởng/phó; TaskDetail; lưu hạn cũ nếu không truyền hạn mới.

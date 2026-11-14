@@ -19,7 +19,7 @@ export const listTasks = async (projectId) => {
   const [details, assignments, members] = await Promise.all([
     unwrap(supabase.from('task_details').select(DETAIL_COLUMNS).in('task_id', tasks.map((t) => t.id))),
     unwrap(supabase.from('task_assignees').select('task_id,member_id,vai_tro_trong_task,trang_thai').in('task_id', tasks.map((t) => t.id))),
-    unwrap(supabase.from('members').select('id,user_id,vai_tro,trang_thai')),
+    unwrap(supabase.from('members').select('id,user_id,vai_tro,trang_thai,ly_do_roi')),
   ])
   const detailMap = Object.fromEntries(details.map((x) => [x.task_id, x]))
   const memberIds = new Set(assignments.map((x) => x.member_id))
@@ -34,7 +34,7 @@ export const getTask = async (id) => {
   if (!task) return null
   const detail = await getTaskDetails(id)
   const assignees = await unwrap(supabase.from('task_assignees').select('task_id,member_id,vai_tro_trong_task,trang_thai,giao_boi,thoi_gian_giao').eq('task_id', id))
-  const people = assignees.length ? await unwrap(supabase.from('members').select('id,user_id,vai_tro,trang_thai').eq('project_id', task.project_id).in('id', assignees.map((a) => a.member_id))) : []
+  const people = assignees.length ? await unwrap(supabase.from('members').select('id,user_id,vai_tro,trang_thai,ly_do_roi').eq('project_id', task.project_id).in('id', assignees.map((a) => a.member_id))) : []
   const profiles = people.length ? await unwrap(supabase.from('profiles').select('user_id,ho_ten,don_vi,anh_dai_dien').in('user_id', people.map((p) => p.user_id))) : []
   const profileMap = Object.fromEntries(profiles.map((p) => [p.user_id, p]))
   const memberMap = Object.fromEntries(people.map((m) => [m.id, { ...m, ...profileMap[m.user_id] }]))

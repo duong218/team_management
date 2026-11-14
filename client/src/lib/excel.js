@@ -69,7 +69,7 @@ export async function downloadExcelReport(report) {
     row.eachCell((cell) => { cell.border = border; cell.alignment = { vertical: "middle" }; });
     const role = row.getCell(2), status = row.getCell(3);
     role.fill = { type: "pattern", pattern: "solid", fgColor: { argb: member.vai_tro === "truong_nhom" ? "FFFFF1B8" : member.vai_tro === "pho_nhom" ? "FFE9E3FF" : "FFE1F2FF" } };
-    status.value = member.trang_thai === "dang_tham_gia" ? "Đang tham gia" : member.trang_thai === "da_roi" ? "Đã rời nhóm" : member.trang_thai || "Chưa rõ";
+    status.value = member.trang_thai === "dang_tham_gia" ? "Đang tham gia" : member.trang_thai === "da_roi" ? member.ly_do_roi === "thay_the" ? "Đã được thay thế" : "Đã rời nhóm" : member.trang_thai || "Chưa rõ";
     status.fill = { type: "pattern", pattern: "solid", fgColor: { argb: member.trang_thai === "dang_tham_gia" ? "FFD7F7E2" : "FFF0EDF6" } };
     status.font = { bold: true, color: { argb: member.trang_thai === "dang_tham_gia" ? "FF166534" : "FF716887" } };
     row.getCell(4).numFmt = "0.00";

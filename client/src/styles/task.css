@@ -128,6 +128,7 @@
 
 /* Quản lý checklist */
 .td .check-actions { display: flex; gap: 6px; margin-left: auto; }
+.td .chip.danger { color: #9f1239; background: #fff1f2; }
 .td .check-actions .sm, .td .check-edit .sm, .td .check-delete .sm { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; min-width: 36px; padding: 4px 10px; }
 .td .check-actions .danger, .td .check-delete .danger { color: #9f1239; background: #fff1f2; }
 .td .check-edit { display: flex; flex: 1; gap: 6px; }

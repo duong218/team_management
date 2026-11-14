@@ -20,7 +20,7 @@ export default function MemberRow({ member: m, myRole, busy, protectedKick, onRo
           <strong>{m.ho_ten}</strong>
           <span className={`mg-role mg-role-${m.vai_tro}`}><Icon size={14} aria-hidden="true" />{ROLES[m.vai_tro] || m.vai_tro}</span>
           {m.chua_nhan_viec && <span className="mg-flag"><TriangleAlert size={14} aria-hidden="true" />Chưa nhận việc</span>}
-          {left && <span className="mg-flag mg-flag-muted">Đã rời nhóm</span>}
+          {left && <span className="mg-flag mg-flag-muted">{m.ly_do_roi === "thay_the" ? "Đã được thay thế" : "Đã rời nhóm"}</span>}
         </div>
         <p>{m.don_vi || "Chưa có đơn vị"}{!readOnly && <> · <b>{m.task_dang_lam}</b> task đang làm
           {m.so_lan_bi_loai > 0 && <> · Từng bị loại {m.so_lan_bi_loai} lần{m.so_lan_bi_loai >= 3 ? " (đã bị cấm)" : ""}</>}</>}</p>
