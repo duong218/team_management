@@ -1,18 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import "../../styles/pet.css";
-import { SPRITES } from "./petSprites";
+import { PETS, usePet } from "./petSprites";
 
 // Mèo thú cưng cho giao diện máy tính: tự đi, nhảy, ngồi, ngủ; giữ chuột để bế lên, thả ra thì rơi xuống.
 // Chỉ chạy transform (compositor); tắt hành vi tự động khi người dùng chọn giảm chuyển động.
-const [W, H] = SPRITES?.size || [72, 56], GRAV = 2200;
+const GRAV = 2200;
 const FALLBACK = { fall: "jump", jump: "sit", land: "sit", held: "sit", sleep: "sit", walk: "sit" };
-const pick = (k) => SPRITES[k] || (FALLBACK[k] && pick(FALLBACK[k])) || null;
+const pick = (S, k) => S[k] || (FALLBACK[k] && pick(S, FALLBACK[k])) || null;
 const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const DESKTOP = "(min-width: 881px) and (hover: hover) and (pointer: fine)";
 
 export default function PetCat() {
   const [on, setOn] = useState(() => matchMedia(DESKTOP).matches);
+  const [id] = usePet(), SPRITES = PETS[id]; // "none" thì không có pet nào
+  const [W, H] = SPRITES?.size || [72, 56];
   const box = useRef(null);
   useEffect(() => {
     const mq = matchMedia(DESKTOP);
@@ -22,7 +24,7 @@ export default function PetCat() {
   }, []);
 
   useEffect(() => {
-    if (!on) return;
+    if (!on || !SPRITES) return;
     const el = box.current;
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ground = () => innerHeight - H - 6;
@@ -116,15 +118,15 @@ export default function PetCat() {
       el.removeEventListener("pointerup", onUp);
       el.removeEventListener("pointercancel", onUp);
     };
-  }, [on]);
+  }, [on, SPRITES, W, H]);
 
-  if (!on) return null;
+  if (!on || !SPRITES) return null;
   return (
     <div className="pet" ref={box} aria-hidden="true" style={{ width: W, height: H, "--face": SPRITES?.facing || 1 }}>
-      <span className="pet-say">Meo~</span>
+      <span className="pet-say">{SPRITES.say}</span>
       <div className="pet-sw"><div className="pet-in">
         {SPRITES ? ["sit", "walk", "sleep", "jump", "fall", "land", "held"].map((k) => {
-          const a = pick(k);
+          const a = pick(SPRITES, k);
           if (!a) return null;
           const n = a.frames || 1;
           return <div key={k} className={`spr spr-${k}${n > 1 ? " anim" : ""}`}

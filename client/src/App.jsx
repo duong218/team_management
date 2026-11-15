@@ -6,6 +6,7 @@ import { ErrorBox, Skeleton, Avatar } from "./components/common";
 import Logo from "./components/common/Logo";
 import NotificationBell from "./components/common/NotificationBell";
 import PetCat from "./components/common/PetCat";
+import PetPicker from "./components/common/PetPicker";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProjectListPage from "./pages/ProjectListPage";
@@ -124,6 +125,7 @@ export default function App() {
         </div>
         {link("#/projects", ListChecks, "Công việc của tôi", route === "/projects" || route === "/")}
         {link("#/history", Archive, "Lịch sử công việc", historyMode)}
+        <PetPicker />
         {inProject && (
           <>
             <div className="nav-label">Công việc đang mở</div>
