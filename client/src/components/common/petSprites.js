@@ -2,7 +2,8 @@ import { useSyncExternalStore } from "react";
 
 // Mèo: bộ "Cat player" của Jump Button (jumpbutton.itch.io/cat-player-asset), khung 32×32, phóng 2×.
 // Hiệp sĩ: bộ "Knight player" và "Red Cape Knight" cũng của Jump Button; đã cắt sát nhân vật, hiệp sĩ áo đỏ thu nhỏ 0.5×.
-// Giấy phép: dùng cá nhân thoải mái; dùng thương mại BẮT BUỘC ghi credit tác giả (Jump Button). Sửa ảnh được, không bán lại ảnh.
+// Cáo: "Fox - Animated Pixel Character" của hanguyen-lisa (itch.io), dùng miễn phí. Mèo xám và chó cam: "Cat & Dog - Free Sprites" của pzUH (opengameart.org), CC0.
+// Giấy phép của Jump Button: dùng cá nhân thoải mái; dùng thương mại BẮT BUỘC ghi credit tác giả (Jump Button). Sửa ảnh được, không bán lại ảnh.
 //
 // Mỗi pet: size [rộng, cao] của 1 khung, facing (1 = ảnh gốc quay mặt sang phải), say (câu nói khi chạm vào),
 // và các trạng thái sit · walk · sleep · jump · fall · land · held. Mỗi trạng thái: { src } hoặc
@@ -11,6 +12,9 @@ const sheets = (dir, f) =>
   Object.fromEntries(Object.entries(f).map(([k, [frames, fps]]) => [k, { src: `/pet/${dir}/${k}.png`, frames, fps }]));
 
 const knight = sheets("knight", { sit: [4, 4], walk: [7, 9], sleep: [3, 2], jump: [6, 8], fall: [3, 8], land: [4, 16] });
+const fox = sheets("fox", { sit: [6, 5], walk: [4, 6], jump: [4, 5], fall: [1, 5] });
+const cartoon = (dir) => sheets(dir, { sit: [10, 8], walk: [10, 12], jump: [8, 10], fall: [8, 10], land: [10, 16] });
+const graycat = cartoon("graycat"), dog = cartoon("dog");
 const red = sheets("red", { sit: [5, 4], walk: [9, 10], sleep: [3, 2], jump: [4, 8], fall: [4, 8], land: [4, 16] });
 
 export const PETS = {
@@ -26,6 +30,9 @@ export const PETS = {
   },
   knight: { name: "Hiệp sĩ tím", say: "Tuân lệnh!", size: [47, 64], facing: 1, ...knight, held: knight.fall },
   red: { name: "Hiệp sĩ áo đỏ", say: "Xuất kích!", size: [51, 54], facing: 1, ...red, held: red.fall },
+  fox: { name: "Cáo tuyết", say: "Yip yip!", size: [56, 46], facing: 1, ...fox, held: fox.fall },
+  graycat: { name: "Mèo xám", say: "Meo meo!", size: [52, 56], facing: 1, ...graycat, held: graycat.fall },
+  dog: { name: "Chó cam", say: "Gâu gâu!", size: [50, 56], facing: 1, ...dog, held: dog.fall },
 };
 
 // Pet đang chọn: chỉ lưu ở localStorage của trình duyệt (không lên DB). "none" = ẩn pet, mặc định là mèo.

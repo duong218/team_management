@@ -94,11 +94,11 @@
 button.pet-nav, button.pet-nav:hover:not(:disabled), button.pet-nav:active:not(:disabled) { width: 100%; min-height: 0; border: 0; box-shadow: none; transform: none; text-align: left; }
 button.pet-nav { background: none; }
 button.pet-nav:hover:not(:disabled) { background: var(--surface-2); }
-.pet-dialog { width: min(440px, 92vw); padding: 26px; border: 0; border-radius: 28px; background: #fff; color: var(--ink); box-shadow: 0 24px 60px rgba(46, 16, 101, 0.35); }
+.pet-dialog { width: min(480px, 92vw); padding: 26px; border: 0; border-radius: 28px; background: #fff; color: var(--ink); box-shadow: 0 24px 60px rgba(46, 16, 101, 0.35); }
 .pet-dialog::backdrop { background: rgba(46, 16, 101, 0.35); backdrop-filter: blur(3px); }
 .pet-dialog h2 { margin: 0 0 4px; font-size: 20px; }
 .pet-dialog p { margin: 0 0 16px; font-size: 14px; color: var(--ink-2); }
-.pet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .pet-opt { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px; border: 2px solid transparent; border-radius: 20px; background: var(--surface-2); font: inherit; color: inherit; cursor: pointer; transition: transform 0.15s, border-color 0.15s; }
 .pet-opt:hover { transform: translateY(-2px); }
 .pet-opt[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); }
