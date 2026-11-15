@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutGrid, Bell, BarChart3, ShieldCheck, Circle, Loader, CircleCheck } from "lucide-react";
+import { LayoutGrid, Bell, BarChart3, ShieldCheck, Circle, Loader, CircleCheck, Sparkles, LogIn, UsersRound, Rocket, Zap } from "lucide-react";
 import { useAuth } from "../hooks";
 import Logo from "../components/common/Logo";
 import { ErrorBox } from "../components/common";
@@ -7,16 +7,22 @@ import "@fontsource-variable/nunito/wght.css";
 import "../styles/login.css";
 
 const FEATURES = [
-  [LayoutGrid, "sky", "Bảng Kanban: ai làm gì, nhìn là biết"],
-  [Bell, "sun", "Thông báo ngay khi có thay đổi"],
-  [BarChart3, "mint", "Báo cáo tiến độ cả nhóm trong một trang"],
+  [LayoutGrid, "sky", "Bảng Kanban", "Ai làm gì, nhìn là biết"],
+  [Bell, "sun", "Thông báo tức thì", "Có thay đổi là báo ngay"],
+  [BarChart3, "mint", "Báo cáo tiến độ", "Cả nhóm gói trong một trang"],
 ];
-// [loại màu, biểu tượng, chữ chip, tên việc, % tiến độ] — chỉ để minh hoạ
-const DEMO = [
-  ["sky", Circle, "Cần làm", "Soạn đề cương", 0],
-  ["sun", Loader, "Đang làm", "Thiết kế giao diện", 60],
-  ["mint", CircleCheck, "Hoàn thành", "Khảo sát nhu cầu", 100],
+// Bảng minh hoạ (không phải dữ liệu thật): [loại màu, biểu tượng, tên cột, [[việc, %, người]]]
+const BOARD = [
+  ["sky", Circle, "Cần làm", [["Soạn đề cương", 0, "pink"], ["Chọn đề tài", 0, "sun"]]],
+  ["sun", Loader, "Đang làm", [["Thiết kế giao diện", 60, "violet"]]],
+  ["mint", CircleCheck, "Hoàn thành", [["Khảo sát nhu cầu", 100, "sky"]]],
 ];
+const STEPS = [
+  [LogIn, "Đăng nhập"],
+  [UsersRound, "Vào nhóm"],
+  [Rocket, "Nhận việc"],
+];
+const initial = { pink: "D", sun: "M", violet: "A", sky: "L" };
 
 const GoogleG = () => (
   <svg viewBox="0 0 48 48" aria-hidden="true">
@@ -41,43 +47,51 @@ export default function LoginPage() {
         <span className="lg-wave lg-w3" />
       </div>
 
+      <header className="lg-brand">
+        <Logo className="lg-logo" size={36} />
+        <b>Ocean and Gem</b>
+        <span className="lg-pill"><Sparkles size={14} aria-hidden="true" />Theo dõi tiến độ nhóm</span>
+      </header>
+
       <section className="lg-hero" aria-hidden="true">
-        <h2>Gom việc cần làm, cả nhóm cùng về đích.</h2>
-        <ul>
-          {FEATURES.map(([Icon, tone, text]) => (
-            <li key={text}>
-              <span className={`lg-ico ${tone}`}>
-                <Icon size={20} strokeWidth={2} />
-              </span>
-              {text}
+        <h2>Gom việc cần làm, cả nhóm <em>cùng về đích.</em></h2>
+        <p className="lg-lead">Chia việc rõ ràng, cập nhật tiến độ theo thời gian thực, không còn hỏi nhau “xong chưa?”.</p>
+
+        <ul className="lg-feats">
+          {FEATURES.map(([Icon, tone, title, text]) => (
+            <li key={title} className={tone}>
+              <span className={`lg-ico ${tone}`}><Icon size={20} strokeWidth={2} /></span>
+              <b>{title}</b>
+              <span>{text}</span>
             </li>
           ))}
         </ul>
-        <div className="lg-stack">
-          {DEMO.map(([tone, Icon, chip, title, p]) => (
-            <div className="lg-card" key={title}>
-              <div className="lg-card-top">
-                <b>{title}</b>
-                <span className={`lg-chip ${tone}`}>
-                  <Icon size={14} strokeWidth={2.2} />
-                  {chip}
-                </span>
-              </div>
-              <div className="lg-bar-row">
-                <span className="lg-bar">
-                  <i style={{ "--p": `${p}%` }} />
-                </span>
-                <span className="lg-pct">{p}%</span>
-              </div>
+
+        <div className="lg-board">
+          {BOARD.map(([tone, Icon, name, cards]) => (
+            <div className={`lg-col ${tone}`} key={name}>
+              <div className={`lg-chip ${tone}`}><Icon size={14} strokeWidth={2.2} />{name}</div>
+              {cards.map(([title, p, who]) => (
+                <div className="lg-card" key={title}>
+                  <b>{title}</b>
+                  <div className="lg-bar-row">
+                    <span className="lg-bar"><i className={tone} style={{ "--p": `${p}%` }} /></span>
+                    <span className="lg-pct">{p}%</span>
+                  </div>
+                  <span className={`lg-av ${who}`}>{initial[who]}</span>
+                </div>
+              ))}
             </div>
           ))}
+          <span className="lg-float lg-f1"><Zap size={14} aria-hidden="true" />Vừa cập nhật 60%</span>
+          <span className="lg-float lg-f2"><CircleCheck size={14} aria-hidden="true" />Được duyệt</span>
         </div>
       </section>
 
       <main className="lg-side">
         <div className="lg-panel">
-          <Logo className="lg-mark" size={64} />
-          <h1>Chào mừng đến với Ocean and Gem!</h1>
+          <Logo className="lg-mark" size={56} />
+          <h1>Chào mừng đến với <span>Ocean and Gem!</span></h1>
           <p>Đăng nhập để xem việc của mình và theo dõi tiến độ cả nhóm.</p>
           {error && <ErrorBox message={error} />}
           <button
@@ -99,6 +113,11 @@ export default function LoginPage() {
             <ShieldCheck size={16} aria-hidden="true" />
             Dùng tài khoản Google, không cần nhớ mật khẩu.
           </p>
+          <ol className="lg-steps" aria-label="Cách bắt đầu">
+            {STEPS.map(([Icon, text], i) => (
+              <li key={text}><span className={`lg-step s${i}`}><Icon size={16} aria-hidden="true" /></span>{text}</li>
+            ))}
+          </ol>
         </div>
       </main>
     </div>
