@@ -3,6 +3,7 @@ import { useSyncExternalStore } from "react";
 // Mèo: bộ "Cat player" của Jump Button (jumpbutton.itch.io/cat-player-asset), khung 32×32, phóng 2×.
 // Hiệp sĩ: bộ "Knight player" và "Red Cape Knight" cũng của Jump Button; đã cắt sát nhân vật, hiệp sĩ áo đỏ thu nhỏ 0.5×.
 // Cáo: "Fox - Animated Pixel Character" của hanguyen-lisa (itch.io), dùng miễn phí. Mèo xám và chó cam: "Cat & Dog - Free Sprites" của pzUH (opengameart.org), CC0.
+// Chim cánh cụt: "FREE Animated Pixel Art Penguin" của Duckhive (itch.io). Bạch tuộc: "Squidlet Baby Green Octopus" của MutterPixel (itch.io), dùng thương mại được, không bán lại ảnh, nên ghi credit.
 // Giấy phép của Jump Button: dùng cá nhân thoải mái; dùng thương mại BẮT BUỘC ghi credit tác giả (Jump Button). Sửa ảnh được, không bán lại ảnh.
 //
 // Mỗi pet: size [rộng, cao] của 1 khung, facing (1 = ảnh gốc quay mặt sang phải), say (câu nói khi chạm vào),
@@ -15,6 +16,8 @@ const knight = sheets("knight", { sit: [4, 4], walk: [7, 9], sleep: [3, 2], jump
 const fox = sheets("fox", { sit: [6, 5], walk: [4, 6], jump: [4, 5], fall: [1, 5] });
 const cartoon = (dir) => sheets(dir, { sit: [10, 8], walk: [10, 12], jump: [8, 10], fall: [8, 10], land: [10, 16] });
 const graycat = cartoon("graycat"), dog = cartoon("dog");
+const penguin = sheets("penguin", { sit: [2, 2], walk: [6, 8], sleep: [1, 1], jump: [2, 6], fall: [1, 1], land: [2, 8] });
+const squid = sheets("squid", { sit: [13, 6], walk: [13, 12], sleep: [6, 4] }); // không có nhảy/rơi: dùng hình ngồi
 const red = sheets("red", { sit: [5, 4], walk: [9, 10], sleep: [3, 2], jump: [4, 8], fall: [4, 8], land: [4, 16] });
 
 export const PETS = {
@@ -32,6 +35,8 @@ export const PETS = {
   red: { name: "Hiệp sĩ áo đỏ", say: "Xuất kích!", size: [51, 54], facing: 1, ...red, held: red.fall },
   fox: { name: "Cáo tuyết", say: "Yip yip!", size: [56, 46], facing: 1, ...fox, held: fox.fall },
   graycat: { name: "Mèo xám", say: "Meo meo!", size: [52, 56], facing: 1, ...graycat, held: graycat.fall },
+  penguin: { name: "Chim cánh cụt", say: "Quạc!", size: [62, 44], facing: -1, ...penguin, held: penguin.fall }, // ảnh gốc quay mặt sang trái
+  squid: { name: "Bạch tuộc xanh", say: "Blub blub!", size: [68, 56], facing: 1, ...squid },
   dog: { name: "Chó cam", say: "Gâu gâu!", size: [50, 56], facing: 1, ...dog, held: dog.fall },
 };
 
