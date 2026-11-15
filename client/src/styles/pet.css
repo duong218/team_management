@@ -1,0 +1,90 @@
+/* Mèo thú cưng (PetCat). Vị trí do JS đặt bằng transform; ở đây chỉ có dáng và hoạt hình của từng trạng thái:
+   sit · walk · jump · fall · land · sleep · held (đang bị bế). Chỉ animate transform/opacity. */
+.pet {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  width: 72px;
+  height: 56px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+}
+.pet:active { cursor: grabbing; }
+.pet-sw { transform: rotate(var(--rot, 0deg)); transform-origin: var(--ox, 50%) var(--oy, 50%); }
+.pet-in { transform: scaleX(calc(var(--dir, -1) * var(--face, 1))); position: relative; }
+.pet svg { display: block; overflow: visible; filter: drop-shadow(0 4px 4px rgba(76, 29, 149, 0.2)); }
+.pet svg * { transform-box: view-box; }
+
+.tail { transform-origin: 14px 36px; animation: pet-tail 1.6s ease-in-out infinite alternate; }
+.leg { transform-origin: center 38px; }
+.head, .body { transform-origin: 50px 36px; }
+.shut, .zz { opacity: 0; }
+.zz { position: absolute; left: 44px; top: -2px; font: 800 14px/1 "Nunito Variable", sans-serif; color: #7c3aed; }
+.zz.z2 { left: 54px; top: -12px; font-size: 11px; }
+
+/* đi: bốn chân chéo nhau, thân nhấp nhô */
+[data-s="walk"] .lf1, [data-s="walk"] .lb2 { animation: pet-leg 0.36s ease-in-out infinite alternate; }
+[data-s="walk"] .lf2, [data-s="walk"] .lb1 { animation: pet-leg 0.36s ease-in-out infinite alternate-reverse; }
+[data-s="walk"] .pet-in { animation: pet-bob 0.36s ease-in-out infinite alternate; }
+[data-s="walk"] .tail { animation-duration: 0.8s; }
+
+/* nhảy / rơi: duỗi chân, đuôi dựng */
+[data-s="jump"] .lf1, [data-s="jump"] .lf2 { transform: rotate(-35deg); }
+[data-s="jump"] .lb1, [data-s="jump"] .lb2 { transform: rotate(35deg); }
+[data-s="fall"] .leg { animation: pet-dangle 0.25s ease-in-out infinite alternate; }
+[data-s="land"] .pet-in { transform: scaleX(calc(var(--dir, -1) * var(--face, 1))) scale(1.12, 0.82); transform-origin: 50% 100%; }
+
+/* ngủ: cuộn tròn, nhắm mắt, hiện chữ z */
+[data-s="sleep"] .leg { opacity: 0; }
+[data-s="sleep"] .body { transform: translateY(8px) scaleY(0.78); }
+[data-s="sleep"] .head { transform: translate(-8px, 12px) rotate(14deg); }
+[data-s="sleep"] .eyes { opacity: 0; }
+[data-s="sleep"] .shut { opacity: 1; }
+[data-s="sleep"] .tail { animation: none; transform: translateY(8px) rotate(-30deg); }
+[data-s="sleep"] .pet-in { animation: pet-breathe 2.6s ease-in-out infinite; transform-origin: 50% 100%; }
+[data-s="sleep"] .zz { animation: pet-z 2.4s ease-in infinite; }
+[data-s="sleep"] .z2 { animation-delay: 1.2s; }
+
+/* bị bế: chân buông thõng đung đưa, đuôi rủ, thân dài ra */
+[data-s="held"] .leg { animation: pet-dangle 0.5s ease-in-out infinite alternate; }
+[data-s="held"] .tail { animation: none; transform: rotate(40deg); }
+[data-s="held"] .body { transform: scaleY(1.1) translateY(1px); }
+
+.pet-say {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff;
+  color: #5b21b6;
+  font: 800 13px/1 "Nunito Variable", sans-serif;
+  white-space: nowrap;
+  box-shadow: 4px 6px 14px rgba(76, 29, 149, 0.18);
+  opacity: 0;
+  transform: translate(-50%, 6px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.pet[data-say] .pet-say { opacity: 1; transform: translate(-50%, 0); }
+
+@keyframes pet-tail { to { transform: rotate(-16deg); } }
+@keyframes pet-leg { from { transform: rotate(-26deg); } to { transform: rotate(26deg); } }
+@keyframes pet-bob { to { translate: 0 -2px; } }
+@keyframes pet-dangle { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+@keyframes pet-breathe { 50% { translate: 0 1.5px; } }
+@keyframes pet-z { 0% { opacity: 0; translate: 0 6px; } 30% { opacity: 1; } 100% { opacity: 0; translate: 8px -14px; } }
+@media (prefers-reduced-motion: reduce) {
+  .pet *, .pet { animation: none !important; transition: none !important; }
+}
+
+/* Chế độ sprite/GIF của riêng bạn (xem petSprites.js): mỗi trạng thái một lớp, chỉ lớp đang dùng được hiện */
+.spr { display: none; background-repeat: no-repeat; image-rendering: pixelated; }
+.spr.anim { animation: spr-play var(--dur) steps(var(--n)) infinite; }
+[data-s="sit"] .spr-sit, [data-s="walk"] .spr-walk, [data-s="sleep"] .spr-sleep, [data-s="jump"] .spr-jump,
+[data-s="fall"] .spr-fall, [data-s="land"] .spr-land, [data-s="held"] .spr-held { display: block; }
+@keyframes spr-play { to { background-position-x: var(--sw); } }

@@ -5,6 +5,7 @@ import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
 import { ErrorBox, Skeleton, Avatar } from "./components/common";
 import Logo from "./components/common/Logo";
 import NotificationBell from "./components/common/NotificationBell";
+import PetCat from "./components/common/PetCat";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProjectListPage from "./pages/ProjectListPage";
@@ -149,6 +150,7 @@ export default function App() {
         </header>
         <main className="content">{screen}</main>
       </div>
+      <PetCat />
     </div>
   );
 }
