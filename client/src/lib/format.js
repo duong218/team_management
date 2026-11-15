@@ -26,3 +26,8 @@ export const vnDue = (v, withYear = true) =>
   v
     ? new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", ...(withYear ? { year: "numeric" } : {}), hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(v))
     : "Chưa đặt";
+// Task quá hạn? Chờ duyệt thì so hạn với giờ GỬI duyệt (cap_nhat_luc) để trưởng nhóm duyệt chậm không làm thành viên bị trễ.
+export const isLateTask = (t) => {
+  const ref = t.trang_thai === "cho_duyet" && t.cap_nhat_luc ? new Date(t.cap_nhat_luc) : new Date();
+  return !!t.han_chot && t.trang_thai !== "hoan_thanh" && new Date(t.han_chot) < ref;
+};

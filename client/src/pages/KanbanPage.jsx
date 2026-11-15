@@ -52,6 +52,7 @@ export default function KanbanPage({ projectId, navigate, readOnly = false }) {
       {!q.data?.length && <EmptyState title="Chưa có công việc">Tạo task để bắt đầu theo dõi.</EmptyState>}
       <KanbanBoard
         tasks={q.data}
+        meId={me.data?.id}
         onCreateTask={manager && !viewOnly ? () => setCreateOpen(true) : undefined}
         onMove={viewOnly ? undefined : moveTask}
         onOpen={(id) => navigate(viewOnly ? `/history/${projectId}/task/${id}` : `/task/${id}`)}
