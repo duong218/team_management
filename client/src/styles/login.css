@@ -283,7 +283,8 @@
   padding: 0 20px;
   border: 0;
   border-radius: 16px;
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  background-color: #7c3aed;
+  background-image: linear-gradient(135deg, #8b5cf6, #6d28d9);
   color: #fff;
   font: inherit;
   font-size: 16px;
@@ -296,12 +297,22 @@
     inset -3px -3px 8px rgba(76, 29, 149, 0.3);
   transition: transform 0.15s, box-shadow 0.15s;
 }
+/* index.css/clay.css có `button:hover:not(:disabled){background:#fff}` (đặc hiệu cao hơn .lg-btn): trên điện thoại,
+   sau một lần chạm :hover bị "dính" → nền trắng, chữ trắng. Khoá lại màu ở mọi trạng thái. */
+.lg button.lg-btn,
+.lg button.lg-btn:hover:not(:disabled),
+.lg button.lg-btn:active:not(:disabled),
+.lg button.lg-btn:focus-visible {
+  background-color: #7c3aed;
+  background-image: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: #fff;
+}
 @media (hover: hover) and (pointer: fine) {
   .lg-btn:hover:not(:disabled) { transform: translateY(-2px); }
 }
 .lg-btn:active:not(:disabled) { transform: scale(0.97); box-shadow: var(--clay-pressed); }
 .lg-btn:focus-visible { outline: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--primary); }
-.lg-btn:disabled { cursor: wait; opacity: 0.85; }
+.lg-btn:disabled { cursor: wait; opacity: 0.85; color: #fff; }
 .lg-g { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #fff; }
 .lg-g svg { width: 18px; height: 18px; }
 .lg-spin {

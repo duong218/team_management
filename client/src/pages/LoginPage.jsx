@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutGrid, Bell, BarChart3, ShieldCheck, Circle, Loader, CircleCheck, Sparkles, LogIn, UsersRound, Rocket, Zap } from "lucide-react";
 import { useAuth } from "../hooks";
 import Logo from "../components/common/Logo";
@@ -36,6 +36,12 @@ const GoogleG = () => (
 export default function LoginPage() {
   const { login, error } = useAuth();
   const [busy, setBusy] = useState(false);
+  // Bấm "quay lại" từ trang Google: trình duyệt khôi phục trang cũ (bfcache) với busy vẫn đang true → nút kẹt.
+  useEffect(() => {
+    const reset = () => setBusy(false);
+    window.addEventListener("pageshow", reset);
+    return () => window.removeEventListener("pageshow", reset);
+  }, []);
   return (
     <div className="lg">
       <div className="lg-bg" aria-hidden="true">
