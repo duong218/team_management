@@ -805,8 +805,24 @@
 
 /* Keep deadline chips inside narrower desktop lanes when the sidebar is open. */
 @media (min-width:761px) and (max-width:1200px) {
-  .kanban .task-card .kb-tags { min-width:0; max-width:100%; }
-  .kanban .task-card .kb-due { max-width:100%; min-width:0; box-sizing:border-box; flex-wrap:wrap; white-space:normal; line-height:1.2; }
+  .kanban .kb-lane[data-state="can_lam"] .task-card .kb-tags {
+    min-width:0;
+    max-width:100%;
+    justify-content:center;
+  }
+  .kanban .kb-lane[data-state="can_lam"] .task-card .kb-due {
+    justify-self:center;
+    width:fit-content;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    flex-wrap:wrap;
+    justify-content:center;
+    text-align:center;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    line-height:1.2;
+  }
 }
 
 /* Mobile-only containment: preserve the desktop Kanban and stop page-level overflow. */
