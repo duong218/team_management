@@ -263,3 +263,24 @@ button[aria-pressed="true"] { background: var(--brand-soft); border-color: var(-
 .app-crash section { width: min(440px, 100%); padding: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
 .app-crash p { color: var(--ink-3); }
 .app-crash button { min-height: 42px; padding: 0 20px; border: 0; border-radius: var(--r); background: var(--brand); color: white; font: inherit; font-weight: 700; cursor: pointer; }
+
+/* Fix cho nút rỗng "Tạo task" trong cột Kanban khi không có task */
+.kanban .kb-empty-create {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 8px !important;
+}
+.kanban .kb-empty-create strong {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+.kanban .kb-empty-create small {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+

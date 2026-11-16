@@ -209,3 +209,24 @@ h1, h2, h3, .lg-brand b { font-family: var(--font-display); }
   select { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; padding-right: 32px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   label { min-width: 0; }
 }
+
+/* Đảm bảo nút rỗng tạo task trong cột kanban luôn xuống dòng đẹp mắt */
+.kanban .kb-empty-create {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 8px !important;
+}
+.kanban .kb-empty-create strong {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+.kanban .kb-empty-create small {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+
