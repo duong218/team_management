@@ -88,7 +88,7 @@ export default function SeasonScene() {
             <circle cy="92" r="2.6" fill="#fb7185" /><ellipse cy="96" rx="9" ry="4" fill="#fff" stroke="#e2e8f0" />
             <path d="M-14 78C-12 58-2 46 12 48C14 58 14 68 14 78Z" fill="#dc2626" /><circle cx="14" cy="50" r="5" fill="#fff" /><rect x="-16" y="74" width="32" height="9" rx="4.5" fill="#fff" />
           </g>
-          <g className="cn-bubble"><rect x="14" y="14" width="68" height="26" rx="13" fill="#fff" stroke="#7c3aed" strokeWidth="2" /><text x="48" y="32" textAnchor="middle" fontSize="13" fontWeight="800" fill="#4c1d95" fontFamily="Nunito Variable, Nunito, sans-serif">Ho ho ho!</text></g>
+          <g className="cn-bubble"><rect x="14" y="14" width="68" height="26" rx="13" fill="#fff" stroke="#7c3aed" strokeWidth="2" /><text x="48" y="32" textAnchor="middle" fontSize="13" fontWeight="800" fill="#4c1d95" fontFamily="Plus Jakarta Sans Variable, sans-serif">Ho ho ho!</text></g>
         </g>
         {FLAKES.map(([x, delay, dur, dx, r], i) => (
           <circle key={i} className="cn-flake" cx={x} cy="-6" r={r} fill="#fff" style={{ "--dx": `${dx}px`, animationDelay: `${delay}s`, animationDuration: `${dur}s` }} />

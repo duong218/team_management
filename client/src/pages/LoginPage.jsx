@@ -3,7 +3,6 @@ import { LayoutGrid, Bell, BarChart3, ShieldCheck, Circle, Loader, CircleCheck, 
 import { useAuth } from "../hooks";
 import Logo from "../components/common/Logo";
 import { ErrorBox } from "../components/common";
-import "@fontsource-variable/nunito/wght.css";
 import "../styles/login.css";
 
 const FEATURES = [

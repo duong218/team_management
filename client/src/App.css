@@ -1,5 +1,5 @@
 :root {
-  font-family: Nunito, "Be Vietnam Pro", system-ui, sans-serif;
+  font-family: var(--font);
   color: #2e1065;
   background: #fafaff;
   color-scheme: light;

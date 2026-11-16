@@ -2,7 +2,6 @@ import { useState } from "react";
 import { saveProfile } from "../api/profile";
 import { UserRound, IdCard, Building2, LogOut, Sparkles } from "lucide-react";
 import { ErrorBox } from "../components/common";
-import "@fontsource-variable/nunito/wght.css";
 import "../styles/profile.css";
 const initials = (n) => n.trim().split(/\s+/).slice(-2).map((w) => w[0]).join("").toUpperCase() || "?";
 const FIELDS = [

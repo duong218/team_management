@@ -1,7 +1,7 @@
 /* Trang hoàn thiện hồ sơ — Claymorphism, nhiều màu có nghĩa. Tiền tố pf-. Luôn sáng. */
 .pf {
   position: fixed; inset: 0; overflow: auto; display: grid; place-items: center; padding: 24px;
-  font-family: "Nunito Variable", "Be Vietnam Pro", system-ui, sans-serif; line-height: 1.5;
+  font-family: var(--font); line-height: 1.5;
   color: #2e1065; background: #fafaff; color-scheme: light; text-align: left;
   background-image: linear-gradient(rgba(250, 250, 255, 0.16), rgba(250, 250, 255, 0.16)), url("../assets/natural-landing-page.svg");
   background-position: center; background-size: cover; background-attachment: fixed;

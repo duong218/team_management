@@ -23,7 +23,7 @@
 .leg { transform-origin: center 38px; }
 .head, .body { transform-origin: 50px 36px; }
 .shut, .zz { opacity: 0; }
-.zz { position: absolute; left: 44px; top: -2px; font: 800 14px/1 "Nunito Variable", sans-serif; color: #7c3aed; }
+.zz { position: absolute; left: 44px; top: -2px; font: 800 14px/1 var(--font); color: #7c3aed; }
 .zz.z2 { left: 54px; top: -12px; font-size: 11px; }
 
 /* đi: bốn chân chéo nhau, thân nhấp nhô */
@@ -62,7 +62,7 @@
   border-radius: 999px;
   background: #fff;
   color: #5b21b6;
-  font: 800 13px/1 "Nunito Variable", sans-serif;
+  font: 800 13px/1 var(--font);
   white-space: nowrap;
   box-shadow: 4px 6px 14px rgba(76, 29, 149, 0.18);
   opacity: 0;

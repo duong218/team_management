@@ -10,7 +10,7 @@
   border-radius: 28px;
   min-height: 300px;
   color: var(--ink);
-  font-family: "Be Vietnam Pro", Nunito, system-ui, sans-serif;
+  font-family: var(--font);
   text-align: left;
   background: linear-gradient(180deg, var(--sky-a), var(--sky-b));
   box-shadow: 0 18px 40px -22px rgba(60, 50, 150, 0.5);
