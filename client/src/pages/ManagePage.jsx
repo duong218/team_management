@@ -58,7 +58,7 @@ export default function ManagePage({ projectId, navigate }) {
           </div>
           <div className="mg-btns">
             <button className="primary" onClick={() => navigate(`/project/${projectId}`)}><LayoutDashboard size={16} aria-hidden="true" />Mở bảng Kanban</button>
-            <button className="danger" disabled={busy || archived} onClick={() => setClosing({ warnings: null })}><Flag size={16} aria-hidden="true" />Kết thúc công việc</button>
+            <button className="danger mg-end-project" disabled={busy || archived} onClick={() => setClosing({ warnings: null })}><Flag size={16} aria-hidden="true" />Kết thúc công việc</button>
             {role === 'truong_nhom' && archived && <button disabled={busy} onClick={() => act(() => reportApi.reopenProject(projectId))}><RotateCcw size={16} aria-hidden="true" />Mở lại công việc</button>}
           </div>
         </section>

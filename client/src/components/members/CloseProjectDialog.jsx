@@ -39,7 +39,7 @@ export default function CloseProjectDialog({ open, warnings, busy, onCancel, onC
           {step2 && <p className="mg-muted">Nếu vẫn kết thúc, các vấn đề trên được ghi nhận vào bản chốt sổ.</p>}
           <div className="mg-btns">
             <button type="button" onClick={onCancel}>{step2 ? "Quay lại" : "Hủy"}</button>
-            <button type="button" className="danger" disabled={busy} onClick={onConfirm}><Flag size={16} aria-hidden="true" />{step2 ? "Vẫn kết thúc" : "Tiếp tục kết thúc"}</button>
+            <button type="button" className="danger mg-end-project" disabled={busy} onClick={onConfirm}><Flag size={16} aria-hidden="true" />{step2 ? "Vẫn kết thúc" : "Tiếp tục kết thúc"}</button>
           </div>
         </div>
       )}

@@ -60,6 +60,17 @@
 .mg-remove-dialog-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .mg-replace-cancel { color: #344054; background: #eef2f7; border: 1px solid #d0d5dd; }
 
+/* Nút kết thúc công việc cần thể hiện rõ đây là thao tác có hậu quả. */
+.mg-project .mg-btns button.danger,
+.mg-dialog .mg-btns button.danger { color: #fff; background: linear-gradient(135deg, #ef4444, #c81e3a); border: 1px solid #b91c1c; box-shadow: 0 6px 16px rgba(185, 28, 28, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.24); }
+.mg-project .mg-btns button.danger:hover:not(:disabled),
+.mg-dialog .mg-btns button.danger:hover:not(:disabled) { color: #fff; background: linear-gradient(135deg, #dc2626, #a9152e); border-color: #991b1b; box-shadow: 0 8px 20px rgba(185, 28, 28, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+
+/* Selector riêng đặt sau layout rules để không bị kiểu nút nguy hiểm chung ghi đè. */
+.mg-end-project,
+.mg-end-project:hover:not(:disabled) { color: #fff !important; background: #dc2626 !important; border: 1px solid #b91c1c !important; box-shadow: 0 6px 16px rgba(185, 28, 28, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.22), inset -2px -2px 5px rgba(127, 29, 29, 0.24) !important; }
+.mg-end-project:hover:not(:disabled) { background: #b91c1c !important; }
+
 /* Bộ chọn quyền: 2 lựa chọn — Phó nhóm / Thành viên */
 .mg-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 18px; background: #f1ecfb; box-shadow: inset 3px 3px 6px rgba(76, 29, 149, 0.12), inset -2px -2px 4px #fff; }
 .mg-seg button { min-height: 40px; padding: 6px 14px; border-radius: 14px; background: transparent; box-shadow: none; color: var(--ink-2); }
