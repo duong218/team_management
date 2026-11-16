@@ -22,6 +22,15 @@ export function largestRemainder(values) {
 
 // Hạn chót có giờ. Ô datetime-local cho "YYYY-MM-DDTHH:mm" (không múi giờ) nên gắn +07:00 để không bị lệch 7 tiếng.
 export const toDueISO = (v) => (!v ? null : v.length === 10 ? `${v}T23:59:00+07:00` : v.length === 16 ? `${v}:00+07:00` : v);
+export const vnDateTimeLocal = (value) => {
+  if (!value) return '';
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date(value));
+  const part = Object.fromEntries(parts.map(({ type, value: text }) => [type, text]));
+  return `${part.year}-${part.month}-${part.day}T${part.hour}:${part.minute}`;
+};
 export const vnDue = (v, withYear = true) =>
   v
     ? new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", ...(withYear ? { year: "numeric" } : {}), hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(v))

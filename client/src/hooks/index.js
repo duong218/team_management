@@ -8,6 +8,7 @@ export { default as useMembers } from "./useMembers";
 export { default as useJoinRequests } from "./useJoinRequests";
 export { default as useTasks } from "./useTasks";
 export { default as useTask } from "./useTask";
+export { default as useTaskComments } from "./useTaskComments";
 export { default as useChecklist } from "./useChecklist";
 export { default as useNotifications } from "./useNotifications";
 export { default as useReport } from "./useReport";

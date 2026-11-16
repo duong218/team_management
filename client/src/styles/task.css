@@ -94,6 +94,15 @@
 
 /* Thao tác */
 .td .td-actions { display: grid; gap: 10px; }
+.td .td-deadline-editor { padding: 14px; border: 1px solid #e6dcff; border-radius: 18px; background: linear-gradient(145deg, #fff, #f5f0ff); box-shadow: var(--clay-sm); }
+.td .td-deadline-editor > summary { display: flex; align-items: center; gap: 8px; min-height: 42px; color: var(--ink); font-weight: 750; cursor: pointer; }
+.td .td-deadline-editor[open] > summary { margin-bottom: 12px; color: #6336d8; }
+.td .td-deadline-editor form { display: grid; gap: 12px; }
+.td .td-deadline-editor label { display: grid; gap: 6px; color: var(--ink-2); font-size: 13px; font-weight: 700; }
+.td .td-deadline-editor input, .td .td-deadline-editor textarea { width: 100%; min-width: 0; }
+.td .td-deadline-editor textarea { min-height: 76px; resize: vertical; }
+.td .td-deadline-error { color: #be123c; font-size: 13px; font-weight: 700; }
+.td .td-deadline-editor form > button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
 .td .td-actions > button { width: 100%; }
 .td .td-card:has(> .td-actions:empty) { display: none; }
 .td .reason-action { padding: 0; border: 0; background: none; border-radius: 0; margin: 0; }
