@@ -17,7 +17,7 @@ import CommentThread from '../components/task/CommentThread'
 import ContributionBar from '../components/task/ContributionBar'
 import TaskCelebration from '../components/task/TaskCelebration'
 import TaskDeadlineEditor from '../components/task/TaskDeadlineEditor'
-import { ArrowLeft, AlarmClock, CalendarClock, Clock, ListChecks, Users, PieChart, History, MessageSquare, Zap, Ban } from 'lucide-react'
+import { ArrowLeft, AlarmClock, CalendarClock, Clock, ListChecks, Users, PieChart, History, MessageSquare, Zap, Ban, Pencil, Check, X } from 'lucide-react'
 import { Avatar } from '../components/common'
 import { STATES } from '../lib/constants'
 import { vnTime, vnDue, vnDateTimeLocal } from '../lib/format'
@@ -31,7 +31,7 @@ export default function TaskDetailPage({ taskId, readOnly: requestedReadOnly = f
   const me = useAsync(() => projectId ? memberApi.getMyMember(projectId) : Promise.resolve(null), [projectId])
   const comments = useAsync(() => taskId ? taskApi.listComments(taskId) : Promise.resolve([]), [taskId])
   const contributions = useAsync(() => task.data?.mo_ta !== undefined ? checklistApi.listTaskContributions(taskId) : Promise.resolve([]), [taskId, task.data?.mo_ta])
-  const [error, setError] = useState(''), [busy, setBusy] = useState(false), [openLink, setOpenLink] = useState(''), [reason, setReason] = useState(''), [comment, setComment] = useState(''), [commentError, setCommentError] = useState(''), [celebrating, setCelebrating] = useState(false)
+  const [error, setError] = useState(''), [busy, setBusy] = useState(false), [openLink, setOpenLink] = useState(''), [reason, setReason] = useState(''), [comment, setComment] = useState(''), [commentError, setCommentError] = useState(''), [celebrating, setCelebrating] = useState(false), [editingTitle, setEditingTitle] = useState(false), [titleDraft, setTitleDraft] = useState('')
   const items = checklist.data || task.data?.checklist || []
   const links = useMemo(() => task.data?.links || [], [task.data?.links])
   const manager = ['truong_nhom', 'pho_nhom'].includes(project.data?.vaiTro)
@@ -56,7 +56,7 @@ export default function TaskDetailPage({ taskId, readOnly: requestedReadOnly = f
     {readOnly && <p className="td-card" role="note">Công việc đã kết thúc. Chi tiết task ở chế độ chỉ xem.</p>}
     <header className="td-hero" data-state={t.trang_thai}>
       <img className="ocean-animation" src={`${import.meta.env.BASE_URL}underwater-ocean.svg`} alt="" aria-hidden="true" />
-      <div className="td-top"><h1>{t.tieu_de || 'Task giao cho bạn'}</h1><span className={`chip ${t.trang_thai}`}>{STATES[t.trang_thai] || t.trang_thai}</span></div>
+      <div className="td-top">{editingTitle ? <form className="td-title-editor" onSubmit={async (e) => { e.preventDefault(); if (!titleDraft.trim() || titleDraft.trim() === t.tieu_de) return setEditingTitle(false); if (await perform(() => taskApi.updateTask(t.id, titleDraft.trim(), t.mo_ta, t.han_chot, null, t.cap_nhat_luc))) setEditingTitle(false) }}><input autoFocus maxLength={200} aria-label="Tên task" value={titleDraft} onChange={(e) => setTitleDraft(e.target.value)} /><button className="primary" type="submit" disabled={busy || !titleDraft.trim()} aria-label="Lưu tên task"><Check size={16} /></button><button type="button" disabled={busy} onClick={() => setEditingTitle(false)} aria-label="Hủy đổi tên"><X size={16} /></button></form> : <><h1>{t.tieu_de || 'Task giao cho bạn'}</h1>{!readOnly && manager && ['can_lam', 'dang_lam'].includes(t.trang_thai) && <button className="td-title-edit" type="button" aria-label="Đổi tên task" title="Đổi tên task" onClick={() => { setTitleDraft(t.tieu_de || ''); setEditingTitle(true) }}><Pencil size={16} /></button>}</>}<span className={`chip ${t.trang_thai}`}>{STATES[t.trang_thai] || t.trang_thai}</span></div>
       {t.mo_ta && <p className="td-desc">{t.mo_ta}</p>}
       <div className="td-prog"><div className="progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${pct}%` }} /></div><b>{pct.toFixed(0)}%</b></div>
       <div className="td-meta">
