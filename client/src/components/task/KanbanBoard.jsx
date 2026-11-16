@@ -119,7 +119,7 @@ export default function KanbanBoard({ tasks = [], members = [], projectName = "C
   return <div className={`kb-board-layout${mode === "people" ? " is-people" : ""}`} data-density={density}>
     <div className="kb-board-main">
     <section className="kb-overview" aria-label="Tổng quan công việc">
-      <article className="kb-project-tile"><span className="kb-project-monogram">{projectName.trim().charAt(0).toLocaleUpperCase("vi") || "D"}</span><div><h1>{projectName}</h1><p>{new Intl.DateTimeFormat("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", day: "numeric", month: "long" }).format(new Date())} · {total} task · {active} thành viên</p></div></article>
+      <article className="kb-project-tile"><img className="kb-project-mascot" src="/jumping-polar-bear.svg" alt="" aria-hidden="true" /><span className="kb-project-monogram">{projectName.trim().charAt(0).toLocaleUpperCase("vi") || "D"}</span><div><h1>{projectName}</h1><p>{new Intl.DateTimeFormat("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", day: "numeric", month: "long" }).format(new Date())} · {total} task · {active} thành viên</p></div></article>
       <div className="kb-stats-strip" aria-label="Số liệu công việc">
         <div className="kb-stat" data-tone="mint"><span className="kb-mini-ring" style={{ "--progress": `${total ? (done / total) * 100 : 0}%` }} /><div><strong>{total ? Math.round((done / total) * 100) : 0}%</strong><small>Hoàn thành {done}/{total}</small></div></div>
         <div className="kb-stat" data-tone="rose"><span><AlarmClock size={18} /></span><div><strong>{late}</strong><small>Quá hạn</small></div></div>
