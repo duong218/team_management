@@ -1,7 +1,7 @@
 import { DndContext, DragOverlay, KeyboardSensor, MouseSensor, TouchSensor, closestCorners, pointerWithin, useDraggable, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { Activity, AlarmClock, CalendarDays, CalendarRange, Check, ChevronDown, ChevronRight, Circle, CircleCheck, Clock3, Eye, Folder, FolderOpen, GripVertical, LayoutGrid, Link2, ListChecks, Loader, Plus, Search, Users, X } from "lucide-react";
+import { Activity, AlarmClock, AlertTriangle, CalendarDays, CalendarRange, Check, ChevronDown, ChevronRight, Circle, CircleCheck, Clock3, Eye, Folder, FolderOpen, GripVertical, LayoutGrid, Link2, ListChecks, Loader, Plus, Search, Users, X } from "lucide-react";
 import { STATE_ORDER, STATES } from "../../lib/constants";
 import { isLateTask, vnDue, vnTime } from "../../lib/format";
 import { useTask, useTaskComments } from "../../hooks";
@@ -47,7 +47,9 @@ function Preview({ task, onOpen, onClear, canOpen }) {
   const comments = useTaskComments(allowed ? task?.id : null);
   const [tab, setTab] = useState("detail"), [showAllItems, setShowAllItems] = useState(false), [showAllLinks, setShowAllLinks] = useState(false);
   const full = detail.data?.id === task?.id ? detail.data : task;
-  const activeAssignees = (full?.assignees || []).filter((item) => item.trang_thai === "dang_lam" && item.member);
+  const assignments = full?.assignees || [];
+  const activeAssignees = assignments.filter((item) => item.trang_thai === "dang_lam" && item.member?.trang_thai === "dang_tham_gia");
+  const missingDueToKick = ["can_lam", "dang_lam"].includes(full?.trang_thai) && assignments.some((item) => item.member?.trang_thai === "da_roi" && item.member?.ly_do_roi === "bi_loai");
   const people = activeAssignees.map((item) => item.member);
   const items = (full?.checklist || []).filter((item) => item.trang_thai_muc === "da_duyet");
   const completed = items.filter((item) => item.da_xong).length;
@@ -70,6 +72,7 @@ function Preview({ task, onOpen, onClear, canOpen }) {
       </div>
       {tab === "detail" && detail.error && <p className="kb-preview-error" role="alert">{detail.error}<button type="button" onClick={detail.reload}>Thử lại</button></p>}
       {tab === "detail" ? <div className="kb-preview-content">
+        {missingDueToKick && <p className="kb-preview-vacancy"><AlertTriangle size={15} aria-hidden="true" />Task thiếu người được giao vì thành viên đã bị kick.</p>}
         <p className="kb-preview-description">{full.mo_ta || "Chưa có mô tả cho công việc này."}</p>
         <dl className="kb-preview-meta"><div><dt>Người làm</dt><dd>{people.length ? activeAssignees.map(({ member, member_id }) => <span className="kb-person" key={member_id}><Avatar name={member.ho_ten} src={member.anh_dai_dien} size="sm" />{member.ho_ten}</span>) : "Chưa giao"}</dd></div>
           <div><dt>Hạn chót</dt><dd>{full.han_chot ? <><CalendarDays size={16} />{vnDue(full.han_chot)}</> : "Chưa đặt hạn"}{isLateTask(full) && <span className="kb-preview-late"><AlarmClock size={14} />Quá hạn</span>}</dd></div>

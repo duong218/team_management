@@ -10,11 +10,19 @@ import TaskCelebration from "../components/task/TaskCelebration";
 import { CircleAlert, X, Plus, ShieldCheck } from "lucide-react";
 import TaskTimeline from "../components/task/TaskTimeline";
 import ReturnTaskDialog from "../components/task/ReturnTaskDialog";
-export default function KanbanPage({ projectId, navigate, readOnly = false }) {
+export default function KanbanPage({ projectId, navigate, readOnly = false, onVacancyCountChange }) {
   const q = useTasks(projectId);
   const members = useMembers(projectId), project = useProject(projectId), me = useAsync(() => getMyMember(projectId), [projectId]);
   const [error, setError] = useState(""), [toast, setToast] = useState(null), [celebrating, setCelebrating] = useState(false), [createOpen, setCreateOpen] = useState(false), dialogRef = useRef(null);
   const [returningTask, setReturningTask] = useState(null);
+  useEffect(() => {
+    if (readOnly || !q.data) return;
+    const count = q.data.filter((task) =>
+      ["can_lam", "dang_lam"].includes(task.trang_thai) &&
+      (task.assignees || []).some((item) => item.member?.trang_thai === "da_roi" && item.member?.ly_do_roi === "bi_loai"),
+    ).length;
+    onVacancyCountChange?.({ projectId, count });
+  }, [projectId, q.data, readOnly, onVacancyCountChange]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(null), 4500);

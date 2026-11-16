@@ -62,6 +62,8 @@
 .kb-prog b { min-width: 3em; text-align: right; font-size: 14px; font-variant-numeric: tabular-nums; }
 .kb-due { justify-self: start; display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-size: 14px; font-weight: 700; background: #ece6fb; color: #4c1d95; }
 .kb-due.late { background: #fecdd3; color: #881337; }
+.kb-vacancy { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 3px 9px; border: 1px solid #fda4af; border-radius: 999px; color: #9f1239; background: #ffe4e9; box-shadow: 0 3px 8px rgba(159,18,57,.12), inset 0 1px 2px rgba(255,255,255,.9); font-size: 11px; font-weight: 800; line-height: 1.2; }
+.kb-vacancy svg { flex: none; }
 @keyframes kb-grow { from { transform: scaleX(0); } }
 @media (prefers-reduced-motion: reduce) { .kb-seg i { animation: none; } .kanban .task-card { transition: none; } }/* Form tạo task: 2 cột, nội dung bên trái, thiết lập bên phải */
 .kanban .tf { padding-top: 20px; border-top: 1.5px dashed var(--line-strong); }
@@ -623,6 +625,8 @@
 .kb-preview-link > svg { flex:none; margin-left:auto; color:#7138df; }
 .kb-preview-muted { margin:0; color:#776b8d; font-size:12px; }
 .kb-preview-error { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0; padding:8px 10px; border-radius:11px; color:#9f1239; background:#ffe5eb; font-size:11px; overflow-wrap:anywhere; }
+.kb-preview-vacancy { display:flex; align-items:flex-start; gap:7px; margin:0; padding:9px 10px; border:1px solid #fda4af; border-radius:12px; color:#9f1239; background:#ffe4e9; box-shadow:var(--clay-sm); font-size:12px; font-weight:800; line-height:1.4; }
+.kb-preview-vacancy svg { flex:none; margin-top:1px; }
 .kb-preview-error button { flex:none; border:0; color:#6d28d9; background:transparent; font:inherit; font-weight:800; cursor:pointer; }
 .kb-preview-feed { gap:9px; }
 .kb-preview-comment,.kb-preview-event { min-width:0; padding:9px; border-radius:13px; background:rgba(255,255,255,.62); }

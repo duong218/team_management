@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell } from "lucide-react";
+import { AlertTriangle, Bell } from "lucide-react";
 import * as api from "../../api/notifications";
 import { vnTime } from "../../lib/format";
-export default function NotificationBell({ notes }) {
+export default function NotificationBell({ notes, alertCount = 0 }) {
   const [open, setOpen] = useState(false),
     [fresh, setFresh] = useState([]),
     box = useRef(null),
@@ -35,6 +35,7 @@ export default function NotificationBell({ notes }) {
   }
   return (
     <div className="bell-wrap" ref={box}>
+      {alertCount > 0 && <span className="bell-vacancy-count" role="status" aria-label={`${alertCount} task thiếu người do thành viên bị loại`} title={`${alertCount} task đang thiếu người do thành viên bị kick`}><AlertTriangle size={13} />{alertCount > 9 ? "9+" : alertCount}</span>}
       <button className="icon-btn bell-btn" aria-label={unread.length ? `Thông báo, ${unread.length} chưa đọc` : "Thông báo"} aria-expanded={open} onClick={toggle}>
         <Bell size={18} />
         {unread.length > 0 && <span className="bell-count">{unread.length > 9 ? "9+" : unread.length}</span>}

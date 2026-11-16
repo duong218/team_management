@@ -21,6 +21,7 @@ import ProjectDashboardPage from "./pages/ProjectDashboardPage";
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [menuAt, setMenuAt] = useState(null); // ngăn kéo menu trên điện thoại: nhớ đang mở ở đường dẫn nào
+  const [vacancy, setVacancy] = useState({ projectId: null, count: 0 });
   const auth = useAuth(),
     profile = useProfile(auth.data?.id),
     { route, navigate } = useHashRoute(),
@@ -87,7 +88,7 @@ export default function App() {
   else if (parts[0] === "project")
     screen = (
       <>
-        <KanbanPage projectId={projectId} navigate={navigate} />
+        <KanbanPage projectId={projectId} navigate={navigate} onVacancyCountChange={setVacancy} />
       </>
     );
   else if (parts[0] === "task") screen = <TaskDetailPage taskId={taskId} />;
@@ -141,7 +142,7 @@ export default function App() {
       <div className="main">
         <header className="topbar">
           <button className="menu-btn" type="button" aria-label="Mở menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Menu size={22} /></button>
-          <NotificationBell notes={notes} />
+          <NotificationBell notes={notes} alertCount={inProject && vacancy.projectId === projectId ? vacancy.count : 0} />
           <div className="user-chip">
             <Avatar name={profile.data.ho_ten} src={photo} />
             <span className="user-name">{profile.data.ho_ten}</span>

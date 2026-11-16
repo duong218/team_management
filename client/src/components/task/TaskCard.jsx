@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { CalendarClock, AlarmClock, UserRound, Lock, ChevronRight } from "lucide-react";
+import { CalendarClock, AlarmClock, UserRound, Lock, ChevronRight, AlertTriangle } from "lucide-react";
 import Avatar from "../common/Avatar";
 import { vnDue, isLateTask } from "../../lib/format";
 const day = (d) => vnDue(d, false);
 export default function TaskCard({ task, onOpen, locked = false, mine = false }) {
   const [note, setNote] = useState(false);
-  const pct = Math.min(100, Math.max(0, Number(task.tien_do ?? 0))),
-    people = (task.assignees || []).filter((a) => a.member?.ho_ten),
-    late = isLateTask(task);
+  const pct = Math.min(100, Math.max(0, Number(task.tien_do ?? 0)));
+  const assignments = task.assignees || [];
+  const people = assignments.filter((a) => a.trang_thai === "dang_lam" && a.member?.trang_thai === "dang_tham_gia" && a.member?.ho_ten);
+  const missingDueToKick = ["can_lam", "dang_lam"].includes(task.trang_thai) && assignments.some((a) => a.member?.trang_thai === "da_roi" && a.member?.ly_do_roi === "bi_loai");
+  const late = isLateTask(task);
   // Task của người khác (thành viên thường): chặn ngay tại thẻ, không chuyển trang rồi mới báo lỗi. Quy tắc khớp server: trưởng/phó, người được giao, hoặc task chưa giao.
   const open = () => (locked ? setNote(true) : onOpen?.(task.id));
   return (
@@ -33,6 +35,7 @@ export default function TaskCard({ task, onOpen, locked = false, mine = false })
       </div>
       {locked && note && <p className="kb-note" role="status"><Lock size={14} aria-hidden="true" />Task này do {people[0]?.member.ho_ten || "người khác"} làm nên bạn không xem được chi tiết.</p>}
       <div className="kb-tags">
+        {missingDueToKick && <span className="kb-vacancy"><AlertTriangle size={14} aria-hidden="true" />Thiếu người · đã bị kick</span>}
         {task.han_chot && (
           <span className={`kb-due ${late ? "late" : ""}`}>
             {late ? <AlarmClock size={14} /> : <CalendarClock size={14} />}
