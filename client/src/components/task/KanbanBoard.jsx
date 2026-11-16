@@ -85,7 +85,7 @@ function Preview({ task, onOpen, onClear, canOpen }) {
 }
 
 export default function KanbanBoard({ tasks = [], members = [], projectName = "Công việc", onMove, onOpen, onCreateTask, canOpen, meId, readOnly = false }) {
-  const mobile = useMobile(), pager = useRef(null), indicator = useRef(null);
+  const mobile = useMobile(), pager = useRef(null);
   const [column, setColumn] = useState(STATE_ORDER[0]), [filter, setFilter] = useState("all"), [mode, setMode] = useState("board"), [density, setDensity] = useState("vua"), [search, setSearch] = useState(""), [selectedId, setSelectedId] = useState(() => tasks.find((task) => !canOpen || canOpen(task))?.id || null), [draggedTask, setDraggedTask] = useState(null);
   const isMine = (task) => !!meId && (task.assignees || []).some((person) => person.member_id === meId);
   const counts = useMemo(() => Object.fromEntries(STATE_ORDER.map((state) => [state, tasks.filter((task) => task.trang_thai === state).length])), [tasks]);
@@ -104,9 +104,9 @@ export default function KanbanBoard({ tasks = [], members = [], projectName = "C
     if (mobile && pager.current) pager.current.scrollTo({ left: STATE_ORDER.indexOf(state) * pager.current.clientWidth, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }
   function syncColumn(event) {
-    const index = Math.round(event.currentTarget.scrollLeft / event.currentTarget.clientWidth), next = STATE_ORDER[index] || STATE_ORDER[0];
-    setColumn(next);
-    if (indicator.current) indicator.current.style.transform = `translateX(${index * 100}%)`;
+    const index = Math.round(event.currentTarget.scrollLeft / event.currentTarget.clientWidth);
+    const next = STATE_ORDER[index] || STATE_ORDER[0];
+    setColumn((current) => current === next ? current : next);
   }
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
@@ -134,7 +134,7 @@ export default function KanbanBoard({ tasks = [], members = [], projectName = "C
       <label className="kb-search"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Tìm task, người..." /></label>
     </div>
 
-    {mode === "board" && <div className="kb-mobile-tabs" data-active={column} role="tablist" aria-label="Chọn cột trạng thái"><i ref={indicator} aria-hidden="true" />{STATE_ORDER.map((state) => { const Icon = ICONS[state]; return <button key={state} type="button" role="tab" aria-selected={column === state} onClick={() => scrollColumn(state)}><Icon size={18} /><span>{STATES[state]}</span><b>{lane(state).length}</b></button>; })}</div>}
+    {mode === "board" && <div className="kb-mobile-tabs" data-active={column} role="tablist" aria-label="Chọn cột trạng thái">{STATE_ORDER.map((state) => { const Icon = ICONS[state]; return <button key={state} type="button" role="tab" aria-selected={column === state} onClick={() => scrollColumn(state)}><Icon size={18} /><span>{STATES[state]}</span><b>{lane(state).length}</b></button>; })}</div>}
 
     <div className="kb-board-canvas">
         <DndContext collisionDetection={findDropTarget} sensors={sensors} onDragStart={({ active }) => setDraggedTask(tasks.find((task) => task.id === active.id) || null)} onDragCancel={() => setDraggedTask(null)} onDragEnd={({ active, over }) => { setDraggedTask(null); if (active && over) onMove?.(active.id, over.id); }}>

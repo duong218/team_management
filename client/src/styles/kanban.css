@@ -805,3 +805,86 @@
   .kanban .task-card .kb-tags { min-width:0; max-width:100%; }
   .kanban .task-card .kb-due { max-width:100%; min-width:0; box-sizing:border-box; flex-wrap:wrap; white-space:normal; line-height:1.2; }
 }
+
+/* Mobile-only containment: preserve the desktop Kanban and stop page-level overflow. */
+@media (max-width: 760px) {
+  .kanban,
+  .kanban .kb-board-layout,
+  .kanban .kb-board-main,
+  .kanban .kb-overview,
+  .kanban .kb-toolbar,
+  .kanban .kb-board-canvas,
+  .kanban .kb-board-side {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .kanban { overflow-x: clip; }
+  .kanban .kb-overview { grid-template-columns: minmax(0, 1fr); }
+  .kanban .kb-overview .kb-project-tile,
+  .kanban .kb-overview .kb-stats-strip { grid-column: 1 / -1; }
+  .kanban .kb-overview .kb-stats-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .kanban .kb-overview .kb-stat { min-width: 0; }
+  .kanban .kb-overview .kb-stat small { overflow: hidden; text-overflow: ellipsis; }
+
+  .kanban .kb-toolbar { flex-wrap: wrap; }
+  .kanban .kb-view-switch,
+  .kanban .kb-toolbar-filters,
+  .kanban .kb-search { min-width: 0; max-width: 100%; box-sizing: border-box; }
+  .kanban .kb-toolbar-filters { width: 100%; }
+  .kanban .kb-search { width: 100%; flex: 0 0 100%; }
+
+  .kanban .kb-board-layout .kanban-grid.kb-pager {
+    width: calc(100% + 32px);
+    max-width: none;
+    margin-inline: -16px;
+    box-sizing: border-box;
+  }
+  .kanban .kb-board-layout .kb-pager > .desktop-column,
+  .kanban .kb-board-layout .kb-pager > .mobile-column { flex-basis: 100%; }
+  .kanban .kb-board-layout .kb-lane,
+  .kanban .kb-board-layout .kb-lane .kb-column-scroll { min-width: 0; max-width: 100%; box-sizing: border-box; }
+  .kanban .task-card,
+  .kanban .task-card .kb-tags,
+  .kanban .task-card .kb-due { min-width: 0; max-width: 100%; box-sizing: border-box; }
+  .kanban .kb-preview { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
+}
+
+/* Make the mobile status tabs easy to distinguish at a glance. */
+@media (max-width: 760px) {
+  .kanban .kb-mobile-tabs button:nth-of-type(1) { color: #075985; background: #d9f1ff; }
+  .kanban .kb-mobile-tabs button:nth-of-type(2) { color: #854d0e; background: #fff1b8; }
+  .kanban .kb-mobile-tabs button:nth-of-type(3) { color: #9a3412; background: #ffe3cf; }
+  .kanban .kb-mobile-tabs button:nth-of-type(4) { color: #166534; background: #d8f8e3; }
+  .kanban .kb-mobile-tabs button[aria-selected="true"] { color: #fff; box-shadow: 0 5px 12px rgba(49, 27, 84, .2), inset 0 1px 0 rgba(255,255,255,.34); }
+  .kanban .kb-mobile-tabs button:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(145deg, #0ea5e9, #0369a1); }
+  .kanban .kb-mobile-tabs button:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(145deg, #facc15, #ca8a04); }
+  .kanban .kb-mobile-tabs button:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(145deg, #fb923c, #ea580c); }
+  .kanban .kb-mobile-tabs button:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(145deg, #4ade80, #16a34a); }
+  .kanban .kb-mobile-tabs button > b { color: #31204d; box-shadow: 0 1px 4px rgba(49, 27, 84, .12); }
+  .kanban .kb-mobile-tabs button[aria-selected="true"] > b { color: #31204d; background: #fff; }
+}
+
+@media (max-width: 760px) {
+  .kanban .kb-mobile-tabs > i { display: none; }
+}
+
+@media (max-width: 760px) {
+  .kanban { padding-bottom: max(110px, calc(100px + env(safe-area-inset-bottom, 0px))); }
+  .kanban .kb-board-layout .kanban-grid.kb-pager { padding-bottom: 0; }
+  .kanban .kb-board-side .kb-preview { height: auto; min-height: 0; max-height: none; }
+}
+
+@media (max-width: 760px) {
+  .kanban .kb-board-layout .kb-lane .kb-column-scroll {
+    max-height: min(58dvh, 560px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(76, 29, 149, .38) transparent;
+  }
+}
