@@ -49,7 +49,11 @@ export default function TaskDeadlineEditor({ task, busy, onSave }) {
   return <details className="td-deadline-editor" open={open} onToggle={(event) => setOpen(event.currentTarget.open)}>
     <summary><CalendarClock size={16} /> Chỉnh hạn chót</summary>
     <form onSubmit={submit}>
-      <label>Hạn chót mới (giờ Việt Nam)<input type="datetime-local" min={minimumDue} value={due} onChange={(event) => setDue(event.target.value)} /></label>
+      <fieldset className="td-deadline-fields">
+        <legend>Hạn chót mới (giờ Việt Nam)</legend>
+        <label>Ngày<input type="date" min={minimumDue.slice(0, 10)} value={due.slice(0, 10)} onChange={(event) => setDue(event.target.value ? `${event.target.value}T${due.slice(11, 16) || '23:59'}` : '')} /></label>
+        <label>Giờ<input type="time" step="60" value={due.slice(11, 16)} disabled={!due} onChange={(event) => setDue(`${due.slice(0, 10)}T${event.target.value}`)} /></label>
+      </fieldset>
       {changed && dueInPast && <small className="td-deadline-error" role="alert">Hạn chót phải là thời gian trong tương lai.</small>}
       <label>Lý do (bắt buộc, 10–1000 ký tự)<textarea required minLength={10} maxLength={1000} value={reason} onChange={(event) => setReason(event.target.value)} /></label>
       {error && <ErrorBox message={error} />}

@@ -99,6 +99,8 @@
 .td .td-deadline-editor[open] > summary { margin-bottom: 12px; color: #6336d8; }
 .td .td-deadline-editor form { display: grid; gap: 12px; }
 .td .td-deadline-editor label { display: grid; gap: 6px; color: var(--ink-2); font-size: 13px; font-weight: 700; }
+.td .td-deadline-fields { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 10px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.td .td-deadline-fields legend { grid-column: 1 / -1; margin-bottom: 6px; color: var(--ink-2); font-size: 13px; font-weight: 700; }
 .td .td-deadline-editor input, .td .td-deadline-editor textarea { width: 100%; min-width: 0; }
 .td .td-deadline-editor textarea { min-height: 76px; resize: vertical; }
 .td .td-deadline-error { color: #be123c; font-size: 13px; font-weight: 700; }
@@ -115,7 +117,7 @@
 .td .td-actions small { color: var(--ink-3); font-weight: 600; }
 
 @media (max-width: 1000px) { .td .td-grid { grid-template-columns: 1fr; } .td .td-side { position: static; } .td .td-top h1 { font-size: 24px; } }
-@media (max-width: 560px) { .td .td-link-form-actions { align-items: stretch; flex-direction: column; } .td .td-link-form-actions button { width: 100%; } }
+@media (max-width: 560px) { .td .td-link-form-actions { align-items: stretch; flex-direction: column; } .td .td-link-form-actions button { width: 100%; } .td .td-deadline-fields { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
 .td .checklist-item > button.sm { justify-self: start; }
 .td .td-card form > button { justify-self: end; min-width: 140px; }
 .td .td-empty { color: var(--ink-3); font-weight: 600; }
