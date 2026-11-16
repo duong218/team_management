@@ -7,7 +7,7 @@ import TaskForm from "../components/task/TaskForm";
 import * as tasksApi from "../api/tasks";
 import { startTask, submitTask, approveTask } from "../api/tasks";
 import TaskCelebration from "../components/task/TaskCelebration";
-import { CircleAlert, X, Plus } from "lucide-react";
+import { CircleAlert, X, Plus, Info } from "lucide-react";
 export default function KanbanPage({ projectId, navigate, readOnly = false }) {
   const q = useTasks(projectId);
   const members = useMembers(projectId), project = useProject(projectId), me = useAsync(() => getMyMember(projectId), [projectId]);
@@ -59,11 +59,11 @@ export default function KanbanPage({ projectId, navigate, readOnly = false }) {
         readOnly={viewOnly}
         canOpen={(t) => manager || !t.assignees?.length || !me.data?.id || t.assignees.some((a) => a.member_id === me.data.id)}
         hint={viewOnly ? null :
-          <ol className="kb-tip" aria-label="Hướng dẫn kéo thả">
+          <details className="kb-help"><summary><Info size={16} aria-hidden="true" />Cách kéo thả thẻ</summary><ol className="kb-tip" aria-label="Hướng dẫn kéo thả">
             <li><i data-state="dang_lam">1</i><span>Task được giao cho bạn: kéo thẻ sang <b>Đang làm</b> để bắt đầu.</span></li>
             <li><i data-state="cho_duyet">2</i><span>Tick hết checklist (kèm link minh chứng), rồi kéo sang <b>Chờ duyệt</b> để gửi nhóm trưởng/phó duyệt.</span></li>
             {manager && <li><i data-state="hoan_thanh">3</i><span><em>Nhóm trưởng/phó:</em> duyệt xong, kéo sang <b>Hoàn thành</b> để công nhận và cộng điểm cho thành viên. Không tự duyệt task của mình; muốn trả lại hoặc mở lại thì vào chi tiết task, nhập lý do.</span></li>}
-          </ol>
+          </ol></details>
         }
       />
     </div>

@@ -56,7 +56,7 @@ function DragCard({ task, onOpen, locked, readOnly, mobile, mine }) {
 }
 export default function KanbanBoard({ tasks = [], onMove, onOpen, onCreateTask, canOpen, hint, meId, readOnly = false }) {
   const [column, setColumn] = useState(STATE_ORDER[0]),
-    [filter, setFilter] = useState("all"), // chỉ dùng trên điện thoại: all | mine | late
+    [filter, setFilter] = useState("all"), // all | mine | late
     mobile = useIsMobile(),
     pager = useRef(null),
     ind = useRef(null);
@@ -92,7 +92,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, onCreateTask, 
     pctDone = total ? Math.round((done / total) * 100) : 0,
     mineCount = tasks.filter(isMine).length,
     lateCount = tasks.filter(isLateTask).length,
-    view = mobile && filter !== "all" ? tasks.filter(filter === "mine" ? isMine : isLateTask) : tasks,
+    view = filter !== "all" ? tasks.filter(filter === "mine" ? isMine : isLateTask) : tasks,
     inState = (st) => view.filter((t) => t.trang_thai === st);
   return (
     <>
@@ -175,7 +175,7 @@ export default function KanbanBoard({ tasks = [], onMove, onOpen, onCreateTask, 
               className={column === state ? "mobile-column" : "desktop-column"}
               key={state}
             >
-              <DropColumn state={state} title={STATES[state]} count={inState(state).length} readOnly={readOnly} mobile={mobile} filtered={mobile && filter !== "all"} onCreateTask={onCreateTask}>
+              <DropColumn state={state} title={STATES[state]} count={inState(state).length} readOnly={readOnly} mobile={mobile} filtered={filter !== "all"} onCreateTask={onCreateTask}>
                 {inState(state)
                   .map((t) => (
                     <DragCard
