@@ -46,7 +46,7 @@ function Preview({ task, onOpen, onClear, canOpen }) {
   const detail = useTask(allowed ? task?.id : null);
   const comments = useTaskComments(allowed ? task?.id : null);
   const [tab, setTab] = useState("detail"), [showAllItems, setShowAllItems] = useState(false), [showAllLinks, setShowAllLinks] = useState(false);
-  const full = detail.data?.id === task?.id ? detail.data : task;
+  const full = task && detail.data?.id === task.id ? detail.data : task;
   const assignments = full?.assignees || [];
   const activeAssignees = assignments.filter((item) => item.trang_thai === "dang_lam" && item.member?.trang_thai === "dang_tham_gia");
   const missingDueToKick = ["can_lam", "dang_lam"].includes(full?.trang_thai) && assignments.some((item) => item.member?.trang_thai === "da_roi" && item.member?.ly_do_roi === "bi_loai");
@@ -54,7 +54,7 @@ function Preview({ task, onOpen, onClear, canOpen }) {
   const items = (full?.checklist || []).filter((item) => item.trang_thai_muc === "da_duyet");
   const completed = items.filter((item) => item.da_xong).length;
   const links = (full?.links || []).filter((item) => item.trang_thai_link === "hop_le");
-  const commentRows = comments.data?.taskId === task?.id ? comments.data.rows : [];
+  const commentRows = task && comments.data?.taskId === task.id ? comments.data.rows : [];
   const activity = full?.activity || [];
   const taskLinks = items.flatMap((item) => links.filter((link) => link.muc_id === item.id).map((link) => ({ ...link, itemName: item.noi_dung })));
   const previewItems = showAllItems ? items : items.slice(0, 3);
