@@ -1,0 +1,4 @@
+/* Hình bay ngang màn hình một lần ngay sau khi đăng nhập: phải sang trái, giữa màn hình. Chỉ animate transform. */
+.login-fly { position: fixed; left: 0; top: 50%; z-index: 9999; width: clamp(220px, 28vw, 380px); height: auto; aspect-ratio: 1; pointer-events: none; transform: translate(100vw, -50%); animation: login-fly 7s cubic-bezier(0.37, 0, 0.63, 1) 0.4s forwards; }
+@keyframes login-fly { from { transform: translate(100vw, -50%); } to { transform: translate(-110%, -50%); } }
+@media (prefers-reduced-motion: reduce) { .login-fly { display: none; } }

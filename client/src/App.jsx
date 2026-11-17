@@ -20,6 +20,14 @@ import CancelledTasksPage from "./pages/CancelledTasksPage";
 import HistoryPage from "./pages/HistoryPage";
 import ProjectDashboardPage from "./pages/ProjectDashboardPage";
 import VotePage from "./pages/VotePage";
+import "./styles/login-fly.css";
+// Hình bay ngang sau khi đăng nhập: màn đăng nhập đặt cờ trong sessionStorage (sống qua lần chuyển hướng Google), lần vào app kế tiếp đọc cờ rồi xóa.
+const FLY_KEY = "og-login-fly";
+function LoginFly() {
+  const [show, setShow] = useState(() => { try { return sessionStorage.getItem(FLY_KEY) === "1"; } catch { return false; } });
+  useEffect(() => { try { sessionStorage.removeItem(FLY_KEY); } catch { /* bỏ qua */ } }, []);
+  return show ? <img className="login-fly" src="/login-fly.svg" alt="" aria-hidden="true" onAnimationEnd={() => setShow(false)} /> : null;
+}
 // Mục "Bình chọn task" chỉ hiện khi nhóm trưởng/phó đã bật bình chọn. Đọc lại mỗi lần đổi trang (route trong deps), nhưng giữ giá trị cũ lúc đang tải nên mục không chớp tắt.
 function VoteNav({ projectId, route, active, link }) {
   const pr = useAsync(() => getProject(projectId), [projectId, route]).data?.project;
@@ -40,6 +48,9 @@ export default function App() {
     // đồng bộ ảnh Google lên hồ sơ để người khác trong nhóm thấy; lỗi thì bỏ qua, lần đăng nhập sau thử lại
     if (profile.data && photo && profile.data.anh_dai_dien !== photo) saveAvatar(photo).catch(() => {});
   }, [profile.data, photo]);
+  useEffect(() => {
+    if (!auth.loading && !auth.data) try { sessionStorage.setItem(FLY_KEY, "1"); } catch { /* bỏ qua */ }
+  }, [auth.loading, auth.data]);
   useEffect(() => {
     if (!menuOpen) return;
     const esc = (e) => e.key === "Escape" && setMenuAt(null);
@@ -163,6 +174,7 @@ export default function App() {
         </header>
         <main className="content">{screen}</main>
       </div>
+      <LoginFly />
       <PetCat />
     </div>
   );
