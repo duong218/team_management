@@ -53,7 +53,11 @@ export default function KanbanPage({ projectId, navigate, readOnly = false, onVa
     }
     setError("");
     try { if (target === "dang_lam" && task.trang_thai === "can_lam") await startTask(id); else if (target === "cho_duyet" && task.trang_thai === "dang_lam") await submitTask(id); else if (completing) await approveTask(id); else throw new Error("Chuyển trạng thái này cần thao tác trong chi tiết task."); if (completing) setCelebrating(true); await q.reload(); }
-    catch (e) { if (target === "cho_duyet") setToast({ message: e.message }); else setError(e.message); }
+    catch (e) {
+      if (target === "cho_duyet" || (target === "dang_lam" && task.trang_thai === "can_lam")) {
+        setToast({ message: e.message || "Bạn không thể bắt đầu task này." });
+      } else setError(e.message);
+    }
   }
   async function confirmReturn(reason) {
     try {
