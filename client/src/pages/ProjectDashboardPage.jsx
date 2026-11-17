@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAsync, useProject, useTasks } from "../hooks";
 import { getMyMember, listCurrentMembers } from "../api/members";
-import { Avatar, ErrorBox, Skeleton } from "../components/common";
+import { Avatar, ErrorBox, Skeleton, CountUp } from "../components/common";
 import { ROLES, STATES } from "../lib/constants";
 import { vnDue } from "../lib/format";
 import {
@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import PineAuroraScene from "../components/dashboard/PineAuroraScene";
 import "../styles/project-dashboard.css";
+import "../styles/reveal.css";
 
 const MANAGERS = ["truong_nhom", "pho_nhom"];
 const ORDER = ["can_lam", "dang_lam", "cho_duyet", "hoan_thanh"];
@@ -323,7 +324,7 @@ export default function ProjectDashboardPage({ projectId, name, navigate }) {
                   ) : null}
                 </svg>
                 <div className="pd-donut-center">
-                  <span className="pd-donut-number">{progressPercent}%</span>
+                  <span className="pd-donut-number"><CountUp value={`${progressPercent}%`} /></span>
                   <span className="pd-donut-caption">
                     {doneCount}/{totalTasks} task
                   </span>
@@ -345,7 +346,7 @@ export default function ProjectDashboardPage({ projectId, name, navigate }) {
                           {cfg.label}
                         </span>
                         <div className="pd-row-vals">
-                          <strong>{c}</strong>
+                          <strong><CountUp value={c} /></strong>
                           <small>({pct}%)</small>
                         </div>
                       </div>
@@ -540,7 +541,7 @@ function MetricCard({ title, value, subtext, icon: Icon, tone, badge, urgent, tr
         {trend && <span className="pd-kpi-trend">{trend}</span>}
       </div>
       <div className="pd-kpi-bottom">
-        <strong className="pd-kpi-number">{value}</strong>
+        <strong className="pd-kpi-number"><CountUp value={value} /></strong>
         <span className="pd-kpi-title">{title}</span>
         <small className="pd-kpi-sub">{subtext}</small>
       </div>

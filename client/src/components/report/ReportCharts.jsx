@@ -1,3 +1,4 @@
+import { CountUp } from "../common";
 import { PieChart, BarChart3, Medal, AlarmClock, Circle, Loader, Eye, CircleCheck, CircleX } from "lucide-react";
 import { Avatar } from "../common";
 import { STATES } from "../../lib/constants";
@@ -32,7 +33,7 @@ function StatusDonut({ tasks }) {
           <circle className="rc-ring" cx="60" cy="60" r="46" pathLength="100" />
           {segs.map(({ s, len, start }) => <circle key={s} className="rc-seg" cx="60" cy="60" r="46" pathLength="100" stroke={COLOR[s]} style={{ strokeDasharray: `${len} ${100 - len}`, strokeDashoffset: -start }} />)}
         </svg>
-        <div className="rc-center"><b>{total ? Math.round((done / total) * 100) : 0}%</b><span>hoàn thành</span></div>
+        <div className="rc-center"><b><CountUp value={`${total ? Math.round((done / total) * 100) : 0}%`} /></b><span>hoàn thành</span></div>
       </div>
       <ul className="rc-legend">
         {counts.map(([s, n]) => {
