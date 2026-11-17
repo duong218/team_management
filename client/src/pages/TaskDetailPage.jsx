@@ -17,7 +17,7 @@ import CommentThread from '../components/task/CommentThread'
 import ContributionBar from '../components/task/ContributionBar'
 import TaskCelebration from '../components/task/TaskCelebration'
 import TaskDeadlineEditor from '../components/task/TaskDeadlineEditor'
-import { ArrowLeft, AlarmClock, CalendarClock, Clock, ListChecks, Users, PieChart, History, MessageSquare, Zap, Ban, Pencil, Check, X, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, AlarmClock, CalendarClock, Clock, ListChecks, Users, PieChart, History, MessageSquare, Zap, Ban, Pencil, Check, X, TriangleAlert, LockKeyhole } from 'lucide-react'
 import { Avatar } from '../components/common'
 import { STATES } from '../lib/constants'
 import { vnTime, vnDue, vnDateTimeLocal } from '../lib/format'
@@ -47,6 +47,7 @@ export default function TaskDetailPage({ taskId, readOnly: requestedReadOnly = f
   if (loadError) return <ErrorBox message={loadError} onRetry={() => Promise.all([task.reload(), checklist.reload(), contributions.reload(), project.reload(), me.reload()])} />
   if (!task.data) return <EmptyState title="Không tìm thấy task">Bạn có thể đã mất quyền xem task này.</EmptyState>
   const t = task.data
+  const checklistLocked = t.trang_thai === 'can_lam'
   const contributes = (contributions.data || []).map((x) => ({ name: t.assignees?.find((a) => a.member_id === x.member_id)?.member?.ho_ten || 'Thành viên', avatar: t.assignees?.find((a) => a.member_id === x.member_id)?.member?.anh_dai_dien, value: Number(x.phan_tram) }))
   const pct = Math.min(100, Math.max(0, Number(t.tien_do || 0))),
     people = (t.assignees || []).filter((a) => a.member?.ho_ten && a.trang_thai === 'dang_lam'),
@@ -60,7 +61,28 @@ export default function TaskDetailPage({ taskId, readOnly: requestedReadOnly = f
     <div className="td-grid"><div className="td-main">
     <p className="td-hint" role="note"><TriangleAlert size={18} aria-hidden="true" />Gắn link không chứng minh nội dung đúng. Hãy cấp quyền xem link cho nhóm trưởng/phó trước khi gửi duyệt.</p>
     {t.trang_thai === 'da_huy' && <section className="td-card td-alert"><div className="td-head"><h2><span className="ic" data-tone="rose"><Ban size={16} /></span>Task đã hủy</h2></div><p>{t.ly_do_huy}</p>{manager && !readOnly && <ReasonAction reason={reason} setReason={setReason} busy={busy} label="Khôi phục task" onConfirm={() => perform(() => taskApi.restoreTask(t.id, reason))} />}</section>}
-    <section className="td-card"><div className="td-head"><h2><span className="ic" data-tone="violet"><ListChecks size={16} /></span>Danh sách việc nhỏ</h2>{totalItems > 0 && <span className="td-count">{doneCount}/{totalItems}</span>}</div>{items.length === 0 ? <EmptyState title="Checklist chưa khả dụng">Nếu bạn chỉ thấy phần tóm tắt, task chưa được giao cho bạn.</EmptyState> : items.map((item) => { const itemLinks = links.filter((l) => l.muc_id === item.id); const approved = item.trang_thai_muc === 'da_duyet'; return <div className={`checklist-item ${item.da_xong ? 'done' : ''}`} key={item.id}><div className="ci-main"><ChecklistRow item={item} readOnly={readOnly} canToggle={approved && (isAssignee || manager)} canManage={!readOnly && manager && ['can_lam', 'dang_lam'].includes(t.trang_thai) && approved} canReviewProposal={!readOnly && manager} canApproveProposal={['can_lam', 'dang_lam'].includes(t.trang_thai)} onApproveProposal={() => perform(() => checklistApi.reviewChecklistItem(item.id, true))} onRejectProposal={(why) => perform(() => checklistApi.reviewChecklistItem(item.id, false, why))} canDelete={approved && !item.da_xong && !itemLinks.length && !(counted.length <= 1 && (t.assignees || []).length > 0)} busy={busy} onEdit={(content) => perform(() => checklistApi.updateChecklistItem(item.id, content, item.trong_so))} onDelete={() => perform(() => checklistApi.deleteChecklistItem(item.id))} hasOwnLink={ownIds.has(item.id)} canAddLink={!readOnly && approved && isAssignee && ['can_lam', 'dang_lam'].includes(t.trang_thai)} onToggle={() => perform(() => checklistApi.toggleChecklistItem(item.id, !item.da_xong))} onAddLink={() => setOpenLink(openLink === item.id ? '' : item.id)} /><LinkList links={itemLinks.filter((l) => l.trang_thai_link === 'hop_le')} />{!readOnly && approved && isAssignee && openLink === item.id && ['can_lam', 'dang_lam'].includes(t.trang_thai) && <LinkForm onSubmit={({ url, ghi_chu }) => perform(async () => { await linkApi.addLink(item.id, url, ghi_chu); setOpenLink('') })} />}</div>{!readOnly && manager && t.trang_thai === 'cho_duyet' && <div className="ci-side">{itemLinks.filter((l) => l.trang_thai_link === 'hop_le').map((l) => <button className="danger sm" key={l.id} disabled={busy} onClick={() => { const why = window.prompt('Lý do từ chối link (ít nhất 10 ký tự)'); if (why?.trim().length >= 10) perform(() => linkApi.rejectLink(l.id, why)) }}>Từ chối minh chứng</button>)}</div>}</div> })}</section>
+    <section className="td-card">
+      <div className="td-head">
+        <h2><span className="ic" data-tone="violet"><ListChecks size={16} /></span>Danh sách việc nhỏ</h2>
+        {totalItems > 0 && <span className="td-count">{doneCount}/{totalItems}</span>}
+      </div>
+      {checklistLocked && <div className="td-checklist-gate" role="note">
+        <LockKeyhole size={18} aria-hidden="true" />
+        <span>Task đang ở trạng thái <strong>Cần làm</strong>. Nhấn <strong>Bắt đầu</strong> hoặc kéo task sang cột <strong>Đang làm</strong> để mở checklist.</span>
+      </div>}
+      {items.length === 0 ? <EmptyState title="Checklist chưa khả dụng">Nếu bạn chỉ thấy phần tóm tắt, task chưa được giao cho bạn.</EmptyState> : items.map((item) => {
+        const itemLinks = links.filter((l) => l.muc_id === item.id)
+        const approved = item.trang_thai_muc === 'da_duyet'
+        return <div className={`checklist-item ${item.da_xong ? 'done' : ''} ${checklistLocked ? 'is-locked' : ''}`} key={item.id}>
+          <div className="ci-main">
+            <ChecklistRow item={item} readOnly={readOnly} canToggle={!checklistLocked && approved && (isAssignee || manager)} canManage={!readOnly && manager && ['can_lam', 'dang_lam'].includes(t.trang_thai) && approved} canReviewProposal={!readOnly && manager} canApproveProposal={['can_lam', 'dang_lam'].includes(t.trang_thai)} onApproveProposal={() => perform(() => checklistApi.reviewChecklistItem(item.id, true))} onRejectProposal={(why) => perform(() => checklistApi.reviewChecklistItem(item.id, false, why))} canDelete={approved && !item.da_xong && !itemLinks.length && !(counted.length <= 1 && (t.assignees || []).length > 0)} busy={busy} onEdit={(content) => perform(() => checklistApi.updateChecklistItem(item.id, content, item.trong_so))} onDelete={() => perform(() => checklistApi.deleteChecklistItem(item.id))} hasOwnLink={ownIds.has(item.id)} canAddLink={!checklistLocked && !readOnly && approved && isAssignee && t.trang_thai === 'dang_lam'} onToggle={() => perform(() => checklistApi.toggleChecklistItem(item.id, !item.da_xong))} onAddLink={() => setOpenLink(openLink === item.id ? '' : item.id)} />
+            <LinkList links={itemLinks.filter((l) => l.trang_thai_link === 'hop_le')} />
+            {!checklistLocked && !readOnly && approved && isAssignee && openLink === item.id && t.trang_thai === 'dang_lam' && <LinkForm onSubmit={({ url, ghi_chu }) => perform(async () => { await linkApi.addLink(item.id, url, ghi_chu); setOpenLink('') })} />}
+          </div>
+          {!readOnly && manager && t.trang_thai === 'cho_duyet' && <div className="ci-side">{itemLinks.filter((l) => l.trang_thai_link === 'hop_le').map((l) => <button className="danger sm" key={l.id} disabled={busy} onClick={() => { const why = window.prompt('Lý do từ chối link (ít nhất 10 ký tự)'); if (why?.trim().length >= 10) perform(() => linkApi.rejectLink(l.id, why)) }}>Từ chối minh chứng</button>)}</div>}
+        </div>
+      })}
+    </section>
     {!readOnly && manager && !['cho_duyet', 'hoan_thanh', 'da_huy'].includes(t.trang_thai) && <details className="td-add"><summary>Thêm mục checklist</summary><AddItem onAdd={(content) => perform(() => checklistApi.addChecklistItem(t.id, content))} /></details>}
     {!readOnly && isAssignee && t.trang_thai === 'dang_lam' && <details className="td-add"><summary>Đề xuất thêm mục checklist</summary><AddItem onAdd={(content) => perform(() => checklistApi.proposeChecklistItem(t.id, content))} />{error && <ErrorBox message={error} />}</details>}
     <section className="td-card"><div className="td-head"><h2><span className="ic" data-tone="sky"><PieChart size={16} /></span>Đóng góp</h2></div><ContributionBar members={contributes} />{!readOnly && manager && ['can_lam', 'dang_lam'].includes(t.trang_thai) && <ContributionEditor taskId={t.id} rows={contributions.data || []} names={t.assignees || []} onSave={(allocations, why) => perform(() => reportApi.adjustContribution(t.id, allocations, why))} />}</section>
