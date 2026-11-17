@@ -288,3 +288,23 @@
 .td .tp > .td-deadline-editor { margin: 20px 24px 0; }
 .td .tp-act .td-actions:not(:has(.reason-action ~ .reason-action)) > .reason-action { grid-column: 1 / -1; }
 
+
+.td .task-assign-submit {
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(91, 33, 182, .28), inset 2px 2px 4px rgba(255, 255, 255, .28);
+  transition: background .18s ease, transform .18s ease;
+}
+.td .task-assign-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9, #4c1d95);
+  transform: translateY(-1px);
+}
+.td .task-assign-submit:disabled {
+  opacity: .55;
+  box-shadow: none;
+}
