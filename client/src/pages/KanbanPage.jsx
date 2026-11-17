@@ -5,6 +5,7 @@ import { ErrorBox, Skeleton, EmptyState } from "../components/common";
 import KanbanBoard from "../components/task/KanbanBoard";
 import TaskForm from "../components/task/TaskForm";
 import * as tasksApi from "../api/tasks";
+import * as voteApi from "../api/votes";
 import { startTask, submitTask, approveTask } from "../api/tasks";
 import TaskCelebration from "../components/task/TaskCelebration";
 import { CircleAlert, X, Plus, ShieldCheck } from "lucide-react";
@@ -52,6 +53,12 @@ export default function KanbanPage({ projectId, navigate, readOnly = false, onVa
       return;
     }
     setError("");
+    // Task chưa giao + bình chọn đang bật: không phải lỗi quyền mà là chưa đến lượt, nên hướng dẫn tham gia bình chọn.
+    if (target === "dang_lam" && task.trang_thai === "can_lam" && !manager && project.data?.project?.bat_binh_chon && !task.assignees?.some((a) => a.trang_thai === "dang_lam")) {
+      const voted = (await voteApi.myVotes(projectId).catch(() => [])).some((r) => r.task_id === id);
+      setToast({ message: voted ? "Bạn đã bình chọn task này. Hãy chờ nhóm trưởng hoặc phó nhóm giao việc." : "Bạn chưa bình chọn task này. Hãy vào mục Bình chọn task ở menu bên trái để chọn task theo hướng tự nguyện." });
+      return;
+    }
     try { if (target === "dang_lam" && task.trang_thai === "can_lam") await startTask(id); else if (target === "cho_duyet" && task.trang_thai === "dang_lam") await submitTask(id); else if (completing) await approveTask(id); else throw new Error("Chuyển trạng thái này cần thao tác trong chi tiết task."); if (completing) setCelebrating(true); await q.reload(); }
     catch (e) {
       if (target === "cho_duyet" || (target === "dang_lam" && task.trang_thai === "can_lam")) {

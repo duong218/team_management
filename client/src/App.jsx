@@ -1,7 +1,8 @@
-import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen, Gauge, Menu, X } from "lucide-react";
+import { LogOut, ListChecks, LayoutGrid, Users, BarChart3, Archive, PanelLeftClose, PanelLeftOpen, Gauge, Menu, X, Vote } from "lucide-react";
 import { useEffect, useState } from "react";
 import { saveAvatar } from "./api/profile";
-import { useAuth, useProfile, useHashRoute, useNotifications } from "./hooks";
+import { getProject } from "./api/projects";
+import { useAuth, useProfile, useHashRoute, useNotifications, useAsync } from "./hooks";
 import { ErrorBox, Skeleton, Avatar } from "./components/common";
 import Logo from "./components/common/Logo";
 import NotificationBell from "./components/common/NotificationBell";
@@ -18,6 +19,12 @@ import NotificationsPage from "./pages/NotificationsPage";
 import CancelledTasksPage from "./pages/CancelledTasksPage";
 import HistoryPage from "./pages/HistoryPage";
 import ProjectDashboardPage from "./pages/ProjectDashboardPage";
+import VotePage from "./pages/VotePage";
+// Mục "Bình chọn task" chỉ hiện khi nhóm trưởng/phó đã bật bình chọn. Đọc lại mỗi lần đổi trang (route trong deps), nhưng giữ giá trị cũ lúc đang tải nên mục không chớp tắt.
+function VoteNav({ projectId, route, active, link }) {
+  const pr = useAsync(() => getProject(projectId), [projectId, route]).data?.project;
+  return pr?.bat_binh_chon ? link(`#/project/${projectId}/vote`, Vote, "Bình chọn task", active) : null;
+}
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [menuAt, setMenuAt] = useState(null); // ngăn kéo menu trên điện thoại: nhớ đang mở ở đường dẫn nào
@@ -73,6 +80,8 @@ export default function App() {
     screen = <ManagePage projectId={projectId} navigate={navigate} />;
   else if (parts[0] === "project" && parts[2] === "dashboard")
     screen = <ProjectDashboardPage projectId={projectId} name={profile.data.ho_ten} navigate={navigate} />;
+  else if (parts[0] === "project" && parts[2] === "vote")
+    screen = <VotePage projectId={projectId} />;
   else if (parts[0] === "project" && parts[2] === "report")
     screen = <ReportPage projectId={projectId} />;
   else if (parts[0] === "project" && parts[2] === "cancelled")
@@ -132,6 +141,7 @@ export default function App() {
             <div className="nav-label">Công việc đang mở</div>
             {link(`${base}/dashboard`, Gauge, "Tổng quan", sub === "dashboard")}
             {link(base, LayoutGrid, "Bảng Kanban", !sub)}
+            <VoteNav projectId={projectId} route={route} active={sub === "vote"} link={link} />
             {link(`${base}/manage`, Users, "Thành viên trong nhóm", sub === "manage")}
             {link(`${base}/report`, BarChart3, "Báo cáo", sub === "report")}
             {link(`${base}/cancelled`, Archive, "Task đã hủy", sub === "cancelled")}
