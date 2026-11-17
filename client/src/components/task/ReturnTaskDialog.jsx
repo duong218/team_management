@@ -3,17 +3,16 @@ import { RotateCcw, X } from "lucide-react";
 
 export default function ReturnTaskDialog({ task, onCancel, onConfirm }) {
   const dialog = useRef(null);
+  const taskId = task?.id;
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (task) {
-      setReason("");
-      setError("");
+    if (taskId) {
       if (!dialog.current?.open) dialog.current?.showModal();
     } else if (dialog.current?.open) dialog.current.close();
-  }, [task]);
+  }, [taskId]);
 
   async function submit(event) {
     event.preventDefault();

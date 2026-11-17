@@ -1,6 +1,6 @@
 import { DndContext, DragOverlay, KeyboardSensor, MouseSensor, TouchSensor, closestCorners, pointerWithin, useDraggable, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { Activity, AlarmClock, AlertTriangle, CalendarDays, CalendarRange, Check, ChevronDown, ChevronRight, Circle, CircleCheck, Clock3, Eye, Folder, FolderOpen, GripVertical, LayoutGrid, Link2, ListChecks, Loader, Plus, Search, Users, X } from "lucide-react";
 import { STATE_ORDER, STATES } from "../../lib/constants";
 import { isLateTask, vnDue, vnTime } from "../../lib/format";
@@ -26,7 +26,7 @@ function Column({ state, tasks, onCreateTask, readOnly, mobile, filtered, select
   return <section ref={setNodeRef} className="kb-lane" data-state={state} data-over={isOver || undefined} aria-label={STATES[state]}>
     <header className="kb-lane-head"><span className="kb-ico"><Icon size={18} /></span><h2>{STATES[state]}</h2><b className="kb-lane-count">{tasks.length}</b>{state === "can_lam" && onCreateTask && <button className="kb-add-task" type="button" onClick={onCreateTask} aria-label="Tạo task"><Plus size={19} /></button>}</header>
     <div className="kb-column-scroll">{tasks.map((task) => <DragCard key={task.id} task={task} selected={selectedId === task.id} onSelect={onSelect} locked={canOpen ? !canOpen(task) : false} readOnly={readOnly} mobile={mobile} mine={isMine(task)} />)}
-      {!tasks.length && state === "can_lam" && onCreateTask ? <button type="button" className="kb-empty-create" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: "8px" }} onClick={onCreateTask}><span><Plus size={27} /></span><strong style={{ display: "block", width: "100%" }}>Tạo task</strong><small style={{ display: "block", width: "100%" }}>Thêm công việc mới</small></button> : !tasks.length && <p className="kb-empty">{readOnly ? "Không có task" : filtered ? "Không có task phù hợp" : mobile ? "Chưa có task ở cột này" : "Kéo task vào đây"}</p>}
+      {!tasks.length && state === "can_lam" && onCreateTask ? <button type="button" className="kb-empty-create" onClick={onCreateTask}><span><Plus size={27} /></span><strong>Tạo task</strong><small>Thêm công việc mới</small></button> : !tasks.length && <p className="kb-empty">{readOnly ? "Không có task" : filtered ? "Không có task phù hợp" : mobile ? "Chưa có task ở cột này" : "Kéo task vào đây"}</p>}
     </div>
   </section>;
 }
@@ -59,7 +59,6 @@ function Preview({ task, onOpen, onClear, canOpen }) {
   const taskLinks = items.flatMap((item) => links.filter((link) => link.muc_id === item.id).map((link) => ({ ...link, itemName: item.noi_dung })));
   const previewItems = showAllItems ? items : items.slice(0, 3);
   const previewLinks = showAllLinks ? taskLinks : taskLinks.slice(0, 3);
-  useEffect(() => { setTab("detail"); setShowAllItems(false); setShowAllLinks(false); }, [task?.id]);
   return <aside className="kb-preview" aria-label="Xem nhanh task">
     {!task ? <div className="kb-preview-empty"><Activity size={25} /><strong>Chọn một task</strong><span>Thông tin chi tiết sẽ hiện ở đây.</span></div> : !allowed ? <div className="kb-preview-empty"><strong>Task bị giới hạn xem</strong><span>Bạn chỉ xem được task được giao cho mình.</span></div> : <>
       <div className="kb-preview-top"><span className="kb-state-chip" data-state={task.trang_thai}>{STATES[task.trang_thai]}</span><div className="kb-preview-actions"><button type="button" className="kb-preview-close" onClick={onClear} aria-label="Bỏ chọn task"><X size={18} /></button></div></div>
@@ -148,7 +147,7 @@ export default function KanbanBoard({ tasks = [], members = [], projectName = "C
     </div>
     <aside className="kb-board-side">
       <div className="kb-side-tools"><div className="kb-density" aria-label="Mật độ hiển thị">{[["gon", "Gọn"], ["vua", "Vừa"], ["rong", "Rộng"]].map(([value, label]) => <button type="button" key={value} aria-pressed={density === value} onClick={() => setDensity(value)}>{label}</button>)}</div>{onCreateTask && <button className="kb-create-button" type="button" onClick={onCreateTask}><Plus size={19} />Tạo task</button>}</div>
-      <Preview task={selected} onOpen={onOpen} onClear={() => setSelectedId(null)} canOpen={canOpen} />
+      <Preview key={selected?.id || "empty"} task={selected} onOpen={onOpen} onClear={() => setSelectedId(null)} canOpen={canOpen} />
     </aside>
   </div>;
 }

@@ -3,9 +3,11 @@ import { CalendarClock, Save } from 'lucide-react'
 import { toDueISO, vnDateTimeLocal } from '../../lib/format'
 import { ErrorBox } from '../common'
 
+const initialNow = Date.now()
+
 export default function TaskDeadlineEditor({ task, busy, onSave }) {
   const initial = vnDateTimeLocal(task.han_chot)
-  const [now, setNow] = useState(Date.now())
+  const [now, setNow] = useState(initialNow)
   const [open, setOpen] = useState(false)
   const [due, setDue] = useState(initial)
   const [reason, setReason] = useState('')
@@ -14,13 +16,6 @@ export default function TaskDeadlineEditor({ task, busy, onSave }) {
   const changed = nextDue === null ? task.han_chot !== null : Date.parse(nextDue) !== Date.parse(task.han_chot)
   const dueInPast = !!nextDue && Date.parse(nextDue) <= now
   const minimumDue = vnDateTimeLocal(new Date(now + 60_000))
-
-  useEffect(() => {
-    setDue(vnDateTimeLocal(task.han_chot))
-    setReason('')
-    setError('')
-    setOpen(false)
-  }, [task.id, task.han_chot])
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 15_000)

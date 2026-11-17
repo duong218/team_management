@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, CalendarRange, Info } from "lucide-react";
 
 const vnParts = new Intl.DateTimeFormat("en-CA", {
@@ -16,13 +16,19 @@ const vnDate = (value) => {
 };
 const labelDate = (value) => new Intl.DateTimeFormat("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", day: "2-digit", month: "2-digit" }).format(new Date(value));
 const dayMs = 86400000;
+const initialNow = Date.now();
 const stateLabel = { can_lam: "Cần làm", dang_lam: "Đang làm", cho_duyet: "Chờ duyệt", hoan_thanh: "Hoàn thành" };
 
 export default function TaskTimeline({ tasks = [], onOpen, canOpen }) {
   const [expanded, setExpanded] = useState(false);
+  const [now, setNow] = useState(initialNow);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   const chart = useMemo(() => {
     if (!tasks.length) return null;
-    const today = vnDate(Date.now());
+    const today = vnDate(now);
     const rows = tasks.map((task) => {
       const start = vnDate(task.tao_luc) ?? today;
       const due = vnDate(task.han_chot);
@@ -41,7 +47,7 @@ export default function TaskTimeline({ tasks = [], onOpen, canOpen }) {
         width: Math.max(1, Math.min(100, ((row.end - row.start) / span) * 100)),
       })),
     };
-  }, [tasks]);
+  }, [tasks, now]);
   const visible = expanded ? chart?.rows : chart?.rows.slice(0, 8);
 
   return (

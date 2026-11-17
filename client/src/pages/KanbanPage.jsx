@@ -67,7 +67,7 @@ export default function KanbanPage({ projectId, navigate, readOnly = false, onVa
   }
   return (
     <div className="kanban">
-      {manager && !viewOnly && <ReturnTaskDialog task={returningTask} onCancel={() => setReturningTask(null)} onConfirm={confirmReturn} />}
+      {manager && !viewOnly && <ReturnTaskDialog key={returningTask?.id ?? "closed"} task={returningTask} onCancel={() => setReturningTask(null)} onConfirm={confirmReturn} />}
       {celebrating && <TaskCelebration />}
       {toast && <div className="kb-toast" role="alert"><CircleAlert size={19} /><span>{toast.message}</span><button aria-label="Đóng thông báo" onClick={() => setToast(null)}><X size={17} /></button></div>}
       {viewOnly && <p className="card" role="note">Công việc đã kết thúc. Bảng này chỉ để xem. <button onClick={() => navigate(`/history/${projectId}/cancelled`)}>Xem task đã hủy</button></p>}
