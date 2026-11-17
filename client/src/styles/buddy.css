@@ -1,0 +1,9 @@
+/* Bé mèo nằm góc dưới trái, bong bóng thoại màu hồng nổi chéo lên phía trên bên phải (fixed, đè lên menu). Ẩn khi sidebar thu gọn hoặc màn nhỏ. */
+.buddy { position: fixed; left: 14px; bottom: 0; z-index: 50; display: flex; flex-direction: row-reverse; align-items: flex-end; animation: buddy-in 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.buddy-bubble { position: relative; width: 170px; margin: 0 0 84px -6px; padding: 10px 26px 10px 12px; border-radius: 18px; background: #ffd3e6; color: #4a0d2b; font: 650 13px/1.4 var(--font); box-shadow: var(--clay-sm); transform: rotate(-2deg); }
+.buddy-bubble::after { content: ""; position: absolute; left: 14px; bottom: -6px; width: 12px; height: 12px; background: #ffd3e6; transform: rotate(45deg); }
+.buddy-x { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 20px; min-height: 20px; padding: 0; border: 0; background: transparent; box-shadow: none; color: #4a0d2b; }
+.buddy-cat { width: 120px; height: auto; pointer-events: none; }
+.sidebar-collapsed .buddy { display: none; }
+@media (max-width: 960px) { .buddy { display: none; } }
+@keyframes buddy-in { from { opacity: 0; transform: translateY(12px); } }

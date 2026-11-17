@@ -8,6 +8,7 @@ import Logo from "./components/common/Logo";
 import NotificationBell from "./components/common/NotificationBell";
 import PetCat from "./components/common/PetCat";
 import PetPicker from "./components/common/PetPicker";
+import SidebarBuddy from "./components/common/SidebarBuddy";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProjectListPage from "./pages/ProjectListPage";
@@ -158,6 +159,7 @@ export default function App() {
             {link(`${base}/cancelled`, Archive, "Task đã hủy", sub === "cancelled")}
           </>
         )}
+        <SidebarBuddy />
       </aside>
       <div className="scrim" onClick={() => setMenuOpen(false)} aria-hidden="true" />
       <div className="main">
